@@ -2,9 +2,10 @@
   "version": 2,
   "name": "frauddetector-dashboard",
   "builds": [
-    { "src": "dashboard/index.html", "use": "@vercel/static" }
+    { "src": "dashboard/**", "use": "@vercel/static" }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "dashboard/index.html" }
+    { "src": "/hero-bg.png", "dest": "/dashboard/hero-bg.png" },
+    { "src": "/(.*)", "dest": "/dashboard/index.html" }
   ]
 }

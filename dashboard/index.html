@@ -64,6 +64,54 @@ body::after{
   opacity:.4;
 }
 
+/* ─── hero banner ───────────────────────────────────────────── */
+.hero{
+  position:relative;overflow:hidden;
+  border-radius:var(--r);margin-bottom:28px;
+  border:1px solid var(--b0);
+  min-height:220px;
+  display:flex;align-items:center;
+}
+.hero-img{
+  position:absolute;right:0;top:0;bottom:0;
+  width:52%;
+  background:url('hero-bg.png') center/cover no-repeat;
+  mask-image:linear-gradient(to left,rgba(0,0,0,.55) 0%,rgba(0,0,0,.2) 60%,transparent 100%);
+  -webkit-mask-image:linear-gradient(to left,rgba(0,0,0,.55) 0%,rgba(0,0,0,.2) 60%,transparent 100%);
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(12,18,34,.98) 0%,rgba(12,18,34,.85) 50%,rgba(12,18,34,.4) 100%);
+}
+.hero-content{
+  position:relative;z-index:2;
+  padding:32px 36px;max-width:580px;
+}
+.hero-eyebrow{
+  font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--vi);margin-bottom:10px;display:flex;align-items:center;gap:7px;
+}
+.hero-eyebrow::before{content:'';width:20px;height:1px;background:var(--vi);}
+.hero-title{font-size:28px;font-weight:800;line-height:1.2;letter-spacing:-.6px;color:var(--tx);margin-bottom:10px;}
+.hero-title span{
+  background:linear-gradient(135deg,var(--vi),var(--ro));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-desc{font-size:13px;color:var(--tx2);line-height:1.6;margin-bottom:18px;max-width:440px;}
+.hero-tags{display:flex;gap:8px;flex-wrap:wrap;}
+.hero-tag{
+  font-size:9px;font-weight:600;letter-spacing:.08em;
+  padding:4px 10px;border-radius:20px;
+  background:rgba(255,255,255,.05);border:1px solid var(--b1);color:var(--tx2);
+}
+.hero-tag.hi{background:rgba(124,106,245,.1);border-color:rgba(124,106,245,.25);color:var(--vi);}
+.hero-stats{
+  display:flex;gap:28px;margin-top:20px;padding-top:20px;
+  border-top:1px solid var(--b0);
+}
+.hero-stat-val{font-size:22px;font-weight:800;letter-spacing:-.8px;}
+.hero-stat-lbl{font-size:9px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);margin-top:2px;}
+
 /* ─── layout ────────────────────────────────────────────────── */
 .root{position:relative;z-index:1;display:flex;flex-direction:column;min-height:100vh;}
 
@@ -380,6 +428,43 @@ footer a:hover{color:var(--vi);}
 </header>
 
 <main>
+
+ <!-- Hero banner -->
+ <div class="hero">
+  <div class="hero-img"></div>
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+   <div class="hero-eyebrow">Real-time Risk Intelligence</div>
+   <div class="hero-title">Detect fraud<br><span>before it lands.</span></div>
+   <div class="hero-desc">
+     Advanced PostgreSQL rules engine — recursive CTEs, LATERAL joins, window functions,
+     and PL/pgSQL triggers catch money mules, velocity bursts, and device sharing
+     the moment a transaction hits the database.
+   </div>
+   <div class="hero-tags">
+    <span class="hero-tag hi">Recursive CTE</span>
+    <span class="hero-tag hi">LATERAL Join</span>
+    <span class="hero-tag hi">RANGE BETWEEN</span>
+    <span class="hero-tag">PL/pgSQL Triggers</span>
+    <span class="hero-tag">Materialized View</span>
+    <span class="hero-tag">PERCENT_RANK</span>
+   </div>
+   <div class="hero-stats">
+    <div>
+     <div class="hero-stat-val" style="color:var(--ro)" id="hs-fl">14</div>
+     <div class="hero-stat-lbl">Open Flags</div>
+    </div>
+    <div>
+     <div class="hero-stat-val" style="color:var(--vi)" id="hs-tx">326</div>
+     <div class="hero-stat-lbl">Transactions</div>
+    </div>
+    <div>
+     <div class="hero-stat-val" style="color:var(--go)" id="hs-rs">72.4</div>
+     <div class="hero-stat-lbl">Avg Risk Score</div>
+    </div>
+   </div>
+  </div>
+ </div>
 
  <!-- KPIs -->
  <div class="sh">
@@ -801,6 +886,10 @@ async function load(){
     $('k-vo').textContent=s.volume_24h?rupee(s.volume_24h):'—';
     $('k-tx-s').textContent='last hour: '+(s.txns_last_hour||0);
     $('nf').textContent=s.open_flags||0;
+    // hero stats
+    if($('hs-fl'))count($('hs-fl'),+s.open_flags||0);
+    if($('hs-tx'))count($('hs-tx'),+s.total_txns||0);
+    if($('hs-rs'))count($('hs-rs'),+s.avg_risk_score||0,1);
     sparks();chartMerch(merch);chartUsers(rank);
     renderFlags(flags);renderFeed(flags);renderChains(chains);renderDevices(devices);
     heatmap(null);
@@ -815,6 +904,10 @@ function demo(){
   $('k-vo').textContent='₹4,82,000';
   $('k-tx-s').textContent='last hour: 12';
   $('nf').textContent='14';
+  // hero stats
+  if($('hs-fl'))count($('hs-fl'),14);
+  if($('hs-tx'))count($('hs-tx'),326);
+  if($('hs-rs'))count($('hs-rs'),72.4,1);
   sparks();
 
   chartMerch([
