@@ -216,6 +216,47 @@ Both test files mock the DB — no live Postgres needed for `pytest tests/ -m "n
 
 ---
 
+## Roadmap
+
+- [x] Velocity burst detection (`VELOCITY_10M`)
+- [x] Rapid-repeat same merchant (`RAPID_REPEAT`)
+- [x] High-amount anomaly via PL/pgSQL trigger
+- [x] Multi-device switch trigger (`MULTI_DEVICE_1H`)
+- [x] Money mule chain tracing — recursive CTE, 6 hops
+- [x] Shared device detection
+- [x] Materialized view — per-user rolling risk stats
+- [x] Docker + docker-compose
+- [x] GitHub Actions CI (Python 3.11 + 3.12)
+- [ ] WebSocket feed — push new flags to dashboard in real time
+- [ ] ML layer — anomaly score using Isolation Forest on top of rule scores
+- [ ] Graph visualisation — D3.js mule chain network diagram
+- [ ] Auth — API key middleware, per-key rate limiting
+- [ ] Scheduled materialized view refresh via pg_cron
+- [ ] Slack / webhook alert on flag risk_score > 80
+
+---
+
+## Contributing
+
+Fork the repo, make a branch, open a PR against `initial-release`.
+
+```bash
+git clone https://github.com/ansh44233/FraudDetector
+cd FraudDetector
+python -m venv venv && venv\Scripts\activate
+pip install -r requirements.txt
+pytest tests/ -m "not integration"   # all green before you push
+```
+
+Good first issues:
+
+- **Add `IP_REPUTATION` rule** — flag transactions from IPs that appear in >3 user accounts
+- **Add `/flags/{id}` GET endpoint** — return a single flag with full transaction detail
+- **Write integration tests** — `tests/test_integration_db.py` hitting a real Postgres test DB
+- **Add `JSONB` index** — `CREATE INDEX ON fraud_flags USING GIN (details)` and benchmark
+
+---
+
 ## Star History
 
 <div align="center">
