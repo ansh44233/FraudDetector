@@ -142,40 +142,29 @@ body{
 .meta-num.danger{color: var(--danger);}
 .meta-lbl{font-size: .6875rem; color: var(--tx-muted); text-transform: uppercase; letter-spacing: .05em; margin-top: 2px;}
 
-/* ── CASE STUDY IMAGE SHOWCASE (App Window) ──────── */
-.hero-window{
+/* ── SEAMLESS ARTWORK STAGE ──────────────────────── */
+.hero-art-stage{
   border-left: 1px solid var(--border);
-  background: #0d0d10;
+  background: radial-gradient(circle at 50% 50%, rgba(94, 106, 210, 0.08) 0%, transparent 65%), #0f0f12;
   display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 36px 40px; position: relative; overflow: hidden;
 }
-.window-bar{
-  height: 36px; padding: 0 16px;
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
+.hero-art-img{
+  max-width: 100%; max-height: 270px; object-fit: contain;
+  display: block; filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.45));
 }
-.window-dots{display: flex; align-items: center; gap: 6px;}
-.w-dot{width: 9px; height: 9px; border-radius: 50%; background: #27272a;}
-.window-title{font-size: .6875rem; font-family: var(--font-mono); color: var(--tx-muted);}
-
-.window-canvas{
-  flex: 1; position: relative; overflow: hidden;
-  background: #000; display: flex; align-items: center; justify-content: center;
+.art-caption-pill{
+  margin-top: 18px; display: inline-flex; align-items: center; gap: 8px;
+  padding: 5px 14px; border-radius: 20px;
+  background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border);
+  font-size: .6875rem; font-family: var(--font-mono); color: var(--tx-sec);
 }
-.window-canvas img{
-  width: 100%; height: 100%; object-fit: cover;
-  object-position: center center; display: block;
-}
-.window-caption{
-  padding: 10px 16px; border-top: 1px solid var(--border);
-  background: var(--surface); display: flex; align-items: center; justify-content: space-between;
-}
-.cap-rule{font-size: .75rem; font-weight: 600; font-family: var(--font-mono); color: var(--tx);}
-.cap-status{font-size: .6875rem; font-weight: 600; color: var(--danger); display: flex; align-items: center; gap: 6px;}
-.cap-status::before{content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--danger);}
+.art-status-dot{width: 6px; height: 6px; border-radius: 50%; background: var(--danger); box-shadow: 0 0 6px var(--danger);}
 
 @media(max-width: 960px){
   .hero-card{grid-template-columns: 1fr;}
-  .hero-window{border-left: none; border-top: 1px solid var(--border); min-height: 280px;}
+  .hero-art-stage{border-left: none; border-top: 1px solid var(--border); padding: 28px 20px;}
   .hero-info{padding: 28px 24px;}
   .nav-links{display: none;}
 }
@@ -348,9 +337,7 @@ tr.tbl-row:hover td{background: rgba(255, 255, 255, 0.025);}
 
   <div class="nav-left">
    <a class="brand" href="#">
-    <div class="brand-mark">
-     <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-    </div>
+    <img src="logo.png" alt="FraudDetector" style="width:28px;height:28px;border-radius:7px;display:block;border:1px solid rgba(255,255,255,0.1);"/>
     <span class="brand-name">FraudDetector</span>
     <span class="brand-ver">v2.5</span>
    </a>
@@ -407,23 +394,12 @@ tr.tbl-row:hover td{background: rgba(255, 255, 255, 0.025);}
    </div>
   </div>
 
-  <!-- Integrated Application Window Frame -->
-  <div class="hero-window">
-   <div class="window-bar">
-    <div class="window-dots">
-     <div class="w-dot"></div><div class="w-dot"></div><div class="w-dot"></div>
-    </div>
-    <div class="window-title">incident_inspector_live.py</div>
-    <div style="font-size: .625rem; color: var(--tx-muted); font-family: var(--font-mono);">SYNC</div>
-   </div>
-
-   <div class="window-canvas">
-    <img src="hero-bg.png" alt="Fraud Detection Incident Visualization"/>
-   </div>
-
-   <div class="window-caption">
-    <div class="cap-rule">Rule #04: SOCIAL_ENGINEERING_ANOMALY</div>
-    <div class="cap-status">Intercepted in 1.4ms</div>
+  <!-- Seamless Artwork Showcase Stage -->
+  <div class="hero-art-stage">
+   <img src="hero-transparent.png" alt="Fraud Detection Incident Visualization" class="hero-art-img"/>
+   <div class="art-caption-pill">
+    <span class="art-status-dot"></span>
+    <span>Vector: Social Engineering &amp; Mule Drop · Intercepted &lt;2ms</span>
    </div>
   </div>
 
@@ -660,9 +636,7 @@ tr.tbl-row:hover td{background: rgba(255, 255, 255, 0.025);}
  <div class="footer-inner">
   <div>
    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-    <div class="brand-mark">
-     <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-    </div>
+    <img src="logo.png" alt="FraudDetector" style="width:26px;height:26px;border-radius:6px;display:block;border:1px solid rgba(255,255,255,0.1);"/>
     <span style="font-weight:700;font-size:.9375rem;">FraudDetector</span>
    </div>
    <p style="font-size:.8125rem;color:var(--tx-muted);line-height:1.6;max-width:320px;">
