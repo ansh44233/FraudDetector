@@ -1,13 +1,7 @@
 {
-  "version": 2,
-  "name": "frauddetector-dashboard",
   "cleanUrls": true,
-  "builds": [
-    { "src": "dashboard/**", "use": "@vercel/static" }
-  ],
-  "routes": [
-    { "src": "/(logo\\.png|favicon\\.png|hero-bg\\.png)", "dest": "/dashboard/$1" },
-    { "src": "/(.*\\.(?:png|jpg|jpeg|gif|svg|ico|css|js|json))", "dest": "/dashboard/$1" },
-    { "src": "/(.*)", "dest": "/dashboard/index.html" }
+  "rewrites": [
+    { "source": "/dashboard/(.*)", "destination": "/$1" },
+    { "source": "/dashboard", "destination": "/index.html" }
   ]
 }

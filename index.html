@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>FraudDetector — Real-Time Risk Intelligence Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="icon" type="image/png" href="favicon.png"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+/* ═══════════════════════════════════════════════════
+   FRAUDDETECTOR DESIGN SYSTEM (v5 Cyber-Shield Edition)
+   Canvas:  #09090b (deep obsidian)
+   Surface: #18181b, #1c1c1f, #232326
+   Border:  #27272a, #3f3f46
+   Accent:  #4f46e5 (Indigo), #06b6d4 (Cyan), #dc2626 (Danger)
+═══════════════════════════════════════════════════ */
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;font-size:14px;}
+
+:root{
+  --canvas: #09090b;
+  --s1:     #18181b;
+  --s2:     #1c1c1f;
+  --s3:     #232326;
+  --bd:     #27272a;
+  --bd2:    #3f3f46;
+  --muted:  #71717a;
+  --tx2:    #a1a1aa;
+  --tx:     #fafafa;
+  --ac:     #4f46e5;
+  --ac2:    #6366f1;
+  --ac3:    #818cf8;
+  --cyan:   #06b6d4;
+  --cyan-g: rgba(6,182,212,0.15);
+  --danger: #dc2626;
+  --danger-g: rgba(220,38,38,0.15);
+  --warn:   #d97706;
+  --good:   #16a34a;
+  --r:      12px;
+  --r2:     6px;
+}
+
+body{
+  background:var(--canvas);
+  color:var(--tx);
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:.875rem;
+  line-height:1.5;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+/* ── HEADER ──────────────────────────────────────── */
+.header{
+  position:sticky;top:0;z-index:200;
+  background:rgba(9,9,11,.92);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--bd);
+}
+.header-inner{
+  max-width:1400px;margin:0 auto;
+  padding:0 24px;height:64px;
+  display:flex;align-items:center;gap:28px;
+}
+
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;flex-shrink:0;}
+.logo-icon{
+  width:40px;height:40px;border-radius:10px;
+  background:radial-gradient(circle at 50% 50%, rgba(79,70,229,0.3) 0%, transparent 80%), var(--s2);
+  border:1px solid rgba(99,102,241,0.35);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 16px rgba(79,70,229,0.25);
+  transition:transform .2s, box-shadow .2s;
+}
+.logo:hover .logo-icon{transform:scale(1.05);box-shadow:0 0 20px rgba(6,182,212,0.4);}
+.logo-icon img{width:32px;height:32px;object-fit:contain;filter:drop-shadow(0 0 6px rgba(6,182,212,0.4));}
+.logo-name{font-size:1.05rem;font-weight:800;letter-spacing:-.3px;color:var(--tx);display:flex;align-items:center;gap:6px;}
+.logo-tag{font-size:.625rem;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(79,70,229,0.2);color:var(--ac3);border:1px solid rgba(79,70,229,0.4);letter-spacing:0.04em;}
+.logo-sub{font-size:.6875rem;color:var(--muted);letter-spacing:.02em;margin-top:1px;}
+
+.hn{display:flex;align-items:center;gap:4px;}
+.hn a{
+  padding:6px 14px;border-radius:var(--r2);
+  font-size:.8125rem;font-weight:500;color:var(--tx2);
+  text-decoration:none;transition:color .15s,background .15s;
+}
+.hn a:hover{color:var(--tx);background:var(--s3);}
+.hn a.active{color:var(--tx);background:var(--s2);border:1px solid var(--bd);}
+
+.hr{display:flex;align-items:center;gap:12px;margin-left:auto;}
+.hstat{
+  display:flex;align-items:center;gap:8px;
+  padding:6px 14px;border-radius:var(--r2);
+  background:var(--s1);border:1px solid var(--bd);
+}
+.hstat-dot{width:7px;height:7px;border-radius:50%;background:var(--good);flex-shrink:0;
+           box-shadow:0 0 8px rgba(22,163,74,.6);
+           animation:hpulse 2s ease-in-out infinite;}
+@keyframes hpulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.15)}}
+.hstat-label{font-size:.75rem;color:var(--tx2);}
+.hstat-sep{width:1px;height:14px;background:var(--bd);}
+.hstat-val{font-size:.8125rem;font-weight:700;color:var(--danger);}
+.hstat-vlbl{font-size:.6875rem;color:var(--muted);}
+
+.btn-sim{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 14px;border-radius:var(--r2);
+  background:linear-gradient(135deg, rgba(79,70,229,0.2) 0%, rgba(6,182,212,0.2) 100%);
+  border:1px solid rgba(99,102,241,0.4);
+  color:var(--tx);font-size:.75rem;font-weight:600;
+  cursor:pointer;transition:all .2s;
+  box-shadow:0 2px 8px rgba(79,70,229,0.2);
+}
+.btn-sim:hover{
+  background:linear-gradient(135deg, rgba(79,70,229,0.35) 0%, rgba(6,182,212,0.35) 100%);
+  border-color:var(--cyan);
+  transform:translateY(-1px);
+  box-shadow:0 4px 14px rgba(6,182,212,0.3);
+}
+
+.hclock{
+  font-size:.75rem;color:var(--muted);
+  font-variant-numeric:tabular-nums;font-family:monospace;
+  padding:6px 12px;border-radius:var(--r2);
+  border:1px solid var(--bd);background:var(--s1);
+}
+
+/* ── MAIN ────────────────────────────────────────── */
+main{max-width:1400px;margin:0 auto;padding:28px 24px 72px;}
+
+/* ── HERO (ZERO-GAP CYBER RADAR) ─────────────────── */
+.hero{
+  position:relative;overflow:hidden;
+  border-radius:var(--r);
+  border:1px solid var(--bd);
+  background:#09090b url('hero-bg.png') right center / cover no-repeat;
+  min-height:240px;
+  display:flex;align-items:stretch;
+  margin-bottom:28px;
+  box-shadow:0 8px 32px -4px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.05);
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg, #09090b 0%, rgba(9,9,11,0.96) 42%, rgba(9,9,11,0.55) 75%, transparent 100%);
+  pointer-events:none;z-index:1;
+}
+.hero-left{
+  flex:1;padding:40px 44px;
+  position:relative;z-index:2;
+  max-width:680px;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:.6875rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--cyan);margin-bottom:14px;
+}
+.hero-eyebrow::before{
+  content:'';display:inline-block;
+  width:18px;height:2px;background:var(--cyan);
+  box-shadow:0 0 6px var(--cyan);
+}
+.hero-h1{
+  font-size:2rem;font-weight:900;line-height:1.15;
+  letter-spacing:-.8px;color:var(--tx);margin-bottom:12px;
+}
+.hero-h1 em{
+  font-style:normal;
+  background:linear-gradient(90deg, #818cf8 0%, #06b6d4 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero-p{
+  font-size:.875rem;color:var(--tx2);line-height:1.65;
+  margin-bottom:20px;max-width:540px;
+}
+.hero-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:24px;}
+.hchip{
+  font-size:.6875rem;font-weight:600;
+  padding:3px 10px;border-radius:20px;
+  border:1px solid var(--bd2);color:var(--tx2);
+  background:rgba(28,28,31,0.7);
+  backdrop-filter:blur(8px);
+}
+.hchip.ac{border-color:rgba(79,70,229,.45);color:var(--ac3);background:rgba(79,70,229,.12);}
+.hchip.cyan{border-color:rgba(6,182,212,.4);color:var(--cyan);background:rgba(6,182,212,.1);}
+
+.hero-nums{
+  display:flex;align-items:center;gap:32px;
+  padding-top:20px;border-top:1px solid var(--bd);
+}
+.hn2-val{font-size:1.625rem;font-weight:800;letter-spacing:-.6px;}
+.hn2-val.d{color:var(--danger);text-shadow:0 0 10px rgba(220,38,38,0.3);}
+.hn2-val.a{color:var(--cyan);text-shadow:0 0 10px rgba(6,182,212,0.3);}
+.hn2-val.w{color:var(--warn);}
+.hn2-lbl{font-size:.6875rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-top:2px;}
+
+@media(max-width:900px){
+  .hero{background-position:top right;}
+  .hero::before{background:rgba(9,9,11,0.92);}
+  .hero-left{padding:28px 24px;}
+  .header-inner{padding:0 16px;}
+  main{padding:16px 16px 48px;}
+  .hn{display:none;}
+}
+
+/* ── SECTION LABEL ───────────────────────────────── */
+.sl{
+  display:flex;align-items:center;gap:10px;
+  font-size:.6875rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);margin:28px 0 14px;
+}
+.sl::after{content:'';flex:1;height:1px;background:var(--bd);}
+
+/* ── KPI GRID ────────────────────────────────────── */
+.kg{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;}
+@media(max-width:1200px){.kg{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:640px) {.kg{grid-template-columns:repeat(2,1fr);}}
+
+.kc{
+  background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);
+  padding:18px 18px 14px;position:relative;overflow:hidden;cursor:default;
+  transition:border-color .2s,box-shadow .18s,transform .18s;
+}
+.kc:hover{border-color:var(--bd2);transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.45);}
+
+.kc::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--_a,var(--bd));
+}
+.kc.ac{--_a:var(--ac);}
+.kc.dg{--_a:var(--danger);}
+.kc.wn{--_a:var(--warn);}
+.kc.gd{--_a:var(--good);}
+.kc.sl2{--_a:var(--muted);}
+
+.kc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.kc-lbl{font-size:.6875rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+.kc-ic{
+  width:28px;height:28px;border-radius:var(--r2);
+  background:var(--s3);border:1px solid var(--bd);
+  display:flex;align-items:center;justify-content:center;
+}
+.kc-ic svg{width:13px;height:13px;stroke:var(--tx2);fill:none;stroke-width:2;stroke-linecap:round;}
+.kc.ac .kc-ic svg{stroke:var(--ac3);}
+.kc.dg .kc-ic svg{stroke:var(--danger);}
+.kc.wn .kc-ic svg{stroke:var(--warn);}
+.kc.gd .kc-ic svg{stroke:var(--good);}
+
+.kc-val{font-size:1.875rem;font-weight:800;line-height:1;letter-spacing:-1px;font-variant-numeric:tabular-nums;color:var(--tx);}
+.kc.ac .kc-val{color:var(--ac3);}
+.kc.dg .kc-val{color:var(--danger);}
+.kc.wn .kc-val{color:var(--warn);}
+.kc.gd .kc-val{color:var(--good);}
+
+.kc-sub{font-size:.6875rem;color:var(--muted);margin-top:4px;}
+.kc-spark{display:block;width:100%;height:24px;margin-top:8px;}
+.kc-bar{height:2px;background:var(--s3);border-radius:1px;margin-top:10px;overflow:hidden;}
+.kc-bar-fill{height:100%;border-radius:1px;background:var(--_a,var(--muted));opacity:.5;}
+
+/* ── CARD ────────────────────────────────────────── */
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;}
+.cardp{padding:20px 22px;}
+.card-title{font-size:.9375rem;font-weight:700;color:var(--tx);margin-bottom:3px;display:flex;align-items:center;justify-content:space-between;}
+.card-sub{font-size:.75rem;color:var(--muted);margin-bottom:16px;}
+.card-sub code{
+  font-family:'SF Mono',Consolas,monospace;font-size:.6875rem;
+  background:rgba(79,70,229,.12);color:var(--ac3);
+  padding:1px 6px;border-radius:4px;border:1px solid rgba(79,70,229,.2);
+}
+
+.g2{display:grid;grid-template-columns:1.6fr 1fr;gap:14px;}
+.g3{display:grid;grid-template-columns:1.6fr 1fr;gap:14px;}
+.span2{grid-column:span 1;}
+@media(min-width:1100px){
+  .g3{grid-template-columns:1.8fr 1fr;}
+}
+@media(max-width:960px){.g2,.g3{grid-template-columns:1fr;}}
+
+/* ── TABLE FILTER TOOLBAR ────────────────────────── */
+.tbl-bar{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  margin-bottom:14px;flex-wrap:wrap;
+}
+.tbl-filters{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.tbl-btn{
+  font-size:.6875rem;font-weight:600;padding:4px 10px;border-radius:6px;
+  background:var(--s2);border:1px solid var(--bd);color:var(--tx2);
+  cursor:pointer;transition:all .15s;
+}
+.tbl-btn:hover{color:var(--tx);background:var(--s3);}
+.tbl-btn.active{background:var(--ac);border-color:var(--ac2);color:#fff;box-shadow:0 0 10px rgba(79,70,229,0.35);}
+
+.tbl-search{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--s2);border:1px solid var(--bd);border-radius:6px;
+  padding:4px 10px;font-size:.75rem;color:var(--tx);min-width:200px;
+}
+.tbl-search input{
+  background:transparent;border:none;outline:none;color:var(--tx);
+  font-size:.75rem;font-family:inherit;width:100%;
+}
+.tbl-search input::placeholder{color:var(--muted);}
+
+/* ── TABLE ───────────────────────────────────────── */
+.tw{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:.8125rem;}
+thead{background:var(--s2);}
+th{
+  padding:10px 14px;text-align:left;
+  font-size:.6875rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);border-bottom:1px solid var(--bd);white-space:nowrap;
+}
+td{padding:11px 14px;border-bottom:1px solid rgba(39,39,42,.8);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr.interactive-row{cursor:pointer;transition:background .15s;}
+tr.interactive-row:hover td{background:rgba(99,102,241,.06);}
+
+/* ── BADGES ──────────────────────────────────────── */
+.badge{
+  display:inline-flex;align-items:center;
+  padding:2px 8px;border-radius:4px;
+  font-size:.6875rem;font-weight:600;letter-spacing:.03em;white-space:nowrap;
+  font-family:'SF Mono',Consolas,monospace;
+}
+.bd-ac {background:rgba(79,70,229,.14); color:var(--ac3);  border:1px solid rgba(79,70,229,.3);}
+.bd-dg {background:rgba(220,38,38,.12); color:#f87171;      border:1px solid rgba(220,38,38,.3);}
+.bd-wn {background:rgba(217,119,6,.12); color:#fbbf24;      border:1px solid rgba(217,119,6,.3);}
+.bd-gd {background:rgba(22,163,74,.12); color:#4ade80;      border:1px solid rgba(22,163,74,.3);}
+.bd-sl {background:rgba(82,82,91,.14); color:var(--tx2);   border:1px solid var(--bd);}
+
+/* ── SCORE BAR ───────────────────────────────────── */
+.sb{display:flex;align-items:center;gap:8px;}
+.sb-t{width:48px;height:4px;background:var(--s3);border-radius:2px;overflow:hidden;flex-shrink:0;}
+.sb-f{height:100%;border-radius:2px;background:var(--danger);}
+.sb-f.md{background:var(--warn);}
+.sb-n{font-size:.8125rem;font-weight:600;color:var(--tx);}
+
+/* ── FEED ────────────────────────────────────────── */
+.feed{display:flex;flex-direction:column;}
+.fi{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--bd);transition:background .15s;}
+.fi:last-child{border-bottom:none;}
+.fi-ic{
+  width:32px;height:32px;border-radius:var(--r2);flex-shrink:0;
+  background:var(--s2);border:1px solid var(--bd);
+  display:flex;align-items:center;justify-content:center;
+}
+.fi-ic svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;}
+.fi-ic.dg{color:var(--danger);background:rgba(220,38,38,.1);border-color:rgba(220,38,38,.3);}
+.fi-ic.wn{color:var(--warn);background:rgba(217,119,6,.1);border-color:rgba(217,119,6,.3);}
+.fi-ic.ac{color:var(--cyan);background:rgba(6,182,212,.1);border-color:rgba(6,182,212,.3);}
+.fi-body{flex:1;min-width:0;}
+.fi-rule{font-size:.8125rem;font-weight:700;color:var(--tx);}
+.fi-meta{font-size:.75rem;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.fi-score{font-size:.875rem;font-weight:800;flex-shrink:0;font-variant-numeric:tabular-nums;}
+
+/* ── HEATMAP ─────────────────────────────────────── */
+#hm{display:grid;grid-template-columns:repeat(24,1fr);grid-template-rows:repeat(7,1fr);gap:2px;flex:1;}
+.hc{aspect-ratio:1;border-radius:2px;cursor:default;transition:transform .1s;}
+.hc:hover{transform:scale(1.5);z-index:5;}
+
+/* ── CHAIN NODES ─────────────────────────────────── */
+.nodes{display:flex;align-items:center;flex-wrap:wrap;gap:2px;}
+.nd{
+  width:26px;height:26px;border-radius:50%;
+  background:rgba(6,182,212,.12);border:1px solid rgba(6,182,212,.35);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.625rem;font-weight:700;color:var(--cyan);
+  font-family:monospace;
+}
+.nd-arr{font-size:.6875rem;color:var(--muted);padding:0 2px;}
+
+/* ── TEXT UTILS ──────────────────────────────────── */
+.u{font-weight:600;color:var(--tx);}
+.m{color:var(--tx2);}
+.mo{font-family:'SF Mono',Consolas,monospace;font-size:.75rem;color:var(--muted);}
+.amt{font-weight:600;color:var(--tx);}
+.emp{text-align:center;padding:28px;color:var(--muted);font-size:.8125rem;}
+
+/* ── MODAL DRAWER ────────────────────────────────── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);
+  z-index:300;display:none;align-items:center;justify-content:center;
+  padding:20px;
+}
+.modal-overlay.open{display:flex;}
+.modal-box{
+  background:var(--s1);border:1px solid var(--bd2);border-radius:var(--r);
+  width:100%;max-width:540px;box-shadow:0 16px 40px rgba(0,0,0,0.8);
+  overflow:hidden;animation:mIn .2s ease-out;
+}
+@keyframes mIn{from{opacity:0;transform:scale(0.96)}to{opacity:1;transform:scale(1)}}
+.modal-hdr{
+  padding:16px 20px;background:var(--s2);border-bottom:1px solid var(--bd);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.modal-body{padding:20px;}
+.modal-ftr{
+  padding:14px 20px;background:var(--s2);border-top:1px solid var(--bd);
+  display:flex;justify-content:flex-end;gap:10px;
+}
+
+/* ── TOAST ALERT ─────────────────────────────────── */
+.toast-container{
+  position:fixed;bottom:24px;right:24px;z-index:400;
+  display:flex;flex-direction:column;gap:8px;pointer-events:none;
+}
+.toast{
+  background:var(--s1);border:1px solid var(--cyan);
+  border-left:4px solid var(--cyan);border-radius:8px;
+  padding:12px 18px;min-width:280px;max-width:380px;
+  box-shadow:0 8px 24px rgba(0,0,0,0.6);
+  font-size:.8125rem;animation:tIn .25s ease-out;
+  pointer-events:auto;
+}
+.toast.warn{border-color:var(--warn);border-left-color:var(--warn);}
+.toast.danger{border-color:var(--danger);border-left-color:var(--danger);}
+@keyframes tIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── FOOTER ──────────────────────────────────────── */
+.footer{
+  background:var(--s1);border-top:1px solid var(--bd);
+  margin-top:48px;padding:36px 0 28px;
+}
+.footer-inner{
+  max-width:1400px;margin:0 auto;padding:0 24px;
+  display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:36px;
+}
+.ft-brand{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.ft-brand img{width:32px;height:32px;object-fit:contain;filter:drop-shadow(0 0 6px rgba(6,182,212,0.4));}
+.ft-name{font-size:.9375rem;font-weight:800;color:var(--tx);}
+.ft-desc{font-size:.8125rem;color:var(--muted);line-height:1.6;max-width:320px;}
+.ft-col-title{font-size:.6875rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
+.ft-col a{display:block;font-size:.8125rem;color:var(--tx2);text-decoration:none;margin-bottom:8px;transition:color .15s;}
+.ft-col a:hover{color:var(--cyan);}
+.ft-bottom{
+  max-width:1400px;margin:24px auto 0;padding:16px 24px 0;
+  border-top:1px solid var(--bd);
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:.75rem;color:var(--muted);flex-wrap:wrap;gap:12px;
+}
+.ft-bottom a{color:var(--tx2);text-decoration:none;}
+.ft-bottom a:hover{color:var(--tx);}
+.ft-tags{display:flex;gap:6px;flex-wrap:wrap;}
+.ft-tag{
+  padding:2px 8px;border-radius:4px;font-size:.6875rem;font-weight:600;
+  background:var(--s2);border:1px solid var(--bd);color:var(--tx2);
+  font-family:monospace;
+}
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══════════════════════════════════════ -->
+<header class="header">
+ <div class="header-inner">
+
+  <a class="logo" href="#">
+   <div class="logo-icon">
+    <img src="logo.png" alt="FraudDetector Logo"/>
+   </div>
+   <div>
+    <div class="logo-name">FraudDetector <span class="logo-tag">v2.0</span></div>
+    <div class="logo-sub">Autonomous Risk Intelligence Engine</div>
+   </div>
+  </a>
+
+  <nav class="hn">
+   <a href="#" class="active">Dashboard</a>
+   <a href="#flags-section">Flags</a>
+   <a href="#analytics-section">Analytics</a>
+   <a href="#chains-section">Mule Chains</a>
+  </nav>
+
+  <div class="hr">
+   <button class="btn-sim" onclick="simulateIncident()" title="Simulate real-time incoming anomaly">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+    Simulate Anomaly
+   </button>
+
+   <div class="hstat">
+    <div class="hstat-dot"></div>
+    <span class="hstat-label">Engine Online</span>
+    <div class="hstat-sep"></div>
+    <span class="hstat-val" id="nf">14</span>
+    <span class="hstat-vlbl">&nbsp;open alerts</span>
+   </div>
+   <div class="hclock" id="clk">—</div>
+  </div>
+
+ </div>
+</header>
+
+<!-- ══ MAIN ════════════════════════════════════════ -->
+<main>
+
+ <!-- Hero (Zero-gap dark-mode cyber radar) -->
+ <div class="hero">
+  <div class="hero-left">
+   <div class="hero-eyebrow">Autonomous Transaction Defense</div>
+   <h1 class="hero-h1">Intercept fraud<br><em>before money leaves the vault.</em></h1>
+   <p class="hero-p">
+    High-throughput risk intelligence powered by deep PostgreSQL internals.
+    Recursive CTEs dissect multi-hop laundering chains, LATERAL joins catch millisecond velocity bursts, and PL/pgSQL triggers evaluate anomalies in sub-5ms on INSERT.
+   </p>
+   <div class="hero-chips">
+    <span class="hchip ac">Recursive CTE 6-Hops</span>
+    <span class="hchip cyan">LATERAL Windows</span>
+    <span class="hchip ac">RANGE INTERVAL</span>
+    <span class="hchip">PL/pgSQL Triggers</span>
+    <span class="hchip">Materialized Views</span>
+    <span class="hchip">Sub-5ms Latency</span>
+   </div>
+   <div class="hero-nums">
+    <div>
+     <div class="hn2-val d" id="hs-fl">14</div>
+     <div class="hn2-lbl">Active Flags</div>
+    </div>
+    <div>
+     <div class="hn2-val a" id="hs-tx">326</div>
+     <div class="hn2-lbl">Transactions (24h)</div>
+    </div>
+    <div>
+     <div class="hn2-val w" id="hs-rs">72.4</div>
+     <div class="hn2-lbl">Mean Risk Index</div>
+    </div>
+   </div>
+  </div>
+ </div>
+
+ <!-- KPIs -->
+ <div class="sl">System Overview</div>
+ <div class="kg">
+
+  <div class="kc ac">
+   <div class="kc-top"><span class="kc-lbl">Total Transactions</span>
+    <div class="kc-ic"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+   </div>
+   <div class="kc-val" id="k-tx">326</div>
+   <div class="kc-sub" id="k-txs">last hour: 12</div>
+   <canvas class="kc-spark" id="sp-tx"></canvas>
+   <div class="kc-bar"><div class="kc-bar-fill" style="width:65%"></div></div>
+  </div>
+
+  <div class="kc dg">
+   <div class="kc-top"><span class="kc-lbl">Open Fraud Flags</span>
+    <div class="kc-ic"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+   </div>
+   <div class="kc-val" id="k-fl">14</div>
+   <div class="kc-sub">unresolved alerts</div>
+   <canvas class="kc-spark" id="sp-fl"></canvas>
+   <div class="kc-bar"><div class="kc-bar-fill" style="width:45%"></div></div>
+  </div>
+
+  <div class="kc wn">
+   <div class="kc-top"><span class="kc-lbl">Avg Risk Score</span>
+    <div class="kc-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+   </div>
+   <div class="kc-val" id="k-rs">72.4</div>
+   <div class="kc-sub">across open flags</div>
+   <canvas class="kc-spark" id="sp-rs"></canvas>
+   <div class="kc-bar"><div class="kc-bar-fill" style="width:72%"></div></div>
+  </div>
+
+  <div class="kc gd">
+   <div class="kc-top"><span class="kc-lbl">Active Accounts</span>
+    <div class="kc-ic"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+   </div>
+   <div class="kc-val" id="k-us">8</div>
+   <div class="kc-sub">distinct entities 24h</div>
+   <canvas class="kc-spark" id="sp-us"></canvas>
+   <div class="kc-bar"><div class="kc-bar-fill" style="width:40%"></div></div>
+  </div>
+
+  <div class="kc sl2">
+   <div class="kc-top"><span class="kc-lbl">Txns Past Hour</span>
+    <div class="kc-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+   </div>
+   <div class="kc-val" id="k-hr">12</div>
+   <div class="kc-sub">velocity window</div>
+   <canvas class="kc-spark" id="sp-hr"></canvas>
+   <div class="kc-bar"><div class="kc-bar-fill" style="width:30%"></div></div>
+  </div>
+
+  <div class="kc sl2">
+   <div class="kc-top"><span class="kc-lbl">Total Volume</span>
+    <div class="kc-ic"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+   </div>
+   <div class="kc-val" id="k-vo">₹4,82,000</div>
+   <div class="kc-sub">processed 24h</div>
+   <canvas class="kc-spark" id="sp-vo"></canvas>
+   <div class="kc-bar"><div class="kc-bar-fill" style="width:55%"></div></div>
+  </div>
+
+ </div>
+
+ <!-- Charts -->
+ <div class="sl" id="analytics-section">Risk Analytics</div>
+ <div class="g2">
+  <div class="card cardp">
+   <div class="card-title">Merchant Fraud Rate</div>
+   <div class="card-sub">Rolling 7-day flag rate · <code>RANGE BETWEEN INTERVAL</code> window</div>
+   <canvas id="cm" height="190"></canvas>
+  </div>
+  <div class="card cardp">
+   <div class="card-title">User Risk Ranking</div>
+   <div class="card-sub"><code>PERCENT_RANK</code> + <code>NTILE(10)</code> · top high-risk entities</div>
+   <canvas id="cu" height="190"></canvas>
+  </div>
+ </div>
+
+ <!-- Heatmap -->
+ <div class="sl">Activity Density Matrix</div>
+ <div class="card cardp">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
+   <div>
+    <div class="card-title">Transaction Risk Density — 7 Days</div>
+    <div class="card-sub" style="margin:0">24-hour temporal grid · hover to inspect incident density</div>
+   </div>
+   <div style="display:flex;align-items:center;gap:6px;font-size:.6875rem;color:var(--muted);">
+    Low
+    <div style="display:flex;gap:2px;">
+     <div style="width:10px;height:10px;border-radius:2px;background:var(--s3);border:1px solid var(--bd)"></div>
+     <div style="width:10px;height:10px;border-radius:2px;background:rgba(79,70,229,.25)"></div>
+     <div style="width:10px;height:10px;border-radius:2px;background:rgba(217,119,6,.35)"></div>
+     <div style="width:10px;height:10px;border-radius:2px;background:rgba(220,38,38,.5)"></div>
+     <div style="width:10px;height:10px;border-radius:2px;background:var(--danger)"></div>
+    </div>
+    Critical
+   </div>
+  </div>
+  <div style="display:flex;gap:8px;">
+   <div style="display:flex;flex-direction:column;justify-content:space-around;width:28px;flex-shrink:0;padding:1px 0;">
+    <span style="font-size:.5625rem;color:var(--muted);text-align:right">Mon</span>
+    <span style="font-size:.5625rem;color:var(--muted);text-align:right">Tue</span>
+    <span style="font-size:.5625rem;color:var(--muted);text-align:right">Wed</span>
+    <span style="font-size:.5625rem;color:var(--muted);text-align:right">Thu</span>
+    <span style="font-size:.5625rem;color:var(--muted);text-align:right">Fri</span>
+    <span style="font-size:.5625rem;color:var(--muted);text-align:right">Sat</span>
+    <span style="font-size:.5625rem;color:var(--muted);text-align:right">Sun</span>
+   </div>
+   <div id="hm" style="flex:1;"></div>
+  </div>
+  <div style="display:flex;justify-content:space-between;padding-left:36px;margin-top:4px;">
+   <span style="font-size:.5625rem;color:var(--muted)">12am</span>
+   <span style="font-size:.5625rem;color:var(--muted)">6am</span>
+   <span style="font-size:.5625rem;color:var(--muted)">12pm</span>
+   <span style="font-size:.5625rem;color:var(--muted)">6pm</span>
+   <span style="font-size:.5625rem;color:var(--muted)">11pm</span>
+  </div>
+ </div>
+
+ <!-- Flags + feed -->
+ <div class="sl" id="flags-section">Live Anomaly Flags & Stream</div>
+ <div class="g2">
+  <div class="card">
+   <div style="padding:16px 20px 0;">
+    <div class="tbl-bar">
+     <div class="tbl-filters">
+      <button class="tbl-btn active" onclick="setFilter('ALL', this)">All Flags</button>
+      <button class="tbl-btn" onclick="setFilter('CRITICAL', this)">Critical (≥80)</button>
+      <button class="tbl-btn" onclick="setFilter('MULE', this)">Mule Chains</button>
+      <button class="tbl-btn" onclick="setFilter('VELOCITY', this)">Velocity</button>
+     </div>
+     <div class="tbl-search">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="flag-search" placeholder="Search user, rule, merchant..." oninput="onSearchChange()"/>
+     </div>
+    </div>
+   </div>
+   <div class="tw">
+    <table id="tf">
+     <thead><tr>
+      <th>Rule Trigger</th><th>Risk</th><th>Entity</th>
+      <th>Merchant</th><th>Amount</th><th>Diagnostic</th><th>Elapsed</th>
+     </tr></thead>
+     <tbody><tr><td colspan="7" class="emp">Loading anomalies…</td></tr></tbody>
+    </table>
+   </div>
+  </div>
+
+  <div class="card cardp">
+   <div class="card-title">
+    Detection Feed
+    <span style="font-size:.6875rem;font-weight:500;color:var(--cyan);background:rgba(6,182,212,.1);padding:2px 8px;border-radius:4px;border:1px solid rgba(6,182,212,.3);">Realtime</span>
+   </div>
+   <div class="card-sub">Recent triggers firing in sub-5ms</div>
+   <div class="feed" id="feed"></div>
+  </div>
+ </div>
+
+ <!-- Chains + devices -->
+ <div class="sl" id="chains-section">Money Mule Chains &nbsp;<span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:.6875rem;color:var(--muted)">recursive CTE · cycle guard via ARRAY[]</span></div>
+ <div class="g3">
+  <div class="card span2"><div class="tw">
+   <table id="tc">
+    <thead><tr><th>Source</th><th>Destination</th><th>Flow Amount</th><th>Depth</th><th>Hop Chain</th></tr></thead>
+    <tbody><tr><td colspan="5" class="emp">Scanning graph…</td></tr></tbody>
+   </table>
+  </div></div>
+
+  <div class="card cardp">
+   <div class="card-title">Device Fingerprinting</div>
+   <div class="card-sub">Same physical device · multiple identity accounts</div>
+   <div class="tw">
+    <table id="td" style="font-size:.75rem;">
+     <thead><tr><th>Hardware ID</th><th>Accounts</th><th>Combined Vol</th></tr></thead>
+     <tbody><tr><td colspan="3" class="emp">Loading…</td></tr></tbody>
+    </table>
+   </div>
+  </div>
+ </div>
+
+</main>
+
+<!-- ══ INSPECT MODAL ════════════════════════════════ -->
+<div class="modal-overlay" id="inspect-modal" onclick="if(event.target===this)closeModal()">
+ <div class="modal-box">
+  <div class="modal-hdr">
+   <div style="font-weight:700;font-size:.9375rem;" id="m-title">Diagnostic Details</div>
+   <button onclick="closeModal()" style="background:none;border:none;color:var(--tx2);cursor:pointer;font-size:1.25rem;">&times;</button>
+  </div>
+  <div class="modal-body" id="m-body">
+   <!-- injected by JS -->
+  </div>
+  <div class="modal-ftr">
+   <button class="tbl-btn" onclick="closeModal()">Close</button>
+   <button class="tbl-btn" style="background:var(--good);border-color:var(--good);color:#fff;" onclick="resolveCurrentFlag()">Mark Investigated</button>
+  </div>
+ </div>
+</div>
+
+<!-- ══ TOAST CONTAINER ═══════════════════════════════ -->
+<div class="toast-container" id="toast-box"></div>
+
+<!-- ══ FOOTER ══════════════════════════════════════ -->
+<div class="footer">
+ <div class="footer-inner">
+  <div>
+   <div class="ft-brand">
+    <img src="logo.png" alt="FraudDetector Logo"/>
+    <span class="ft-name">FraudDetector Core</span>
+   </div>
+   <p class="ft-desc">Real-time fraud detection engine built entirely on raw PostgreSQL internals. No black boxes, zero third-party dependencies — pure mathematical SQL triggers.</p>
+  </div>
+  <div class="ft-col">
+   <div class="ft-col-title">Engine Rules</div>
+   <a href="#flags-section" onclick="setFilter('VELOCITY')">VELOCITY_10M (Fast Bursts)</a>
+   <a href="#flags-section">RAPID_REPEAT (Double Swipes)</a>
+   <a href="#flags-section" onclick="setFilter('MULE')">MULE_CHAIN (Layered Hops)</a>
+   <a href="#flags-section">HIGH_AMOUNT_ANOMALY (5x Mean)</a>
+   <a href="#chains-section">SHARED_DEVICE (Multi-Account)</a>
+  </div>
+  <div class="ft-col">
+   <div class="ft-col-title">Documentation</div>
+   <a href="https://github.com/ansh44233/FraudDetector" target="_blank">GitHub Repository</a>
+   <a href="https://github.com/ansh44233/FraudDetector#api" target="_blank">API Reference</a>
+   <a href="https://github.com/ansh44233/FraudDetector#sql-highlights" target="_blank">SQL Highlights</a>
+   <a href="https://github.com/ansh44233" target="_blank">Ansh GitHub Profile</a>
+  </div>
+ </div>
+ <div class="ft-bottom">
+  <span>© 2026 <a href="https://github.com/ansh44233">Ansh</a> · MIT License</span>
+  <span id="ts">Live Synchronized</span>
+  <div class="ft-tags">
+   <span class="ft-tag">Python 3.11</span>
+   <span class="ft-tag">PostgreSQL 15</span>
+   <span class="ft-tag">FastAPI</span>
+   <span class="ft-tag">38 Automated Tests</span>
+  </div>
+ </div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const rp=n=>'₹'+Number(n).toLocaleString('en-IN',{maximumFractionDigits:0});
+const ago=d=>{
+  if(!d)return'—';
+  const s=Math.floor((Date.now()-new Date(d))/1000);
+  if(s<60)return s+'s ago';if(s<3600)return Math.floor(s/60)+'m ago';
+  return Math.floor(s/3600)+'h ago';
+};
+
+function bclass(rule){
+  if(rule.includes('MULE')) return 'bd-ac';
+  if(rule.includes('VELOCITY')||rule.includes('HIGH_AMOUNT')) return 'bd-dg';
+  if(rule.includes('MULTI')||rule.includes('RAPID')) return 'bd-wn';
+  if(rule.includes('SHARED')) return 'bd-sl';
+  return 'bd-sl';
+}
+
+function fic(rule){
+  if(rule.includes('MULE')) return 'ac';
+  if(rule.includes('HIGH')||rule.includes('VELOCITY')) return 'dg';
+  return 'wn';
+}
+
+const svgs={
+  dg:'<svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg>',
+  wn:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+  ac:'<svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>',
+};
+
+function count(el,t,d=0){
+  if(!el) return;
+  const dur=800,t0=performance.now(),f=+(el.dataset.v||0)||0;
+  el.dataset.v=t;
+  const s=ts=>{
+    const p=Math.min((ts-t0)/dur,1),e=1-Math.pow(1-p,3),v=f+(t-f)*e;
+    el.textContent=d?v.toFixed(d):Math.round(v);p<1&&requestAnimationFrame(s);
+  };requestAnimationFrame(s);
+}
+
+function spark(id,color,pts){
+  const cv=$(id);if(!cv)return;
+  cv.width=cv.offsetWidth||180;cv.height=24;
+  const ctx=cv.getContext('2d'),W=cv.width,H=cv.height;
+  const mx=Math.max(...pts),mn=Math.min(...pts),rng=mx-mn||1,st=W/(pts.length-1);
+  ctx.clearRect(0,0,W,H);
+  const g=ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,color+'40');g.addColorStop(1,color+'00');
+  ctx.beginPath();
+  pts.forEach((v,i)=>{const x=i*st,y=H-(v-mn)/rng*(H-4)-2;i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
+  ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();
+  ctx.fillStyle=g;ctx.fill();
+  ctx.beginPath();
+  pts.forEach((v,i)=>{const x=i*st,y=H-(v-mn)/rng*(H-4)-2;i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
+  ctx.strokeStyle=color;ctx.lineWidth=1.5;ctx.lineJoin='round';ctx.stroke();
+}
+
+function sparks(){
+  spark('sp-tx','#6366f1',[.4,.5,.45,.55,.6,.58,.65,.7,.68,.72,.76,.8]);
+  spark('sp-fl','#dc2626',[.3,.4,.35,.5,.6,.55,.65,.7,.6,.7,.75,.72]);
+  spark('sp-rs','#d97706',[.6,.62,.65,.64,.68,.7,.69,.72,.7,.74,.71,.73]);
+  spark('sp-us','#16a34a',[.3,.35,.4,.42,.45,.44,.5,.52,.5,.54,.56,.58]);
+  spark('sp-hr','#06b6d4',[.2,.28,.25,.4,.5,.55,.58,.52,.56,.6,.62,.65]);
+  spark('sp-vo','#a1a1aa',[.4,.5,.52,.58,.62,.66,.64,.7,.72,.7,.74,.78]);
+}
+
+function heatmap(vals){
+  const hm=$('hm');hm.innerHTML='';
+  for(let d=0;d<7;d++)for(let h=0;h<24;h++){
+    const v=vals?vals[d*24+h]:Math.random()*Math.random();
+    const el=document.createElement('div');el.className='hc';
+    if(v<.04) el.style.background='rgba(255,255,255,.03)';
+    else if(v<.18) el.style.background=`rgba(79,70,229,${(.15+v*.8).toFixed(2)})`;
+    else if(v<.42) el.style.background=`rgba(217,119,6,${(.2+v*.7).toFixed(2)})`;
+    else el.style.background=`rgba(220,38,38,${(.35+v*.65).toFixed(2)})`;
+    el.title=`${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][d]} ${h}:00 | Risk Index: ${(v*10).toFixed(1)}`;
+    hm.appendChild(el);
+  }
+}
+
+let MC,UC;
+function chartMerch(data){
+  const names=[...new Set(data.map(r=>r.merchant))].slice(0,7);
+  const rows=names.map(n=>data.filter(r=>r.merchant===n).at(-1)||{});
+  if(MC)MC.destroy();
+  MC=new Chart($('cm'),{type:'bar',
+    data:{labels:rows.map(r=>r.merchant||''),datasets:[{
+      data:rows.map(r=>r.rolling_7d_rate||0),
+      backgroundColor:rows.map(r=>(r.rolling_7d_rate||0)>10?'rgba(220,38,38,.7)':'rgba(6,182,212,.6)'),
+      borderRadius:4,borderSkipped:false,
+      borderColor:rows.map(r=>(r.rolling_7d_rate||0)>10?'rgba(220,38,38,.9)':'rgba(6,182,212,.9)'),borderWidth:1,
+    }]},
+    options:{plugins:{legend:{display:false}},animation:{duration:600},
+      scales:{
+        x:{ticks:{color:'#71717a',font:{size:10}},grid:{display:false},border:{display:false}},
+        y:{ticks:{color:'#71717a',callback:v=>v+'%',font:{size:10}},grid:{color:'rgba(39,39,42,.8)'},border:{display:false}}
+      }}
+  });
+}
+
+function chartUsers(data){
+  const top=data.slice(0,8);if(UC)UC.destroy();
+  UC=new Chart($('cu'),{type:'bar',
+    data:{labels:top.map(r=>r.name.split(' ')[0]),datasets:[{
+      data:top.map(r=>r.flag_count),
+      backgroundColor:top.map((_,i)=>`rgba(220,38,38,${.8-.07*i})`),
+      borderRadius:4,borderSkipped:false,
+    }]},
+    options:{indexAxis:'y',plugins:{legend:{display:false}},animation:{duration:600},
+      scales:{
+        x:{ticks:{color:'#71717a',font:{size:10}},grid:{color:'rgba(39,39,42,.8)'},border:{display:false}},
+        y:{ticks:{color:'#a1a1aa',font:{size:11}},grid:{display:false},border:{display:false}}
+      }}
+  });
+}
+
+let allFlags = [];
+let currentFilter = 'ALL';
+let activeInspectedIndex = -1;
+
+function setFilter(filt, btn){
+  currentFilter = filt;
+  if(btn){
+    document.querySelectorAll('.tbl-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  applyFlagFilters();
+}
+
+function onSearchChange(){
+  applyFlagFilters();
+}
+
+function applyFlagFilters(){
+  const query = ($('flag-search').value||'').toLowerCase().trim();
+  let filtered = allFlags.filter(f=>{
+    if(currentFilter === 'CRITICAL' && f.risk_score < 80) return false;
+    if(currentFilter === 'MULE' && !f.rule_name.includes('MULE')) return false;
+    if(currentFilter === 'VELOCITY' && !f.rule_name.includes('VELOCITY')) return false;
+    if(query){
+      const matchText = `${f.rule_name} ${f.user_name} ${f.merchant} ${f.amount}`.toLowerCase();
+      if(!matchText.includes(query)) return false;
+    }
+    return true;
+  });
+  renderFlagsTable(filtered);
+}
+
+function renderFlagsTable(flags){
+  const tb=document.querySelector('#tf tbody');
+  if(!flags.length){
+    tb.innerHTML='<tr><td colspan="7" class="emp" style="color:var(--good)">No flags matching criteria</td></tr>';
+    return;
+  }
+  tb.innerHTML=flags.map((f,idx)=>`
+    <tr class="interactive-row" onclick="inspectFlag(${idx})">
+      <td><span class="badge ${bclass(f.rule_name)}">${f.rule_name}</span></td>
+      <td><div class="sb">
+        <div class="sb-t"><div class="sb-f ${f.risk_score<80?'md':''}" style="width:${f.risk_score}%"></div></div>
+        <span class="sb-n">${f.risk_score}</span>
+      </div></td>
+      <td class="u">${f.user_name}</td>
+      <td class="m">${f.merchant}</td>
+      <td class="amt">${rp(f.amount)}</td>
+      <td class="mo">${f.details?JSON.stringify(f.details).slice(0,40):'{}'}</td>
+      <td style="color:var(--muted);white-space:nowrap">${ago(f.created_at)}</td>
+    </tr>
+  `).join('');
+}
+
+function inspectFlag(idx){
+  const f = allFlags[idx];
+  if(!f) return;
+  activeInspectedIndex = idx;
+  $('m-title').textContent = `Incident: ${f.rule_name} (Risk: ${f.risk_score})`;
+  $('m-body').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+      <div style="background:var(--s2);padding:10px 14px;border-radius:6px;border:1px solid var(--bd);">
+        <div style="font-size:.6875rem;color:var(--muted);text-transform:uppercase;">Suspect Entity</div>
+        <div style="font-size:1rem;font-weight:700;color:var(--tx);margin-top:2px;">${f.user_name}</div>
+      </div>
+      <div style="background:var(--s2);padding:10px 14px;border-radius:6px;border:1px solid var(--bd);">
+        <div style="font-size:.6875rem;color:var(--muted);text-transform:uppercase;">Merchant Terminal</div>
+        <div style="font-size:1rem;font-weight:700;color:var(--tx);margin-top:2px;">${f.merchant}</div>
+      </div>
+      <div style="background:var(--s2);padding:10px 14px;border-radius:6px;border:1px solid var(--bd);">
+        <div style="font-size:.6875rem;color:var(--muted);text-transform:uppercase;">Transaction Amount</div>
+        <div style="font-size:1rem;font-weight:700;color:var(--cyan);margin-top:2px;">${rp(f.amount)}</div>
+      </div>
+      <div style="background:var(--s2);padding:10px 14px;border-radius:6px;border:1px solid var(--bd);">
+        <div style="font-size:.6875rem;color:var(--muted);text-transform:uppercase;">Time Elapsed</div>
+        <div style="font-size:1rem;font-weight:700;color:var(--tx);margin-top:2px;">${ago(f.created_at)}</div>
+      </div>
+    </div>
+    <div style="font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;">Rule Diagnostic JSON</div>
+    <pre style="background:var(--canvas);border:1px solid var(--bd);padding:12px;border-radius:6px;font-family:'SF Mono',Consolas,monospace;font-size:.75rem;color:var(--tx2);overflow-x:auto;">${JSON.stringify(f.details||{},null,2)}</pre>
+  `;
+  $('inspect-modal').classList.add('open');
+}
+
+function closeModal(){
+  $('inspect-modal').classList.remove('open');
+}
+
+function resolveCurrentFlag(){
+  if(activeInspectedIndex >= 0 && activeInspectedIndex < allFlags.length){
+    const resolved = allFlags.splice(activeInspectedIndex, 1)[0];
+    closeModal();
+    showToast(`Flag ${resolved.rule_name} resolved for ${resolved.user_name}`, 'warn');
+    applyFlagFilters();
+    renderFeed(allFlags);
+    const countVal = allFlags.length;
+    $('k-fl').textContent = countVal;
+    $('nf').textContent = countVal;
+    if($('hs-fl')) $('hs-fl').textContent = countVal;
+  }
+}
+
+function renderFeed(flags){
+  const feed=$('feed');
+  feed.innerHTML=flags.slice(0,6).map(f=>{
+    const cls=fic(f.rule_name);
+    return`<div class="fi">
+      <div class="fi-ic ${cls}">${svgs[cls]||svgs.wn}</div>
+      <div class="fi-body">
+        <div class="fi-rule">${f.rule_name}</div>
+        <div class="fi-meta">${f.user_name} · ${f.merchant} · ${ago(f.created_at)}</div>
+      </div>
+      <div class="fi-score" style="color:${f.risk_score>=80?'var(--danger)':'var(--warn)'}">${f.risk_score}</div>
+    </div>`;
+  }).join('')||'<div style="color:var(--muted);font-size:.8125rem;padding:8px 0">No recent flags</div>';
+}
+
+function renderChains(chains){
+  const tb=document.querySelector('#tc tbody');
+  tb.innerHTML=chains.length?chains.slice(0,8).map(c=>{
+    const p=(c.chain||[c.from_user_id,c.to_user_id]).map((n,i,a)=>
+      `<div class="nd">${n}</div>${i<a.length-1?'<div class="nd-arr">→</div>':''}`).join('');
+    return`<tr>
+      <td class="u">User #${c.from_user_id}</td><td class="u">User #${c.to_user_id}</td>
+      <td class="amt">${rp(c.amount)}</td>
+      <td><span class="badge ${c.depth>=3?'bd-dg':'bd-wn'}">${c.depth} hop${c.depth>1?'s':''}</span></td>
+      <td><div class="nodes">${p}</div></td>
+    </tr>`;}).join('')
+  :'<tr><td colspan="5" class="emp" style="color:var(--good)">No money mule chains detected</td></tr>';
+}
+
+function renderDevices(devices){
+  const tb=document.querySelector('#td tbody');
+  tb.innerHTML=devices.length?devices.map(d=>`<tr>
+    <td class="mo" style="max-width:130px;overflow:hidden;text-overflow:ellipsis">${d.device_id}</td>
+    <td><span class="badge bd-dg">${d.user_count} accounts</span></td>
+    <td class="amt">${rp(d.total_amount)}</td>
+  </tr>`).join(''):'<tr><td colspan="3" class="emp" style="color:var(--good)">No device sharing detected</td></tr>';
+}
+
+function showToast(msg, type=''){
+  const b = $('toast-box');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.innerHTML = `<strong>⚡ Fraud Alert</strong><div style="margin-top:2px;color:var(--tx2);">${msg}</div>`;
+  b.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),300);}, 4000);
+}
+
+function simulateIncident(){
+  const rules = [
+    {rule_name:'VELOCITY_10M',risk_score:94,user_name:'Aryan Kapoor',merchant:'Binance P2P',amount:82000,details:{txn_count_10m:9,velocity:'HIGH'}},
+    {rule_name:'MULE_CHAIN',risk_score:96,user_name:'Sameer Verma',merchant:'WazirX Escrow',amount:125000,details:{chain_depth:4,cycle_safe:true}},
+    {rule_name:'HIGH_AMOUNT_ANOMALY',risk_score:88,user_name:'Kunal Singhania',merchant:'LuxuryStore IN',amount:245000,details:{ratio:6.8,avg_prev:36000}},
+    {rule_name:'RAPID_REPEAT',risk_score:82,user_name:'Pooja Sharma',merchant:'Dream11 Pay',amount:9500,details:{gap_seconds:14}}
+  ];
+  const sim = rules[Math.floor(Math.random()*rules.length)];
+  sim.created_at = new Date();
+  allFlags.unshift(sim);
+  applyFlagFilters();
+  renderFeed(allFlags);
+  showToast(`Intercepted ${sim.rule_name} on ${sim.merchant} (${rp(sim.amount)})`, 'danger');
+  
+  const cur = +( $('k-fl').textContent||14 ) + 1;
+  $('k-fl').textContent = cur;
+  $('nf').textContent = cur;
+  if($('hs-fl')) $('hs-fl').textContent = cur;
+}
+
+setInterval(()=>$('clk').textContent=new Date().toLocaleTimeString('en-IN'),1000);
+
+async function load(){
+  try{
+    const [sum,flags,chains,devices,merch,rank]=await Promise.all([
+      fetch('/analytics/summary').then(r=>r.json()),
+      fetch('/flags?resolved=false&limit=20').then(r=>r.json()),
+      fetch('/analytics/mule-chains').then(r=>r.json()),
+      fetch('/analytics/device-sharing').then(r=>r.json()),
+      fetch('/analytics/merchant-fraud-rate').then(r=>r.json()),
+      fetch('/analytics/user-risk-ranking').then(r=>r.json()),
+    ]);
+    const s=Array.isArray(sum)?sum[0]:sum;
+    count($('k-tx'),+s.total_txns||0);count($('k-fl'),+s.open_flags||0);
+    count($('k-rs'),+s.avg_risk_score||0,1);count($('k-us'),+s.active_users_24h||0);
+    count($('k-hr'),+s.txns_last_hour||0);
+    $('k-vo').textContent=s.volume_24h?rp(s.volume_24h):'—';
+    $('k-txs').textContent='last hour: '+(s.txns_last_hour||0);
+    $('nf').textContent=s.open_flags||0;
+    if($('hs-fl'))count($('hs-fl'),+s.open_flags||0);
+    if($('hs-tx'))count($('hs-tx'),+s.total_txns||0);
+    if($('hs-rs'))count($('hs-rs'),+s.avg_risk_score||0,1);
+    sparks();chartMerch(merch);chartUsers(rank);
+    allFlags = flags;
+    applyFlagFilters();
+    renderFeed(flags);renderChains(chains);renderDevices(devices);
+    heatmap(null);
+    $('ts').textContent='Sync · '+new Date().toLocaleTimeString('en-IN');
+  }catch{demo();}
+}
+
+function demo(){
+  count($('k-tx'),326);count($('k-fl'),14);count($('k-rs'),72.4,1);
+  count($('k-us'),8);count($('k-hr'),12);
+  $('k-vo').textContent='₹4,82,000';$('k-txs').textContent='last hour: 12';
+  $('nf').textContent='14';
+  if($('hs-fl'))count($('hs-fl'),14);if($('hs-tx'))count($('hs-tx'),326);if($('hs-rs'))count($('hs-rs'),72.4,1);
+  sparks();
+  chartMerch([{merchant:'WazirX',rolling_7d_rate:28.5},{merchant:'CoinDCX',rolling_7d_rate:21.0},
+    {merchant:'MPL Games',rolling_7d_rate:14.3},{merchant:'Dream11',rolling_7d_rate:8.6},
+    {merchant:'PhonePe',rolling_7d_rate:3.2},{merchant:'Swiggy',rolling_7d_rate:1.1}]);
+  chartUsers([{name:'Rahul Sharma',flag_count:5},{name:'Anjali Mehta',flag_count:4},
+    {name:'Arjun Nair',flag_count:4},{name:'Rohan Gupta',flag_count:3},
+    {name:'Priya Patel',flag_count:3},{name:'Vikram Singh',flag_count:2},
+    {name:'Sonal Kapoor',flag_count:2},{name:'Dev Rao',flag_count:1}]);
+  allFlags=[
+    {rule_name:'MULE_CHAIN',risk_score:90,user_name:'Rahul Sharma',merchant:'UnknownShop',amount:15000,details:{chain_depth:3,layer:'layer_2'},created_at:new Date(Date.now()-120e3)},
+    {rule_name:'VELOCITY_10M',risk_score:85,user_name:'Anjali Mehta',merchant:'WazirX',amount:950,details:{txn_count_10m:7,threshold:5},created_at:new Date(Date.now()-3e5)},
+    {rule_name:'HIGH_AMOUNT_ANOMALY',risk_score:75,user_name:'Arjun Nair',merchant:'CoinDCX',amount:95000,details:{ratio:4.75,historical_avg:20000},created_at:new Date(Date.now()-36e5)},
+    {rule_name:'MULTI_DEVICE_1H',risk_score:80,user_name:'Rohan Gupta',merchant:'MPL Games',amount:2200,details:{distinct_devices_1h:4},created_at:new Date(Date.now()-108e4)},
+    {rule_name:'RAPID_REPEAT',risk_score:70,user_name:'Priya Patel',merchant:'Dream11',amount:1100,details:{gap_seconds:28},created_at:new Date(Date.now()-204e4)},
+    {rule_name:'SHARED_DEVICE',risk_score:60,user_name:'Vikram Singh',merchant:'UnknownShop',amount:8500,details:{other_users:2,device:'dev_889'},created_at:new Date(Date.now()-108e5)},
+  ];
+  applyFlagFilters();renderFeed(allFlags);
+  renderChains([{from_user_id:5,to_user_id:11,amount:15000,depth:3,chain:[5,11,12]},
+    {from_user_id:11,to_user_id:12,amount:15000,depth:2,chain:[11,12]},
+    {from_user_id:3,to_user_id:7,amount:8200,depth:2,chain:[3,7]}]);
+  renderDevices([{device_id:'device_mule_11',user_count:3,total_amount:45000},
+    {device_id:'device_x_99',user_count:2,total_amount:18000}]);
+  const hv=[];
+  for(let d=0;d<7;d++)for(let h=0;h<24;h++){
+    let v=.02;
+    if(h>=9&&h<=12)v=.25+(d<5?.35:0)+Math.random()*.2;
+    else if(h>=19&&h<=23)v=.45+Math.random()*.45;
+    else if(h>=13&&h<=18)v=.15+Math.random()*.3;
+    else if(h>=0&&h<=5)v=Math.random()*.04;
+    else v=Math.random()*.12;
+    if(d===4&&h>=19)v=Math.min(1,v+.3);
+    hv.push(v);
+  }
+  heatmap(hv);
+  $('ts').textContent='Interactive Demo · '+new Date().toLocaleTimeString('en-IN');
+}
+
+// Initial paint
+demo();
+setTimeout(load, 150);
+setInterval(load, 15000);
+</script>
+</body>
+</html>
