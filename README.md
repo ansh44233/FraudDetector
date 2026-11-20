@@ -13,6 +13,10 @@
 [![Tests](https://img.shields.io/badge/tests-38%20passing-brightgreen?style=flat)](tests/)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat)](LICENSE)
 
+<div align="center">
+
+![dashboard](assets/dashboard-preview.png)
+
 </div>
 
 Detects fraud patterns in real time using nothing but advanced PostgreSQL. No ML models, no third-party services — everything runs through a rules engine backed by raw SQL. Flags appear within milliseconds of a transaction insert via PL/pgSQL triggers; the rest runs on demand or on schedule.
