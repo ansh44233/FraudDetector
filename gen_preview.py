@@ -48,19 +48,22 @@ NAV = 58
 d.rectangle([0,0,W,NAV], fill=( 9, 9,11))
 d.rectangle([0,NAV-1,W,NAV], fill=BD)
 
-# logo icon (indigo shield)
+# logo icon (actual emblem)
 LX, LY = 20, NAV//2
-def shield(ox,oy,sz=15):
-    pts=[
-        (ox, oy-sz),(ox+sz*.8,oy-sz*.5),(ox+sz*.8,oy+sz*.2),
-        (ox,oy+sz),(ox-sz*.8,oy+sz*.2),(ox-sz*.8,oy-sz*.5),
-    ]
-    d.polygon(pts, fill=AC)
-    # checkmark
-    d.line([(ox-sz*.3,oy+sz*.1),(ox-sz*.05,oy+sz*.4),(ox+sz*.4,oy-sz*.3)],
-           fill=TX, width=2)
-
-shield(LX+14, LY)
+logo_path = "dashboard/logo.png"
+if os.path.exists(logo_path):
+    from PIL import Image as PILImage
+    lg = PILImage.open(logo_path).convert("RGBA").resize((32, 32), PILImage.LANCZOS)
+    img.paste(lg, (LX, LY-16), lg)
+else:
+    def shield(ox,oy,sz=15):
+        pts=[
+            (ox, oy-sz),(ox+sz*.8,oy-sz*.5),(ox+sz*.8,oy+sz*.2),
+            (ox,oy+sz),(ox-sz*.8,oy+sz*.2),(ox-sz*.8,oy-sz*.5),
+        ]
+        d.polygon(pts, fill=AC)
+        d.line([(ox-sz*.3,oy+sz*.1),(ox-sz*.05,oy+sz*.4),(ox+sz*.4,oy-sz*.3)], fill=TX, width=2)
+    shield(LX+14, LY)
 
 d.text((LX+32, LY-11), "FraudDetector", font=fnt(15,True), fill=TX)
 d.text((LX+33, LY+3),  "Risk Intelligence Platform", font=fnt(8), fill=TX3)
@@ -289,7 +292,11 @@ d.rectangle([0,footY,W,H], fill=S1)
 d.rectangle([0,footY,W,footY+1], fill=BD)
 
 # footer logo
-shield(32, footY+22, sz=12)
+if os.path.exists(logo_path):
+    lg_ft = PILImage.open(logo_path).convert("RGBA").resize((24, 24), PILImage.LANCZOS)
+    img.paste(lg_ft, (20, footY+10), lg_ft)
+else:
+    shield(32, footY+22, sz=12)
 d.text((50,footY+13), "FraudDetector", font=fnt(12,True), fill=TX)
 d.text((50,footY+28), "Real-time fraud detection engine · raw SQL · no ML",
        font=fnt(8), fill=TX3)
