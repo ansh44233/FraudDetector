@@ -1,137 +1,67 @@
 <div align="center">
 
-# 🛡️ FraudDetector
+# FraudDetector
 
-**Real-time fraud detection engine — Python · PostgreSQL · FastAPI**
-
-</div>
-
-<div align="center">
+**Real-time transaction fraud detection — PostgreSQL · Python · FastAPI**
 
 [![Live Demo](https://img.shields.io/badge/demo-live-brightgreen?style=flat&logo=vercel)](https://frauddetector-dashboard.vercel.app)
 [![CI](https://github.com/ansh44233/FraudDetector/actions/workflows/ci.yml/badge.svg)](https://github.com/ansh44233/FraudDetector/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat&logo=python&logoColor=white)](https://python.org)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-4169E1?style=flat&logo=postgresql&logoColor=white)](https://postgresql.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![Tests](https://img.shields.io/badge/tests-30%20passing-brightgreen?style=flat)](tests/)
+[![Tests](https://img.shields.io/badge/tests-38%20passing-brightgreen?style=flat)](tests/)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat)](LICENSE)
 
-</div>
-
----
-
-<div align="center">
-
-![FraudDetector Dashboard](assets/dashboard-preview.png)
+![dashboard](assets/dashboard-preview.png)
 
 </div>
 
----
-
-Fraud detection backend built entirely on advanced PostgreSQL — no ML black boxes, no external services. Detects velocity bursts, money mule chains, device sharing, high-risk merchant patterns, and high-amount anomalies in real time. Everything runs through a rules engine backed by raw SQL: recursive CTEs, `LATERAL` joins, `LAG`/`LEAD` window functions, `RANGE BETWEEN` rolling windows, `PERCENT_RANK`, `NTILE`, and materialized views.
+Detects fraud patterns in real time using nothing but advanced PostgreSQL. No ML models, no third-party services — everything runs through a rules engine backed by raw SQL. Flags appear within milliseconds of a transaction insert via PL/pgSQL triggers; the rest runs on demand or on schedule.
 
 **[Live demo →](https://frauddetector-dashboard.vercel.app)**
 
 ```
-transaction insert → DB triggers → rules engine → fraud_flags → live dashboard
+transaction INSERT → PL/pgSQL triggers → rules engine → fraud_flags → dashboard
 ```
 
 ---
 
-## Advanced SQL used
+## What it detects
+
+| Pattern | Rule | Score |
+|---|---|---|
+| >5 transactions in 10 minutes | `VELOCITY_10M` | 85 |
+| Same user+merchant repeat < 60 s | `RAPID_REPEAT` | 70 |
+| Amount > 5× user's own average | `HIGH_AMOUNT_ANOMALY` | 75 |
+| 3+ devices in 1 hour | `MULTI_DEVICE_1H` | 80 |
+| Money mule chain ≥ 2 hops | `MULE_CHAIN` | 90 |
+| High-risk merchant + large amount | `HIGH_RISK_MERCHANT` | 65 |
+| One device used by multiple users | `SHARED_DEVICE` | 60 |
+
+---
+
+## Advanced SQL
 
 | Technique | Where |
 |---|---|
-| Recursive CTE | Money mule chain tracing (up to 6 hops) |
-| `LATERAL` join | Per-user velocity window, rapid-repeat detection |
-| `LAG` / `LEAD` | Time gap between consecutive transactions |
-| `RANGE BETWEEN` | Rolling 7-day merchant fraud rate |
-| `PERCENT_RANK` + `NTILE` | User risk percentile ranking |
+| Recursive CTE | Mule chain tracing — up to 6 hops, cycle guard via `ARRAY` |
+| `LATERAL` join | Per-user velocity window; rapid-repeat detection |
+| `RANGE BETWEEN INTERVAL` | Rolling 7-day merchant fraud rate |
+| `PERCENT_RANK` + `NTILE(10)` | User risk percentile ranking |
 | `DENSE_RANK` | Global fraud leaderboard |
-| Materialized view | Pre-computed user risk stats (refresh on demand) |
-| PL/pgSQL triggers | Auto-flag high-amount anomalies + multi-device switches |
-| `JSONB` | Structured flag details (ratio, device count, chain depth) |
-| `LATERAL` + `ARRAY_AGG` | Device sharing detection |
-
----
-
-## Fraud patterns detected
-
-| Pattern | Rule | Risk score |
-|---|---|---|
-| >5 transactions in 10 minutes | `VELOCITY_10M` | 85 |
-| Same user+merchant repeat < 60s | `RAPID_REPEAT` | 70 |
-| Amount > 5× user average | `HIGH_AMOUNT_ANOMALY` | 75 |
-| Multi-device login within 1 hour | `MULTI_DEVICE_1H` | 80 |
-| Money mule chain (depth ≥ 2) | `MULE_CHAIN` | 90 |
-| High-risk merchant + large amount | `HIGH_RISK_MERCHANT` | 65 |
-| Shared device across users | `SHARED_DEVICE` | 60 |
-
----
-
-## Quickstart
-
-```bash
-git clone https://github.com/ansh44233/FraudDetector
-cd FraudDetector
-
-# Docker (recommended)
-docker compose up -d db api
-docker compose run --rm seed
-
-# open http://localhost:8000
-```
-
-### Manual setup
-
-```bash
-python -m venv venv && venv\Scripts\activate
-pip install -r requirements.txt
-
-psql -U postgres -c "CREATE DATABASE frauddetector;"
-psql -U postgres -d frauddetector -f db/schema.sql
-
-copy .env.example .env   # add your password
-
-python pipeline/seed.py
-uvicorn api.main:app --reload
-```
-
----
-
-## API
-
-```
-POST /transactions                       submit a transaction (rules run async)
-
-GET  /flags                              open fraud flags
-GET  /flags?resolved=true               resolved flags
-PATCH /flags/{id}                        resolve / unresolve a flag
-
-GET  /analytics/velocity                 users with >5 txns in 10 min
-GET  /analytics/merchant-fraud-rate      rolling 7-day rate per merchant
-GET  /analytics/mule-chains              recursive CTE chain results
-GET  /analytics/device-sharing           shared device detection
-GET  /analytics/user-risk-ranking        PERCENT_RANK + NTILE ranking
-GET  /analytics/summary                  dashboard KPIs
-
-POST /engine/run                         manually trigger rules engine
-GET  /users/risk-stats                   materialized view — user risk stats
-```
-
----
-
-## SQL Highlights
+| `LAG` / `LEAD` | Time gap between consecutive transactions |
+| Materialized view | Pre-computed per-user risk stats, refresh on demand |
+| PL/pgSQL triggers | Auto-flag on insert — high-amount anomaly + multi-device |
+| `JSONB` | Structured flag metadata — ratio, depth, device count |
 
 <details>
-<summary><strong>Recursive CTE — money mule chain tracing</strong></summary>
+<summary><strong>Recursive CTE — money mule chain (up to 6 hops)</strong></summary>
 
 ```sql
 WITH RECURSIVE chain AS (
-    SELECT from_user_id, to_user_id, txn_id,
-           ARRAY[from_user_id] AS visited, 1 AS depth
-    FROM transaction_graph
-    JOIN fraud_flags ff ON ff.txn_id = transaction_graph.txn_id
+    SELECT tg.from_user_id, tg.to_user_id, tg.txn_id,
+           ARRAY[tg.from_user_id] AS visited, 1 AS depth
+    FROM transaction_graph tg
+    JOIN fraud_flags ff ON ff.txn_id = tg.txn_id
     WHERE ff.resolved = FALSE
 
     UNION ALL
@@ -151,7 +81,7 @@ SELECT * FROM chain ORDER BY depth DESC;
 <summary><strong>LATERAL join — per-user velocity window</strong></summary>
 
 ```sql
-SELECT u.id, u.name, recent.txn_count
+SELECT u.id, u.name, recent.txn_count, recent.total_amount
 FROM users u
 JOIN LATERAL (
     SELECT COUNT(*) AS txn_count, SUM(amount) AS total_amount
@@ -175,7 +105,7 @@ SUM(COUNT(ff.id)) OVER (
 </details>
 
 <details>
-<summary><strong>PL/pgSQL trigger — auto-flag on high-amount anomaly</strong></summary>
+<summary><strong>PL/pgSQL trigger — high-amount anomaly on INSERT</strong></summary>
 
 ```sql
 CREATE OR REPLACE FUNCTION auto_flag_high_amount()
@@ -188,8 +118,8 @@ BEGIN
     IF avg_amt IS NOT NULL AND NEW.amount > (avg_amt * 5) THEN
         INSERT INTO fraud_flags (txn_id, rule_name, risk_score, details)
         VALUES (NEW.id, 'HIGH_AMOUNT_ANOMALY', 75.0,
-            jsonb_build_object('amount', NEW.amount, 'ratio',
-                               ROUND(NEW.amount / avg_amt, 2)));
+            jsonb_build_object('amount', NEW.amount,
+                               'ratio', ROUND(NEW.amount / avg_amt, 2)));
     END IF;
     RETURN NEW;
 END;
@@ -199,64 +129,146 @@ $$;
 
 ---
 
+## Quickstart
+
+```bash
+git clone https://github.com/ansh44233/FraudDetector
+cd FraudDetector
+
+# Docker — recommended
+docker compose up -d db api
+docker compose run --rm seed
+# open http://localhost:8000
+```
+
+<details>
+<summary>Manual setup</summary>
+
+```bash
+python -m venv venv && venv\Scripts\activate
+pip install -r requirements.txt
+
+psql -U postgres -c "CREATE DATABASE frauddetector;"
+psql -U postgres -d frauddetector -f db/schema.sql
+
+copy .env.example .env     # fill in your DB password
+
+python pipeline/seed.py
+uvicorn api.main:app --reload
+```
+</details>
+
+---
+
+## API
+
+```
+POST /transactions                   submit transaction (rules run async)
+
+GET  /flags                          open fraud flags
+GET  /flags?resolved=true            resolved flags
+PATCH /flags/{id}                    resolve / unresolve
+
+GET  /analytics/velocity             users with >5 txns in 10 min
+GET  /analytics/merchant-fraud-rate  rolling 7-day rate per merchant
+GET  /analytics/mule-chains          recursive CTE chain results
+GET  /analytics/device-sharing       shared device detection
+GET  /analytics/user-risk-ranking    PERCENT_RANK + NTILE ranking
+GET  /analytics/summary              dashboard KPIs
+
+POST /engine/run                     manually trigger rules engine
+GET  /users/risk-stats               materialized view — user risk stats
+```
+
+<details>
+<summary>Example — submit a transaction and see flags</summary>
+
+```bash
+# create a transaction
+curl -X POST http://localhost:8000/transactions \
+  -H "Content-Type: application/json" \
+  -d '{"user_id":1,"merchant_id":3,"amount":95000,"channel":"UPI","device_id":"device_x"}'
+
+# {"txn_id":61,"txn_ref":"...","message":"Transaction submitted. Rules engine running."}
+
+# check what got flagged
+curl http://localhost:8000/flags?resolved=false
+
+# [{"rule_name":"HIGH_AMOUNT_ANOMALY","risk_score":75.0,"details":{"amount":95000,"ratio":475.0},...}]
+
+# mule chain detection
+curl http://localhost:8000/analytics/mule-chains
+
+# [{"from_user_id":5,"to_user_id":11,"depth":3,"chain":[5,11,12],...}]
+```
+</details>
+
+---
+
 ## Tests
 
 ```bash
-# unit tests (no DB needed)
-pytest tests/ -m "not integration" -v
-
-# all tests (needs Postgres)
-TEST_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/frauddetector_test \
-pytest tests/ -v
+pytest tests/ -m "not integration"          # unit — no DB needed
+pytest tests/ -m integration               # integration — needs Postgres
 ```
 
-| File | Tests | Type | Coverage |
-|---|---|---|---|
-| `test_rules.py` | 18 | unit | All 5 rules + `_flag` helper + `run_all_rules` |
-| `test_api.py` | 20 | unit | Flags, transactions, analytics, engine endpoints |
+| File | Tests | Type |
+|---|---|---|
+| `tests/test_rules.py` | 18 | unit — all 5 rules + `_flag` + `run_all_rules` |
+| `tests/test_api.py` | 20 | unit — all endpoints mocked |
 
-Both test files mock the DB — no live Postgres needed for `pytest tests/ -m "not integration"`.
+---
+
+## Stack
+
+| Layer | Tech |
+|---|---|
+| Database | PostgreSQL 15 — raw SQL, no ORM |
+| API | FastAPI + Pydantic v2 |
+| Rules engine | Python + psycopg2 |
+| Dashboard | Vanilla JS + Chart.js |
+| Tests | pytest + httpx |
+| CI | GitHub Actions — Python 3.11 + 3.12 |
+| Deploy | Docker + docker-compose · dashboard on Vercel |
 
 ---
 
 ## Roadmap
 
-- [x] Velocity burst detection (`VELOCITY_10M`)
-- [x] Rapid-repeat same merchant (`RAPID_REPEAT`)
-- [x] High-amount anomaly via PL/pgSQL trigger
-- [x] Multi-device switch trigger (`MULTI_DEVICE_1H`)
-- [x] Money mule chain tracing — recursive CTE, 6 hops
+- [x] Velocity burst — `VELOCITY_10M`
+- [x] Rapid repeat — `RAPID_REPEAT`
+- [x] High-amount anomaly — PL/pgSQL trigger
+- [x] Multi-device trigger — `MULTI_DEVICE_1H`
+- [x] Money mule chains — recursive CTE, 6 hops
 - [x] Shared device detection
-- [x] Materialized view — per-user rolling risk stats
+- [x] Materialized view — per-user risk stats
 - [x] Docker + docker-compose
-- [x] GitHub Actions CI (Python 3.11 + 3.12)
-- [ ] WebSocket feed — push new flags to dashboard in real time
-- [ ] ML layer — anomaly score using Isolation Forest on top of rule scores
-- [ ] Graph visualisation — D3.js mule chain network diagram
+- [x] GitHub Actions CI
+- [ ] WebSocket — push new flags to dashboard live
+- [ ] ML layer — Isolation Forest anomaly score on top of rule scores
+- [ ] D3.js — interactive mule chain network graph
 - [ ] Auth — API key middleware, per-key rate limiting
-- [ ] Scheduled materialized view refresh via pg_cron
-- [ ] Slack / webhook alert on flag risk_score > 80
+- [ ] pg_cron — scheduled materialized view refresh
 
 ---
 
 ## Contributing
 
-Fork the repo, make a branch, open a PR against `initial-release`.
+Fork → branch → PR against `initial-release`.
 
 ```bash
 git clone https://github.com/ansh44233/FraudDetector
 cd FraudDetector
 python -m venv venv && venv\Scripts\activate
 pip install -r requirements.txt
-pytest tests/ -m "not integration"   # all green before you push
+pytest tests/ -m "not integration"   # must be green before you push
 ```
 
 Good first issues:
-
-- **Add `IP_REPUTATION` rule** — flag transactions from IPs that appear in >3 user accounts
-- **Add `/flags/{id}` GET endpoint** — return a single flag with full transaction detail
-- **Write integration tests** — `tests/test_integration_db.py` hitting a real Postgres test DB
-- **Add `JSONB` index** — `CREATE INDEX ON fraud_flags USING GIN (details)` and benchmark
+- **`IP_REPUTATION` rule** — flag IPs appearing across >3 user accounts
+- **`GET /flags/{id}`** — single flag with full transaction detail
+- **Integration tests** — `test_integration_db.py` against a real Postgres test DB
+- **GIN index on `details`** — `CREATE INDEX ON fraud_flags USING GIN (details)` and benchmark
 
 ---
 
@@ -269,7 +281,5 @@ Good first issues:
 </div>
 
 ---
-
-## License
 
 MIT © [Ansh](https://github.com/ansh44233)
