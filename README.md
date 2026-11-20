@@ -1,5 +1,7 @@
 <div align="center">
 
+![dashboard](assets/dashboard-preview.png)
+
 # FraudDetector
 
 **Real-time transaction fraud detection — PostgreSQL · Python · FastAPI**
@@ -10,8 +12,6 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-4169E1?style=flat&logo=postgresql&logoColor=white)](https://postgresql.org)
 [![Tests](https://img.shields.io/badge/tests-38%20passing-brightgreen?style=flat)](tests/)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat)](LICENSE)
-
-![dashboard](assets/dashboard-preview.png)
 
 </div>
 
