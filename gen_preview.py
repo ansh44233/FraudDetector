@@ -1,29 +1,28 @@
 """
-Generate assets/dashboard-preview.png  1280×720
-Matches dashboard v3: violet/rose palette, custom logo, SVG icons, Inter font.
+Generate assets/dashboard-preview.png  1280×800
+Matches dashboard v4: Zinc/Indigo palette, proper header, footer, monospace badges.
 """
 from PIL import Image, ImageDraw, ImageFont
 import os, math
 
-W, H = 1280, 720
+W, H = 1280, 800
 
-# ── palette ───────────────────────────────────────────────────
-BG   = (5,   7,  15)
-S0   = (8,  12,  24)
-S1   = (12,  18,  34)
-S2   = (17,  25,  48)
-S3   = (25,  37,  58)
-BD   = (255, 255, 255,  13)   # rgba border
-TX   = (226, 232, 244)
-TX2  = (124, 143, 168)
-TX3  = ( 61,  80, 104)
-
-VI   = (124, 106, 245)   # violet
-RO   = (244,  63, 114)   # rose
-GO   = (249, 115,  22)   # orange
-EM   = ( 52, 211, 153)   # emerald
-SKY  = ( 56, 189, 248)   # sky
-SL   = (148, 163, 184)   # slate
+# ── palette (dashboard v4) ────────────────────────────────────
+BG   = ( 9,  9, 11)   # zinc-950
+S1   = (24, 24, 27)   # zinc-900
+S2   = (28, 28, 31)   # zinc-900 alt
+S3   = (35, 35, 39)   # zinc-800
+BD   = (39, 39, 42)   # zinc-800 border
+BD2  = (63, 63, 70)   # zinc-700
+TX   = (250,250,250)  # zinc-50
+TX2  = (161,161,170)  # zinc-400
+TX3  = ( 82, 82, 91)  # zinc-600
+AC   = ( 79, 70,229)  # indigo-600
+AC2  = ( 99,102,241)  # indigo-500
+AC3  = (129,140,248)  # indigo-400
+DG   = (220, 38, 38)  # red-600
+WN   = (217,119,  6)  # amber-600
+GD   = ( 22,163, 74)  # green-600
 
 def fnt(sz=11, bold=False):
     for path in [
@@ -36,270 +35,290 @@ def fnt(sz=11, bold=False):
     return ImageFont.load_default()
 
 img = Image.new("RGB", (W, H), BG)
-d   = ImageDraw.Draw(img, "RGBA")
-
-# ── ambient glow blobs ────────────────────────────────────────
-def blob(cx, cy, r, color, alpha_max=50):
-    for i in range(r, 0, -4):
-        a = int(alpha_max * (1 - i/r)**1.4)
-        d.ellipse([cx-i, cy-i, cx+i, cy+i], fill=(*color, a))
-
-blob(-120, -80,  480, VI, 38)
-blob(W+100, 300, 380, RO, 28)
-blob(W//2,  H+60, 320, SKY, 20)
+d   = ImageDraw.Draw(img)
 
 # ── subtle grid ───────────────────────────────────────────────
 for x in range(0, W, 44):
-    d.line([(x,0),(x,H)], fill=(255,255,255, 4), width=1)
+    d.line([(x,0),(x,H)], fill=(255,255,255,3), width=1)
 for y in range(0, H, 44):
-    d.line([(0,y),(W,y)], fill=(255,255,255, 4), width=1)
+    d.line([(0,y),(W,y)], fill=(255,255,255,3), width=1)
 
-# ══════════════════════════════════════════════════════════════
-# NAV
-# ══════════════════════════════════════════════════════════════
-NAV_H = 54
-d.rectangle([0, 0, W, NAV_H], fill=(5, 7, 15, 210))
-d.rectangle([0, NAV_H-1, W, NAV_H], fill=(255,255,255, 10))
+# ══ HEADER ════════════════════════════════════════════════════
+NAV = 58
+d.rectangle([0,0,W,NAV], fill=( 9, 9,11))
+d.rectangle([0,NAV-1,W,NAV], fill=BD)
 
-# shield logo
-def shield(ox, oy, sz=28):
-    # body
-    pts = []
-    for a in range(-90, 270, 5):
-        t = a * math.pi/180
-        pts.append((ox + sz*0.52*math.cos(t), oy + sz*0.6*math.sin(t)))
-    # simplified shield via polygon
-    sp = [
-        (ox, oy-sz*.52),
-        (ox+sz*.44, oy-sz*.28),
-        (ox+sz*.44, oy+sz*.12),
-        (ox, oy+sz*.52),
-        (ox-sz*.44, oy+sz*.12),
-        (ox-sz*.44, oy-sz*.28),
+# logo icon (indigo shield)
+LX, LY = 20, NAV//2
+def shield(ox,oy,sz=15):
+    pts=[
+        (ox, oy-sz),(ox+sz*.8,oy-sz*.5),(ox+sz*.8,oy+sz*.2),
+        (ox,oy+sz),(ox-sz*.8,oy+sz*.2),(ox-sz*.8,oy-sz*.5),
     ]
-    # gradient shield: draw layered
-    for i, col in enumerate([(*VI,180), (*RO,120), (*VI,60)]):
-        scale = 1 - i*0.08
-        pts2 = [(ox+(x-ox)*scale, oy+(y-oy)*scale) for x,y in sp]
-        d.polygon(pts2, fill=col)
+    d.polygon(pts, fill=AC)
     # checkmark
-    d.line([(ox-sz*.16, oy+sz*.04),(ox-sz*.02, oy+sz*.18),(ox+sz*.20, oy-sz*.12)],
-           fill=(255,255,255,230), width=2)
+    d.line([(ox-sz*.3,oy+sz*.1),(ox-sz*.05,oy+sz*.4),(ox+sz*.4,oy-sz*.3)],
+           fill=TX, width=2)
 
-shield(26, NAV_H//2)
+shield(LX+14, LY)
 
-# logo text
-d.text((46, 10), "FraudDetector", font=fnt(16, True), fill=TX)
-d.text((47, 29), "RISK INTELLIGENCE", font=fnt(8), fill=TX3)
+d.text((LX+32, LY-11), "FraudDetector", font=fnt(15,True), fill=TX)
+d.text((LX+33, LY+3),  "Risk Intelligence Platform", font=fnt(8), fill=TX3)
 
-# separator
-d.rectangle([195, 14, 196, NAV_H-14], fill=(255,255,255, 18))
+# nav links
+nav_items = ["Dashboard","Flags","Analytics","Chains"]
+nx = 220
+for i,item in enumerate(nav_items):
+    col = TX if i==0 else TX3
+    bg  = S3 if i==0 else None
+    if bg:
+        d.rounded_rectangle([nx-6,LY-10,nx+len(item)*7+2,LY+12], radius=5, fill=bg)
+    d.text((nx, LY-8), item, font=fnt(11, i==0), fill=col)
+    nx += len(item)*7 + 20
 
-# status chip
-cx, cy2, cw, ch2 = 204, 14, 112, 26
-d.rounded_rectangle([cx, cy2, cx+cw, cy2+ch2], radius=13,
-                     fill=(52,211,153,22), outline=(52,211,153,45))
-d.ellipse([cx+10, cy2+9, cx+16, cy2+15], fill=EM)
-d.text((cx+20, cy2+6), "System Live", font=fnt(10), fill=EM)
+# header right — status + flags + clock
+sx = W-320
+d.rounded_rectangle([sx,LY-13,sx+180,LY+13], radius=6, fill=S1, outline=BD)
+d.ellipse([sx+10,LY-4,sx+17,LY+3], fill=GD)
+d.text((sx+22,LY-8), "System operational", font=fnt(10), fill=TX2)
+d.line([sx+150,LY-8,sx+151,LY+8], fill=BD, width=1)
+d.text((sx+156,LY-8), "14", font=fnt(11,True), fill=DG)
+d.text((sx+170,LY-8), " flags", font=fnt(10), fill=TX3)
 
-# nav right — open flags
-d.text((W-220, 8), "14", font=fnt(20, True), fill=RO)
-d.text((W-220, 30), "OPEN FLAGS", font=fnt(8), fill=TX3)
-# clock
-d.rounded_rectangle([W-130, 14, W-20, 40], radius=6, fill=S1, outline=(255,255,255,18))
-d.text((W-124, 20), "08:04:32 IST", font=fnt(10), fill=TX3)
+d.rounded_rectangle([W-120,LY-13,W-16,LY+13], radius=6, fill=S1, outline=BD)
+d.text((W-114,LY-8), "08:04:32 IST", font=fnt(10), fill=TX3)
 
-# ══════════════════════════════════════════════════════════════
-# KPI CARDS  (6 across)
-# ══════════════════════════════════════════════════════════════
-kpis = [
-    ("TOTAL TXNS",      "326",        VI,  "last hour: 12"),
-    ("OPEN FLAGS",      "14",         RO,  "unresolved alerts"),
-    ("AVG RISK SCORE",  "72.4",       GO,  "across open flags"),
-    ("ACTIVE USERS",    "8",          EM,  "24h distinct"),
-    ("TXNS LAST HOUR",  "12",         SKY, "past 60 min"),
-    ("VOLUME 24H",      "₹4,82,000",  SL,  "total amount"),
-]
-n_k = 6
-pad = 20
-gap = 10
-kw  = (W - pad*2 - gap*(n_k-1)) // n_k
-ky  = NAV_H + 14
-kh  = 88
+# ══ HERO ══════════════════════════════════════════════════════
+HY = NAV+10
+HH = 165
+d.rounded_rectangle([16,HY,W-16,HY+HH], radius=10, fill=S1, outline=BD)
 
-for i, (label, val, color, sub) in enumerate(kpis):
-    x = pad + i*(kw+gap)
-    # card bg
-    d.rounded_rectangle([x, ky, x+kw, ky+kh], radius=12,
-                         fill=(*S1, 180), outline=(255,255,255, 18))
-    # top-right glow
-    for r_ in range(50, 0, -5):
-        a = int(28 * (1 - r_/50)**1.5)
-        d.ellipse([x+kw-r_//2, ky-r_//2, x+kw+r_//2, ky+r_//2],
-                  fill=(*color, a))
-    # highlight shimmer top edge
-    d.rectangle([x+1, ky+1, x+kw-1, ky+2], fill=(255,255,255, 12))
-    # label
-    d.text((x+12, ky+10), label, font=fnt(8, True), fill=TX3)
-    # value
-    d.text((x+12, ky+24), val, font=fnt(21, True), fill=color)
-    # sub
-    d.text((x+12, ky+kh-18), sub, font=fnt(9), fill=TX3)
-    # bottom fill bar
-    bw2 = int(kw * [.65, .45, .72, .40, .30, .55][i])
-    d.rounded_rectangle([x+10, ky+kh-6, x+10+bw2, ky+kh-4],
-                         radius=1, fill=(*color, 90))
-
-# ══════════════════════════════════════════════════════════════
-# SECTION HEADER
-# ══════════════════════════════════════════════════════════════
-sy = ky + kh + 14
-d.text((pad, sy), "ANALYTICS", font=fnt(9, True), fill=TX3)
-d.rectangle([pad+80, sy+6, W-pad, sy+7], fill=(255,255,255, 14))
-# badge
-bx = W-pad-70
-d.rounded_rectangle([bx-2, sy-1, bx+58, sy+14], radius=7,
-                     fill=(*VI, 25), outline=(*VI, 50))
-d.text((bx+2, sy+1), "Live data", font=fnt(8), fill=VI)
-
-# ══════════════════════════════════════════════════════════════
-# MERCHANT FRAUD RATE CHART
-# ══════════════════════════════════════════════════════════════
-cy3 = sy + 16
-cw2, ch3 = 580, 192
-d.rounded_rectangle([pad, cy3, pad+cw2, cy3+ch3], radius=12,
-                     fill=(*S1, 160), outline=(255,255,255, 15))
-# shimmer
-d.rectangle([pad+1, cy3+1, pad+cw2-1, cy3+2], fill=(255,255,255, 10))
-d.text((pad+14, cy3+12), "Merchant Fraud Rate", font=fnt(13, True), fill=TX)
-d.text((pad+14, cy3+28), "Rolling 7-day · RANGE BETWEEN window", font=fnt(9), fill=TX3)
-
-merch = [("WazirX",28.5,RO),("CoinDCX",21.0,RO),("MPL",14.3,RO),
-         ("Dream11",8.6,VI),("PhonePe",3.2,VI),("Swiggy",1.1,VI)]
-bx1, bx2 = pad+28, pad+cw2-18
-by1, by2 = cy3+50, cy3+ch3-26
-bw3 = (bx2-bx1) // len(merch) - 8
-max_r = 32
-for i, (name, rate, color) in enumerate(merch):
-    bx3 = bx1 + i*(bw3+8)
-    bh  = int((rate/max_r)*(by2-by1-6))
-    top = by2 - bh
-    # bar with gradient effect
-    for yy in range(bh):
-        alpha = int(180 + 60 * yy/max(bh,1))
-        d.rectangle([bx3, by2-yy-1, bx3+bw3, by2-yy], fill=(*color, min(220,alpha)))
-    # value label
-    d.text((bx3+2, top-14), f"{rate}%", font=fnt(9, True), fill=TX)
-    # x label
-    d.text((bx3+2, by2+4), name[:6], font=fnt(8), fill=TX3)
-
-# grid lines for chart
-for pct in [0, 10, 20, 30]:
-    gy = by2 - int(pct/max_r*(by2-by1))
-    d.line([(bx1-6, gy),(bx2, gy)], fill=(255,255,255,8), width=1)
-    d.text((pad+14, gy-5), f"{pct}%", font=fnt(7), fill=TX3)
-
-# ══════════════════════════════════════════════════════════════
-# USER RISK RANKING CHART
-# ══════════════════════════════════════════════════════════════
-rx = pad + cw2 + 14
-rw = W - rx - pad
-d.rounded_rectangle([rx, cy3, rx+rw, cy3+ch3], radius=12,
-                     fill=(*S1, 160), outline=(255,255,255, 15))
-d.rectangle([rx+1, cy3+1, rx+rw-1, cy3+2], fill=(255,255,255, 10))
-d.text((rx+14, cy3+12), "User Risk Ranking", font=fnt(13, True), fill=TX)
-d.text((rx+14, cy3+28), "PERCENT_RANK + NTILE(10) · top 8", font=fnt(9), fill=TX3)
-
-users = [("Rahul S",5),("Anjali M",4),("Arjun N",4),("Rohan G",3),
-         ("Priya P",3),("Vikram S",2),("Sonal K",2),("Dev R",1)]
-bax1 = rx + 72
-bax2 = rx + rw - 18
-max_f = 6
-rh3 = 15
-rg  = 7
-for i, (name, cnt) in enumerate(users):
-    ry3 = cy3+46+i*(rh3+rg)
-    blen = int((cnt/max_f)*(bax2-bax1))
-    alpha = int(210 - i*18)
-    # bar
-    for xx in range(blen):
-        a2 = int(alpha * (1 - xx/(blen+1)*.3))
-        d.rectangle([bax1+xx, ry3, bax1+xx+1, ry3+rh3], fill=(*RO, a2))
-    d.text((rx+10, ry3+2), name, font=fnt(10), fill=TX2)
-    d.text((bax1+blen+5, ry3+2), str(cnt), font=fnt(10, True), fill=TX)
-
-# ══════════════════════════════════════════════════════════════
-# SECTION: OPEN FRAUD FLAGS
-# ══════════════════════════════════════════════════════════════
-ty = cy3 + ch3 + 14
-d.text((pad, ty), "OPEN FRAUD FLAGS", font=fnt(9, True), fill=TX3)
-d.rectangle([pad+128, ty+6, W-pad, ty+7], fill=(255,255,255, 14))
-
-ty += 16
-rows = [
-    ("MULE_CHAIN",         VI,  90, "Rahul Sharma",  "UnknownShop",  "₹15,000",  "chain_depth:3",    "2m ago"),
-    ("VELOCITY_10M",       RO,  85, "Anjali Mehta",  "WazirX",       "₹950",     "txn_count_10m:7",  "5m ago"),
-    ("HIGH_AMOUNT_ANOMALY",RO,  75, "Arjun Nair",    "CoinDCX",      "₹95,000",  "ratio:475",        "1h ago"),
-    ("MULTI_DEVICE_1H",    GO,  80, "Rohan Gupta",   "MPL Games",    "₹2,200",   "devices_1h:4",     "18m ago"),
-    ("RAPID_REPEAT",       GO,  70, "Priya Patel",   "Dream11",      "₹1,100",   "gap_seconds:28",   "34m ago"),
-]
-row_h2 = 30
-hdr_h2 = 22
-tbl_h2 = hdr_h2 + row_h2*len(rows) + 4
-tw2 = W - pad*2
-
-d.rounded_rectangle([pad, ty, pad+tw2, ty+tbl_h2], radius=12,
-                     fill=(*S1, 160), outline=(255,255,255, 15))
-d.rectangle([pad+1, ty, pad+tw2-1, ty+hdr_h2], fill=(*S2, 120))
-d.rectangle([pad+1, ty, pad+tw2-1, ty+2], fill=(255,255,255, 8))
-
-# header
-cols = [("RULE",145),("RISK",80),("USER",130),("MERCHANT",110),("AMOUNT",90),("DETAILS",0)]
-hx2 = pad+16
-for col,cw3 in cols:
-    d.text((hx2, ty+6), col, font=fnt(8, True), fill=TX3)
-    hx2 += cw3 if cw3 else 0
-
-for ri, (rule, color, score, user, merch2, amt, det, when) in enumerate(rows):
-    ry4 = ty + hdr_h2 + ri*row_h2
-    if ri % 2:
-        d.rectangle([pad+1, ry4, pad+tw2-1, ry4+row_h2], fill=(*S0, 80))
-
-    rx4 = pad+16
-    # pill
-    pw = len(rule)*5+14
-    pill_bg = {VI:(30,20,60), RO:(60,10,30), GO:(55,30,8)}
-    pill_brd= {VI:(80,55,160),RO:(140,30,70),GO:(130,70,20)}
-    d.rounded_rectangle([rx4, ry4+6, rx4+pw, ry4+row_h2-6],
-                         radius=9, fill=pill_bg.get(color,(30,30,40)),
-                         outline=pill_brd.get(color,(60,60,80)))
-    d.text((rx4+5, ry4+9), rule, font=fnt(9, True), fill=color)
-    rx4 += 145
-
-    # score bar
-    blen2 = int(score * 0.36)
-    # gradient bar
-    for xx in range(blen2):
-        t2 = xx/max(blen2-1,1)
-        rc = tuple(int(GO[j]+(RO[j]-GO[j])*t2) for j in range(3))
-        d.rectangle([rx4+xx, ry4+12, rx4+xx+1, ry4+row_h2-10], fill=rc)
-    d.text((rx4+blen2+5, ry4+9), str(score), font=fnt(10, True), fill=TX)
-    rx4 += 80
-    d.text((rx4, ry4+9), user,   font=fnt(10, True), fill=TX);  rx4+=130
-    d.text((rx4, ry4+9), merch2, font=fnt(10), fill=TX2);       rx4+=110
-    d.text((rx4, ry4+9), amt,    font=fnt(10, True), fill=EM);  rx4+=90
-    d.text((rx4, ry4+9), "{"+det+"}", font=fnt(9), fill=TX3)
-
-# ── footer ─────────────────────────────────────────────────────
-d.rectangle([0, H-26, W, H], fill=(4, 6, 12))
-d.rectangle([0, H-27, W, H-26], fill=(255,255,255, 10))
-d.text((pad, H-18), "FraudDetector · Risk Intelligence · PostgreSQL · FastAPI",
+# hero left content
+d.text((32,HY+14), "REAL-TIME FRAUD DETECTION", font=fnt(8,True), fill=AC3)
+# gradient title simulation — draw "Catch fraud" in white, "before it lands." in indigo
+d.text((32,HY+30), "Catch fraud", font=fnt(22,True), fill=TX)
+d.text((32,HY+56), "before it lands.", font=fnt(22,True), fill=AC2)
+d.text((32,HY+86), "Advanced PostgreSQL rules engine — recursive CTEs, LATERAL joins,",
        font=fnt(9), fill=TX3)
-d.text((W-430, H-18),
-       "Demo · recursive CTEs · LATERAL joins · PL/pgSQL triggers · 38 tests",
-       font=fnt(9), fill=(45, 60, 85))
+d.text((32,HY+100), "PL/pgSQL triggers. Flags appear within milliseconds of INSERT.",
+       font=fnt(9), fill=TX3)
 
+# chips
+chips_ac = ["Recursive CTE","LATERAL Join","RANGE BETWEEN"]
+chips_sl = ["PL/pgSQL Triggers","Materialized View","PERCENT_RANK"]
+cx2 = 32
+for chip in chips_ac:
+    cw2 = len(chip)*6+16
+    d.rounded_rectangle([cx2,HY+118,cx2+cw2,HY+133], radius=10,
+                         fill=(AC[0]//8,AC[1]//8,AC[2]//4+10), outline=(*AC,80))
+    d.text((cx2+7,HY+120), chip, font=fnt(8,True), fill=AC3)
+    cx2 += cw2+6
+for chip in chips_sl:
+    cw2 = len(chip)*6+16
+    d.rounded_rectangle([cx2,HY+118,cx2+cw2,HY+133], radius=10, fill=S3, outline=BD)
+    d.text((cx2+7,HY+120), chip, font=fnt(8,True), fill=TX3)
+    cx2 += cw2+6
+
+# hero stats
+hstats = [("14",DG,"OPEN FLAGS"),("326",AC2,"TRANSACTIONS"),("72.4",WN,"AVG RISK")]
+sx2 = 32
+d.line([(30,HY+140),(560,HY+141)], fill=BD, width=1)
+for val,col,lbl in hstats:
+    d.text((sx2,HY+146), val, font=fnt(16,True), fill=col)
+    sx2 += len(val)*9+4
+    d.text((sx2,HY+148), lbl, font=fnt(8), fill=TX3)
+    sx2 += len(lbl)*5+28
+
+# hero right — illustration area (gradient block)
+himg_x = W-16-320
+d.rectangle([himg_x,HY+1,W-17,HY+HH-1], fill=S1)
+# load actual hero image if available
+hero_path = "dashboard/hero-bg.png"
+if os.path.exists(hero_path):
+    from PIL import Image as PILImage
+    hi = PILImage.open(hero_path).convert("RGB")
+    hi = hi.resize((320, HH-2), PILImage.LANCZOS)
+    # apply mask: fade left edge
+    from PIL import ImageFilter
+    mask = PILImage.new("L", (320, HH-2), 0)
+    md = ImageDraw.Draw(mask)
+    for x in range(320):
+        alpha = min(255, int(255 * max(0, (x-60)/180)))
+        md.line([(x,0),(x,HH-2)], fill=alpha)
+    img.paste(hi, (himg_x, HY+1), mask)
+else:
+    # fallback gradient
+    for x in range(320):
+        a = int(40 * x/320)
+        d.line([(himg_x+x,HY+1),(himg_x+x,HY+HH-1)], fill=(AC[0]//6,AC[1]//6,AC[2]//4))
+
+# ══ SECTION: OVERVIEW ════════════════════════════════════════
+SY = HY+HH+14
+d.text((16,SY), "OVERVIEW", font=fnt(8,True), fill=TX3)
+d.line([(76,SY+5),(W-16,SY+6)], fill=BD, width=1)
+
+# ══ KPI CARDS ═════════════════════════════════════════════════
+KY = SY+16
+KH = 76
+kpis = [
+    ("TOTAL TRANSACTIONS","326",AC,  "last hour: 12", .65),
+    ("OPEN FLAGS",        "14", DG,  "unresolved",    .45),
+    ("AVG RISK SCORE",    "72.4",WN, "open flags",    .72),
+    ("ACTIVE USERS 24H",  "8",  GD,  "24h distinct",  .40),
+    ("TXNS LAST HOUR",    "12", TX3, "past 60 min",   .30),
+    ("VOLUME 24H",    "₹4,82,000",TX3,"total amount", .55),
+]
+n_k=6; gap=10; pad=16
+kw=(W-pad*2-gap*(n_k-1))//n_k
+
+for i,(lbl,val,col,sub,pct) in enumerate(kpis):
+    x=pad+i*(kw+gap)
+    d.rounded_rectangle([x,KY,x+kw,KY+KH], radius=8, fill=S1, outline=BD)
+    # accent top line
+    d.rectangle([x+1,KY,x+kw-1,KY+1], fill=col)
+    d.text((x+10,KY+8),  lbl, font=fnt(7,True), fill=TX3)
+    d.text((x+10,KY+22), val, font=fnt(18,True), fill=col if col!=TX3 else TX2)
+    d.text((x+10,KY+KH-16), sub, font=fnt(8), fill=TX3)
+    # bottom fill bar
+    bw2=int((kw-20)*pct)
+    d.rounded_rectangle([x+10,KY+KH-6,x+10+bw2,KY+KH-4], radius=1,
+                         fill=col if col!=TX3 else BD2)
+
+# ══ SECTION: ANALYTICS ═══════════════════════════════════════
+AY = KY+KH+16
+d.text((16,AY), "ANALYTICS", font=fnt(8,True), fill=TX3)
+d.line([(78,AY+5),(W-16,AY+6)], fill=BD, width=1)
+
+CY = AY+16
+CW1,CW2,CH = 570,W-570-16*3,195
+
+# Merchant chart card
+d.rounded_rectangle([16,CY,16+CW1,CY+CH], radius=8, fill=S1, outline=BD)
+d.text((30,CY+12), "Merchant Fraud Rate", font=fnt(12,True), fill=TX)
+d.text((30,CY+27), "Rolling 7-day · RANGE BETWEEN window", font=fnt(8), fill=TX3)
+merch=[("WazirX",28.5,True),("CoinDCX",21.0,True),("MPL",14.3,True),
+       ("Dream11",8.6,False),("PhonePe",3.2,False),("Swiggy",1.1,False)]
+bx1,bx2=38,16+CW1-18
+by1,by2=CY+50,CY+CH-24
+bw3=(bx2-bx1)//len(merch)-7
+for i,(name,rate,is_hi) in enumerate(merch):
+    bx=bx1+i*(bw3+7)
+    bh=int((rate/32)*(by2-by1-6))
+    top=by2-bh
+    color=DG if is_hi else AC
+    d.rounded_rectangle([bx,top,bx+bw3,by2], radius=4, fill=color)
+    d.text((bx+2,top-13), f"{rate}%", font=fnt(8,True), fill=TX)
+    d.text((bx+2,by2+4), name[:6], font=fnt(7), fill=TX3)
+
+# User risk chart card
+rx3=16+CW1+12
+d.rounded_rectangle([rx3,CY,rx3+CW2,CY+CH], radius=8, fill=S1, outline=BD)
+d.text((rx3+12,CY+12), "User Risk Ranking", font=fnt(12,True), fill=TX)
+d.text((rx3+12,CY+27), "PERCENT_RANK + NTILE(10) · top 8", font=fnt(8), fill=TX3)
+users=[("Rahul S",5),("Anjali M",4),("Arjun N",4),("Rohan G",3),
+       ("Priya P",3),("Vikram S",2),("Sonal K",2),("Dev R",1)]
+bax1=rx3+72; bax2=rx3+CW2-18; max_f=6; rh=14; rg=6
+for i,(name,cnt) in enumerate(users):
+    ry5=CY+46+i*(rh+rg)
+    blen=int((cnt/max_f)*(bax2-bax1))
+    alpha=int(200-i*18)
+    for xx in range(blen):
+        t2=xx/max(blen-1,1)
+        rc=tuple(int(DG[j]*(.7+.3*(1-t2))) for j in range(3))
+        d.rectangle([bax1+xx,ry5,bax1+xx+1,ry5+rh], fill=rc)
+    d.text((rx3+8,ry5+2), name, font=fnt(9), fill=TX2)
+    d.text((bax1+blen+5,ry5+2), str(cnt), font=fnt(9,True), fill=TX)
+
+# ══ SECTION: FLAGS ════════════════════════════════════════════
+FY = CY+CH+16
+d.text((16,FY), "OPEN FRAUD FLAGS", font=fnt(8,True), fill=TX3)
+d.line([(128,FY+5),(W-16,FY+6)], fill=BD, width=1)
+
+TY=FY+16
+rows=[
+    ("MULE_CHAIN",         AC,  90,"Rahul Sharma","UnknownShop","₹15,000","chain_depth:3",   "2m ago"),
+    ("VELOCITY_10M",       DG,  85,"Anjali Mehta","WazirX",     "₹950",  "txn_count_10m:7", "5m ago"),
+    ("HIGH_AMOUNT_ANOMALY",DG,  75,"Arjun Nair",  "CoinDCX",    "₹95,000","ratio:475",      "1h ago"),
+    ("MULTI_DEVICE_1H",    WN,  80,"Rohan Gupta", "MPL Games",  "₹2,200","devices_1h:4",   "18m ago"),
+    ("RAPID_REPEAT",       WN,  70,"Priya Patel", "Dream11",    "₹1,100","gap_seconds:28",  "34m ago"),
+]
+row_h=26; hdr_h=22
+tbl_h=hdr_h+row_h*len(rows)+4
+tw3=W-32
+
+d.rounded_rectangle([16,TY,16+tw3,TY+tbl_h], radius=8, fill=S1, outline=BD)
+# header row
+d.rectangle([17,TY,16+tw3-1,TY+hdr_h], fill=S2)
+d.rectangle([17,TY,16+tw3-1,TY+1], fill=BD)
+cols=[("RULE",148),("RISK",82),("USER",130),("MERCHANT",110),("AMOUNT",92),("DETAILS",0)]
+hx3=28
+for col,cw4 in cols:
+    d.text((hx3,TY+6), col, font=fnt(7,True), fill=TX3)
+    hx3+=cw4 if cw4 else 0
+
+for ri,(rule,color,score,user,merch2,amt,det,when) in enumerate(rows):
+    ry6=TY+hdr_h+ri*row_h
+    if ri%2:
+        d.rectangle([17,ry6,16+tw3-1,ry6+row_h], fill=S2)
+    rx5=28
+    # monospace badge
+    pw=len(rule)*5+14
+    badge_bg={AC:(12,10,45),DG:(40,8,8),WN:(40,30,5)}
+    badge_bd={AC:(*AC,100),DG:(*DG,100),WN:(*WN,100)}
+    d.rounded_rectangle([rx5,ry6+4,rx5+pw,ry6+row_h-4], radius=4,
+                         fill=badge_bg.get(color,(20,20,25)),
+                         outline=badge_bd.get(color,(*BD2,255)))
+    d.text((rx5+5,ry6+7), rule, font=fnt(8,True), fill=color)
+    rx5+=148
+    # score bar
+    blen3=int(score*0.36)
+    for xx in range(blen3):
+        t3=xx/max(blen3-1,1)
+        rc=tuple(int(WN[j]+(DG[j]-WN[j])*t3) for j in range(3))
+        d.rectangle([rx5+xx,ry6+10,rx5+xx+1,ry6+16], fill=rc)
+    d.text((rx5+blen3+5,ry6+7), str(score), font=fnt(9,True), fill=TX)
+    rx5+=82
+    d.text((rx5,ry6+7), user,  font=fnt(9,True), fill=TX);  rx5+=130
+    d.text((rx5,ry6+7), merch2,font=fnt(9), fill=TX2);     rx5+=110
+    d.text((rx5,ry6+7), amt,   font=fnt(9,True), fill=TX); rx5+=92
+    d.text((rx5,ry6+7), "{"+det+"}", font=fnt(8), fill=TX3)
+
+# ══ FOOTER ════════════════════════════════════════════════════
+footY=TY+tbl_h+12
+d.rectangle([0,footY,W,H], fill=S1)
+d.rectangle([0,footY,W,footY+1], fill=BD)
+
+# footer logo
+shield(32, footY+22, sz=12)
+d.text((50,footY+13), "FraudDetector", font=fnt(12,True), fill=TX)
+d.text((50,footY+28), "Real-time fraud detection engine · raw SQL · no ML",
+       font=fnt(8), fill=TX3)
+
+# footer links
+fl_x=400
+for group,items in [
+    ("DETECTION RULES",["VELOCITY_10M","RAPID_REPEAT","MULE_CHAIN","HIGH_AMOUNT_ANOMALY"]),
+    ("RESOURCES",["GitHub Repository","API Reference","SQL Highlights","SmartInventory"]),
+]:
+    d.text((fl_x,footY+8), group, font=fnt(7,True), fill=TX3)
+    for j,item in enumerate(items):
+        d.text((fl_x,footY+20+j*13), item, font=fnt(9), fill=TX2)
+    fl_x+=200
+
+# footer bottom bar
+d.line([(16,H-26),(W-16,H-26)], fill=BD, width=1)
+d.text((16,H-20), "© 2026 Ansh · MIT License", font=fnt(8), fill=TX3)
+# tech tags
+tags=["Python 3.11","PostgreSQL 15","FastAPI","38 tests"]
+tx4=W-16
+for tag in reversed(tags):
+    tw4=len(tag)*5+14
+    tx4-=tw4+6
+    d.rounded_rectangle([tx4,H-22,tx4+tw4,H-10], radius=3, fill=S2, outline=BD)
+    d.text((tx4+5,H-20), tag, font=fnt(7), fill=TX3)
+
+# save
 os.makedirs("assets", exist_ok=True)
-out = "assets/dashboard-preview.png"
-img.save(out, "PNG", optimize=True)
+out="assets/dashboard-preview.png"
+img.save(out,"PNG",optimize=True)
 print(f"✓  {out}  {W}×{H}")
