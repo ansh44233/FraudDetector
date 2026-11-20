@@ -5,7 +5,7 @@ Matches dashboard v4: Zinc/Indigo palette, proper header, footer, monospace badg
 from PIL import Image, ImageDraw, ImageFont
 import os, math
 
-W, H = 1280, 800
+W, H = 1280, 900
 
 # ── palette (dashboard v4) ────────────────────────────────────
 BG   = ( 9,  9, 11)   # zinc-950
@@ -306,16 +306,17 @@ for group,items in [
     fl_x+=200
 
 # footer bottom bar
-d.line([(16,H-26),(W-16,H-26)], fill=BD, width=1)
-d.text((16,H-20), "© 2026 Ansh · MIT License", font=fnt(8), fill=TX3)
+btmY = footY+78
+d.line([(16,btmY),(W-16,btmY)], fill=BD, width=1)
+d.text((16,btmY+8), "© 2026 Ansh · MIT License", font=fnt(8), fill=TX3)
 # tech tags
 tags=["Python 3.11","PostgreSQL 15","FastAPI","38 tests"]
 tx4=W-16
 for tag in reversed(tags):
     tw4=len(tag)*5+14
     tx4-=tw4+6
-    d.rounded_rectangle([tx4,H-22,tx4+tw4,H-10], radius=3, fill=S2, outline=BD)
-    d.text((tx4+5,H-20), tag, font=fnt(7), fill=TX3)
+    d.rounded_rectangle([tx4,btmY+6,tx4+tw4,btmY+18], radius=3, fill=S2, outline=BD)
+    d.text((tx4+5,btmY+8), tag, font=fnt(7), fill=TX3)
 
 # save
 os.makedirs("assets", exist_ok=True)
