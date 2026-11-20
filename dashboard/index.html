@@ -881,7 +881,11 @@ function demo(){
   $('ts').textContent='Demo mode · '+new Date().toLocaleTimeString('en-IN');
 }
 
-load();setInterval(load,15000);
+// Run demo immediately — full page renders on first paint
+demo();
+// Then try live API in background (will override demo data if connected)
+setTimeout(load, 100);
+setInterval(load, 15000);
 </script>
 </body>
 </html>
