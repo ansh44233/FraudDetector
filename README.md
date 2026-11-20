@@ -1,9 +1,3 @@
-<div align="center">
-
-![dashboard](assets/dashboard-preview.png)
-
-# FraudDetector
-
 **Real-time transaction fraud detection — PostgreSQL · Python · FastAPI**
 
 [![Live Demo](https://img.shields.io/badge/demo-live-brightgreen?style=flat&logo=vercel)](https://frauddetector-dashboard.vercel.app)
