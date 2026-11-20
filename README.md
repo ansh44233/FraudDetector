@@ -19,6 +19,14 @@
 
 ---
 
+<div align="center">
+
+![FraudDetector Dashboard](assets/dashboard-preview.png)
+
+</div>
+
+---
+
 Fraud detection backend built entirely on advanced PostgreSQL — no ML black boxes, no external services. Detects velocity bursts, money mule chains, device sharing, high-risk merchant patterns, and high-amount anomalies in real time. Everything runs through a rules engine backed by raw SQL: recursive CTEs, `LATERAL` joins, `LAG`/`LEAD` window functions, `RANGE BETWEEN` rolling windows, `PERCENT_RANK`, `NTILE`, and materialized views.
 
 ```
