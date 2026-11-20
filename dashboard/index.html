@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FraudDetector — Live Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg:      #0d1117;
+      --s1:      #161b22;
+      --s2:      #1c2230;
+      --border:  #30363d;
+      --text:    #e6edf3;
+      --muted:   #7d8590;
+      --blue:    #58a6ff;
+      --green:   #3fb950;
+      --amber:   #d29922;
+      --red:     #f85149;
+      --purple:  #bc8cff;
+      --r:       10px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text);
+           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+           font-size: 14px; }
+
+    /* topbar */
+    .top { position:sticky; top:0; z-index:10;
+           background:rgba(13,17,23,.92); backdrop-filter:blur(8px);
+           border-bottom:1px solid var(--border);
+           height:52px; display:flex; align-items:center; gap:10px; padding:0 24px; }
+    .top .logo { font-size:15px; font-weight:700; color:var(--text); }
+    .top .sp   { flex:1; }
+    .top .live { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--muted); }
+    .dot { width:8px;height:8px;border-radius:50%;background:var(--red);
+           box-shadow:0 0 8px var(--red); animation:pulse 1.5s ease-in-out infinite; }
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+    .badge { font-size:10px; background:rgba(248,81,73,.12); color:var(--red);
+             border:1px solid rgba(248,81,73,.3); padding:2px 9px; border-radius:20px; }
+
+    /* layout */
+    .page  { max-width:1240px; margin:0 auto; padding:24px 20px 56px; }
+    .stitle{ font-size:10px; font-weight:600; text-transform:uppercase;
+             letter-spacing:.08em; color:var(--muted); margin:28px 0 10px; }
+
+    /* kpi grid */
+    .kpis  { display:grid; grid-template-columns:repeat(6,1fr); gap:12px; }
+    @media(max-width:900px){ .kpis{ grid-template-columns:repeat(3,1fr); } }
+    .kpi   { background:var(--s1); border:1px solid var(--border); border-radius:var(--r);
+             padding:16px 18px; position:relative; overflow:hidden; }
+    .kpi::before { content:''; position:absolute; inset:0 0 auto 0; height:2px; border-radius:var(--r) var(--r) 0 0; }
+    .kpi.bl::before{background:var(--blue);}
+    .kpi.gn::before{background:var(--green);}
+    .kpi.rd::before{background:var(--red);}
+    .kpi.am::before{background:var(--amber);}
+    .kpi.pu::before{background:var(--purple);}
+    .kpi-l { font-size:9px; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); font-weight:600; }
+    .kpi-v { font-size:26px; font-weight:700; margin-top:6px; line-height:1; }
+    .kpi.bl .kpi-v{color:var(--blue);}
+    .kpi.gn .kpi-v{color:var(--green);}
+    .kpi.rd .kpi-v{color:var(--red);}
+    .kpi.am .kpi-v{color:var(--amber);}
+    .kpi.pu .kpi-v{color:var(--purple);}
+
+    /* charts */
+    .charts{ display:grid; grid-template-columns:1.4fr 1fr; gap:14px; }
+    @media(max-width:800px){ .charts{ grid-template-columns:1fr; } }
+    .card  { background:var(--s1); border:1px solid var(--border); border-radius:var(--r); padding:18px 20px; }
+    .card-t{ font-size:13px; font-weight:600; color:var(--text); margin-bottom:3px; }
+    .card-s{ font-size:10px; color:var(--muted); margin-bottom:14px; }
+
+    /* tables */
+    .twrap { overflow-x:auto; }
+    table  { width:100%; border-collapse:collapse; font-size:12px; }
+    th     { text-align:left; padding:8px 10px; font-size:9px; font-weight:600;
+             text-transform:uppercase; letter-spacing:.07em; color:var(--muted);
+             border-bottom:1px solid var(--border); }
+    td     { padding:9px 10px; border-bottom:1px solid rgba(48,54,61,.5); }
+    tr:last-child td{ border-bottom:none; }
+    tr:hover td { background:rgba(255,255,255,.025); }
+    .sku   { font-family:monospace; color:var(--muted); font-size:11px; }
+    .pill  { display:inline-block; padding:2px 8px; border-radius:20px; font-size:10px; font-weight:600; }
+    .p-rd  { background:rgba(248,81,73,.12); color:var(--red);    border:1px solid rgba(248,81,73,.25); }
+    .p-am  { background:rgba(210,153,34,.12); color:var(--amber); border:1px solid rgba(210,153,34,.25); }
+    .p-gn  { background:rgba(63,185,80,.1);  color:var(--green);  border:1px solid rgba(63,185,80,.25); }
+    .p-bl  { background:rgba(88,166,255,.1); color:var(--blue);   border:1px solid rgba(88,166,255,.25); }
+    .p-pu  { background:rgba(188,140,255,.1);color:var(--purple); border:1px solid rgba(188,140,255,.25); }
+    .empty { text-align:center; padding:20px; color:var(--muted); }
+    .score-bar { display:inline-block; height:6px; border-radius:3px; background:var(--red); vertical-align:middle; margin-right:6px; }
+
+    /* footer */
+    .footer{ margin-top:40px; padding-top:16px; border-top:1px solid var(--border);
+             display:flex; justify-content:space-between; color:var(--muted); font-size:11px; }
+  </style>
+</head>
+<body>
+
+<div class="top">
+  <div class="logo">🛡️ FraudDetector</div>
+  <span class="badge">LIVE</span>
+  <div class="sp"></div>
+  <div class="live"><div class="dot"></div>Real-time · Refreshes 15s</div>
+</div>
+
+<div class="page">
+
+  <div class="stitle">Overview</div>
+  <div class="kpis">
+    <div class="kpi bl"><div class="kpi-l">Total Txns</div>    <div class="kpi-v" id="k-txns">—</div></div>
+    <div class="kpi rd"><div class="kpi-l">Open Flags</div>    <div class="kpi-v" id="k-flags">—</div></div>
+    <div class="kpi am"><div class="kpi-l">Avg Risk Score</div><div class="kpi-v" id="k-risk">—</div></div>
+    <div class="kpi gn"><div class="kpi-l">Active Users 24h</div><div class="kpi-v" id="k-users">—</div></div>
+    <div class="kpi pu"><div class="kpi-l">Txns Last Hour</div><div class="kpi-v" id="k-hour">—</div></div>
+    <div class="kpi bl"><div class="kpi-l">Volume 24h</div>    <div class="kpi-v" id="k-vol">—</div></div>
+  </div>
+
+  <div class="stitle">Analytics</div>
+  <div class="charts">
+    <div class="card">
+      <div class="card-t">Merchant Fraud Rate</div>
+      <div class="card-s">Rolling 7-day flag rate · RANGE BETWEEN window function</div>
+      <canvas id="chart-merch" height="200"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-t">User Risk Ranking</div>
+      <div class="card-s">PERCENT_RANK + NTILE · top 8 by flag count</div>
+      <canvas id="chart-users" height="200"></canvas>
+    </div>
+  </div>
+
+  <div class="stitle">🚨 Open Fraud Flags</div>
+  <div class="card">
+    <div class="twrap">
+      <table id="tbl-flags">
+        <thead><tr>
+          <th>Rule</th><th>Risk</th><th>User</th><th>Merchant</th>
+          <th>Amount</th><th>Details</th><th>When</th>
+        </tr></thead>
+        <tbody><tr><td colspan="7" class="empty">Loading…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="stitle">🔗 Money Mule Chains <span style="color:var(--muted);font-weight:400">(recursive CTE)</span></div>
+  <div class="card">
+    <div class="twrap">
+      <table id="tbl-chains">
+        <thead><tr><th>From User</th><th>To User</th><th>Amount</th><th>Hops</th><th>Chain</th></tr></thead>
+        <tbody><tr><td colspan="5" class="empty">Loading…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="stitle">📱 Device Sharing <span style="color:var(--muted);font-weight:400">(shared device = mule signal)</span></div>
+  <div class="card">
+    <div class="twrap">
+      <table id="tbl-devices">
+        <thead><tr><th>Device ID</th><th>Users</th><th>Total Amount</th><th>User Names</th></tr></thead>
+        <tbody><tr><td colspan="4" class="empty">Loading…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>FraudDetector · PostgreSQL + FastAPI · Advanced SQL</span>
+    <span id="ts">—</span>
+  </div>
+</div>
+
+<script>
+  const API = '';
+  const fmt = n => '₹' + Number(n).toLocaleString('en-IN',{maximumFractionDigits:0});
+  const ago = d => { if(!d) return '—';
+    const s = Math.floor((Date.now()-new Date(d))/1000);
+    if(s<60) return s+'s ago'; if(s<3600) return Math.floor(s/60)+'m ago';
+    return Math.floor(s/3600)+'h ago'; };
+
+  async function get(p){ const r=await fetch(API+p); return r.json(); }
+
+  const ruleColor = r => {
+    if(r.includes('MULE')) return 'p-pu';
+    if(r.includes('VELOCITY')||r.includes('RAPID')) return 'p-rd';
+    if(r.includes('DEVICE')) return 'p-am';
+    return 'p-bl';
+  };
+
+  let mChart, uChart;
+
+  async function load(){
+    try {
+      const [sum, flags, chains, devices, merch, rank] = await Promise.all([
+        get('/analytics/summary'),
+        get('/flags?resolved=false&limit=20'),
+        get('/analytics/mule-chains'),
+        get('/analytics/device-sharing'),
+        get('/analytics/merchant-fraud-rate'),
+        get('/analytics/user-risk-ranking'),
+      ]);
+
+      const s = Array.isArray(sum) ? sum[0] : sum;
+      document.getElementById('k-txns').textContent  = s.total_txns   || '—';
+      document.getElementById('k-flags').textContent = s.open_flags   || '0';
+      document.getElementById('k-risk').textContent  = s.avg_risk_score ? s.avg_risk_score + '' : '—';
+      document.getElementById('k-users').textContent = s.active_users_24h || '—';
+      document.getElementById('k-hour').textContent  = s.txns_last_hour  || '0';
+      document.getElementById('k-vol').textContent   = s.volume_24h ? fmt(s.volume_24h) : '—';
+
+      // merchant chart
+      const merchants = [...new Set(merch.map(r=>r.merchant))].slice(0,6);
+      const latestByMerch = merchants.map(name => {
+        const rows = merch.filter(r=>r.merchant===name);
+        return rows[rows.length-1] || {};
+      });
+      if(mChart) mChart.destroy();
+      mChart = new Chart(document.getElementById('chart-merch'),{
+        type:'bar',
+        data:{
+          labels: latestByMerch.map(r=>r.merchant||''),
+          datasets:[{
+            label:'Flag Rate %',
+            data: latestByMerch.map(r=>r.rolling_7d_rate||0),
+            backgroundColor: latestByMerch.map(r=>(r.rolling_7d_rate||0)>10
+              ? 'rgba(248,81,73,.7)' : 'rgba(88,166,255,.6)'),
+            borderRadius:4,
+          }]
+        },
+        options:{plugins:{legend:{display:false}},
+          scales:{
+            x:{ticks:{color:'#7d8590',font:{size:10}},grid:{display:false}},
+            y:{ticks:{color:'#7d8590',callback:v=>v+'%'},grid:{color:'#21262d'}}
+          }}
+      });
+
+      // user risk chart
+      const top8 = rank.slice(0,8);
+      if(uChart) uChart.destroy();
+      uChart = new Chart(document.getElementById('chart-users'),{
+        type:'bar',
+        data:{
+          labels: top8.map(r=>r.name.split(' ')[0]),
+          datasets:[{
+            label:'Flags',
+            data: top8.map(r=>r.flag_count),
+            backgroundColor:'rgba(248,81,73,.65)',
+            borderRadius:4,
+          }]
+        },
+        options:{indexAxis:'y',plugins:{legend:{display:false}},
+          scales:{
+            x:{ticks:{color:'#7d8590'},grid:{color:'#21262d'}},
+            y:{ticks:{color:'#7d8590',font:{size:10}},grid:{display:false}}
+          }}
+      });
+
+      // flags table
+      const ftb = document.querySelector('#tbl-flags tbody');
+      ftb.innerHTML = flags.length ? flags.map(f=>`
+        <tr>
+          <td><span class="pill ${ruleColor(f.rule_name)}">${f.rule_name}</span></td>
+          <td>
+            <span class="score-bar" style="width:${f.risk_score*0.6}px"></span>
+            ${f.risk_score}
+          </td>
+          <td>${f.user_name}</td>
+          <td>${f.merchant}</td>
+          <td>${fmt(f.amount)}</td>
+          <td style="color:var(--muted);font-size:11px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+            ${f.details ? JSON.stringify(f.details).slice(0,80) : '—'}
+          </td>
+          <td style="color:var(--muted)">${ago(f.created_at)}</td>
+        </tr>`).join('')
+        : '<tr><td colspan="7" class="empty" style="color:var(--green)">✓ No open flags</td></tr>';
+
+      // chains table
+      const ctb = document.querySelector('#tbl-chains tbody');
+      ctb.innerHTML = chains.length ? chains.slice(0,10).map(c=>`
+        <tr>
+          <td>${c.from_user_id}</td>
+          <td>${c.to_user_id}</td>
+          <td>${fmt(c.amount)}</td>
+          <td><span class="pill ${c.depth>=4?'p-rd':'p-am'}">${c.depth} hop${c.depth>1?'s':''}</span></td>
+          <td style="font-family:monospace;font-size:10px;color:var(--muted)">${JSON.stringify(c.chain)}</td>
+        </tr>`).join('')
+        : '<tr><td colspan="5" class="empty" style="color:var(--green)">No chains detected</td></tr>';
+
+      // devices table
+      const dtb = document.querySelector('#tbl-devices tbody');
+      dtb.innerHTML = devices.length ? devices.map(d=>`
+        <tr>
+          <td class="sku">${d.device_id}</td>
+          <td><span class="pill p-rd">${d.user_count} users</span></td>
+          <td>${fmt(d.total_amount)}</td>
+          <td style="color:var(--muted);font-size:11px">${(d.users||[]).join(', ')}</td>
+        </tr>`).join('')
+        : '<tr><td colspan="4" class="empty" style="color:var(--green)">No shared devices</td></tr>';
+
+      document.getElementById('ts').textContent = 'Refreshed ' + new Date().toLocaleTimeString();
+
+    } catch(e) {
+      loadDemo();
+    }
+  }
+
+  function loadDemo(){
+    document.getElementById('k-txns').textContent  = '326';
+    document.getElementById('k-flags').textContent = '14';
+    document.getElementById('k-risk').textContent  = '72.4';
+    document.getElementById('k-users').textContent = '8';
+    document.getElementById('k-hour').textContent  = '12';
+    document.getElementById('k-vol').textContent   = '₹4,82,000';
+
+    const ftb = document.querySelector('#tbl-flags tbody');
+    ftb.innerHTML = [
+      ['MULE_CHAIN','p-pu',90,'Rahul Sharma','UnknownShop','15,000','{chain_depth:3}','2m ago'],
+      ['VELOCITY_10M','p-rd',85,'Anjali Mehta','WazirX','950','{txn_count_10m:7}','5m ago'],
+      ['HIGH_AMOUNT_ANOMALY','p-rd',75,'Arjun Nair','CoinDCX','95,000','{ratio:475}','1h ago'],
+      ['MULTI_DEVICE_1H','p-am',80,'Rohan Gupta','MPL Games','2,200','{distinct_devices_1h:4}','18m ago'],
+      ['RAPID_REPEAT','p-bl',70,'Priya Patel','Dream11','1,100','{gap_seconds:28}','34m ago'],
+      ['SHARED_DEVICE','p-am',60,'Vikram Singh','UnknownShop','8,500','{other_users:2}','3h ago'],
+    ].map(([rule,cls,score,user,merch,amt,det,when])=>`
+      <tr>
+        <td><span class="pill ${cls}">${rule}</span></td>
+        <td><span class="score-bar" style="width:${score*.6}px"></span>${score}</td>
+        <td>${user}</td><td>${merch}</td><td>₹${amt}</td>
+        <td style="color:var(--muted);font-size:11px">${det}</td>
+        <td style="color:var(--muted)">${when}</td>
+      </tr>`).join('');
+
+    const ctb = document.querySelector('#tbl-chains tbody');
+    ctb.innerHTML = `
+      <tr><td>5</td><td>11</td><td>₹15,000</td><td><span class="pill p-rd">3 hops</span></td><td style="font-family:monospace;font-size:10px;color:var(--muted)">[5,11,12]</td></tr>
+      <tr><td>11</td><td>12</td><td>₹15,000</td><td><span class="pill p-am">2 hops</span></td><td style="font-family:monospace;font-size:10px;color:var(--muted)">[11,12]</td></tr>`;
+
+    const dtb = document.querySelector('#tbl-devices tbody');
+    dtb.innerHTML = `
+      <tr><td class="sku">device_mule_11</td><td><span class="pill p-rd">3 users</span></td><td>₹45,000</td><td style="color:var(--muted);font-size:11px">Mule Account A, Mule Account B, Vikram Singh</td></tr>`;
+
+    document.getElementById('ts').textContent = 'Demo mode · ' + new Date().toLocaleTimeString();
+  }
+
+  load();
+  setInterval(load, 15000);
+</script>
+</body>
+</html>
