@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "frauddetector-dashboard",
+  "builds": [
+    { "src": "dashboard/index.html", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "dashboard/index.html" }
+  ]
+}

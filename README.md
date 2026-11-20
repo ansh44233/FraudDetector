@@ -8,6 +8,7 @@
 
 <div align="center">
 
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen?style=flat&logo=vercel)](https://frauddetector-dashboard.vercel.app)
 [![CI](https://github.com/ansh44233/FraudDetector/actions/workflows/ci.yml/badge.svg)](https://github.com/ansh44233/FraudDetector/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat&logo=python&logoColor=white)](https://python.org)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-4169E1?style=flat&logo=postgresql&logoColor=white)](https://postgresql.org)
@@ -28,6 +29,8 @@
 ---
 
 Fraud detection backend built entirely on advanced PostgreSQL — no ML black boxes, no external services. Detects velocity bursts, money mule chains, device sharing, high-risk merchant patterns, and high-amount anomalies in real time. Everything runs through a rules engine backed by raw SQL: recursive CTEs, `LATERAL` joins, `LAG`/`LEAD` window functions, `RANGE BETWEEN` rolling windows, `PERCENT_RANK`, `NTILE`, and materialized views.
+
+**[Live demo →](https://frauddetector-dashboard.vercel.app)**
 
 ```
 transaction insert → DB triggers → rules engine → fraud_flags → live dashboard
