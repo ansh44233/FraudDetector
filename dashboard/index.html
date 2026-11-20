@@ -2,345 +2,448 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>FraudDetector</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-:root{
-  --bg:#060910;--s1:#0d1117;--s2:#111820;--s3:#151d27;
-  --border:#1e2a38;--border2:#243040;
-  --text:#e8f0fe;--muted:#5a7090;--muted2:#3a5070;
-  --blue:#4f9eff;--blue2:#2563eb;
-  --green:#10b981;--green2:#065f46;
-  --red:#ef4444;--red2:#7f1d1d;
-  --amber:#f59e0b;--amber2:#78350f;
-  --purple:#a855f7;--purple2:#4c1d95;
-  --cyan:#06b6d4;
-  --r:12px;
-}
+/* ── reset ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;font-size:13px;overflow-x:hidden;}
 
-/* animated grid background */
-body::before{
-  content:'';position:fixed;inset:0;z-index:0;
-  background-image:
-    linear-gradient(rgba(79,158,255,.03) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(79,158,255,.03) 1px,transparent 1px);
-  background-size:40px 40px;
-  pointer-events:none;
+/* ── design tokens ── */
+:root{
+  --canvas: #080c14;
+  --g1: #0f172a;      /* card bg */
+  --g2: #111827;
+  --g3: #1a2236;
+  --border: rgba(255,255,255,.07);
+  --border2: rgba(255,255,255,.12);
+  --text: #f1f5f9;
+  --text2: #94a3b8;
+  --text3: #475569;
+
+  --blue:   #3b82f6;
+  --blue-g: linear-gradient(135deg,#2563eb,#3b82f6);
+  --indigo: #6366f1;
+  --purple: #8b5cf6;
+  --pink:   #ec4899;
+  --green:  #10b981;
+  --teal:   #14b8a6;
+  --amber:  #f59e0b;
+  --red:    #ef4444;
+  --cyan:   #06b6d4;
+
+  --r: 16px;
+  --r-sm: 10px;
 }
 
-/* topbar */
-.nav{
-  position:sticky;top:0;z-index:100;
-  background:rgba(6,9,16,.85);backdrop-filter:blur(16px);
+body{
+  background:var(--canvas);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter",system-ui,sans-serif;
+  font-size:13px;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── ambient glow blobs ── */
+.blob{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0;}
+.blob-1{width:600px;height:600px;top:-200px;left:-150px;background:radial-gradient(circle,rgba(99,102,241,.18) 0%,transparent 70%);}
+.blob-2{width:500px;height:500px;top:30%;right:-150px;background:radial-gradient(circle,rgba(139,92,246,.15) 0%,transparent 70%);}
+.blob-3{width:400px;height:400px;bottom:0;left:30%;background:radial-gradient(circle,rgba(59,130,246,.12) 0%,transparent 70%);}
+
+/* ── nav ── */
+nav{
+  position:sticky;top:0;z-index:200;
+  height:60px;
+  background:rgba(8,12,20,.75);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
   border-bottom:1px solid var(--border);
-  height:56px;display:flex;align-items:center;gap:12px;padding:0 28px;
+  display:flex;align-items:center;gap:14px;padding:0 28px;
 }
-.nav-logo{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;letter-spacing:-.3px;}
-.nav-logo svg{width:22px;height:22px;}
-.nav-pill{
-  font-size:9px;font-weight:700;letter-spacing:.12em;
-  padding:3px 10px;border-radius:20px;
-  background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.3);
-  animation:livepulse 2s ease-in-out infinite;
+.nav-logo{
+  display:flex;align-items:center;gap:9px;
+  font-size:17px;font-weight:800;letter-spacing:-.4px;color:var(--text);
 }
-@keyframes livepulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(239,68,68,.3)}50%{opacity:.8;box-shadow:0 0 0 4px rgba(239,68,68,0)}}
+.nav-logo-icon{
+  width:32px;height:32px;border-radius:8px;
+  background:linear-gradient(135deg,#2563eb,#8b5cf6);
+  display:flex;align-items:center;justify-content:center;font-size:15px;
+  box-shadow:0 0 16px rgba(99,102,241,.5);
+}
+.live-badge{
+  display:flex;align-items:center;gap:5px;
+  font-size:10px;font-weight:700;letter-spacing:.1em;
+  padding:4px 11px;border-radius:20px;
+  background:rgba(16,185,129,.12);
+  color:var(--green);
+  border:1px solid rgba(16,185,129,.3);
+}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:livepulse 1.8s ease-in-out infinite;}
+@keyframes livepulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(16,185,129,.5)}60%{opacity:.8;box-shadow:0 0 0 5px transparent}}
 .nav-sp{flex:1;}
-.nav-info{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px;}
-.pulse-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:dot 2s ease-in-out infinite;}
-@keyframes dot{0%,100%{opacity:1}50%{opacity:.3}}
-.nav-time{font-size:10px;color:var(--muted2);font-family:monospace;}
+.nav-meta{display:flex;align-items:center;gap:16px;}
+.nav-stat{text-align:right;}
+.nav-stat-val{font-size:14px;font-weight:700;color:var(--red);}
+.nav-stat-lbl{font-size:9px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;}
+.nav-time{font-size:12px;color:var(--text3);font-variant-numeric:tabular-nums;font-family:monospace;}
 
-/* page */
-.page{max-width:1320px;margin:0 auto;padding:28px 24px 72px;position:relative;z-index:1;}
+/* ── layout ── */
+.page{max-width:1380px;margin:0 auto;padding:28px 24px 80px;position:relative;z-index:1;}
 
-/* section header */
+/* ── section header ── */
 .sh{
-  display:flex;align-items:center;gap:10px;
-  font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--muted);margin:36px 0 14px;
+  display:flex;align-items:center;gap:10px;margin:32px 0 16px;
+  font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);
 }
 .sh::after{content:'';flex:1;height:1px;background:var(--border);}
-.sh:first-child{margin-top:0;}
+.sh:first-child{margin-top:4px;}
+.sh-dot{width:5px;height:5px;border-radius:50%;background:var(--indigo);}
 
-/* kpi grid */
-.kgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;}
+/* ── glass card ── */
+.card{
+  background:rgba(15,23,42,.7);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  position:relative;overflow:hidden;
+  transition:border-color .2s,box-shadow .2s,transform .15s;
+}
+.card:hover{border-color:var(--border2);box-shadow:0 8px 40px rgba(0,0,0,.35);}
+.card-p{padding:20px 22px;}
+.card-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.card-sub{font-size:10px;color:var(--text3);margin-bottom:16px;}
+.card-sub code{
+  background:rgba(99,102,241,.15);color:var(--indigo);
+  padding:1px 6px;border-radius:4px;font-size:9px;font-family:monospace;
+}
+
+/* ── KPI cards ── */
+.kgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;}
 @media(max-width:1100px){.kgrid{grid-template-columns:repeat(3,1fr);}}
-@media(max-width:600px){.kgrid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:650px){.kgrid{grid-template-columns:repeat(2,1fr);}}
 
 .kcard{
-  background:var(--s1);border:1px solid var(--border);border-radius:var(--r);
-  padding:18px 20px;position:relative;overflow:hidden;cursor:default;
-  transition:border-color .2s,transform .15s;
+  border-radius:var(--r);padding:20px;position:relative;overflow:hidden;cursor:default;
+  background:rgba(15,23,42,.8);
+  border:1px solid var(--border);
+  transition:transform .2s,box-shadow .2s,border-color .2s;
 }
-.kcard:hover{border-color:var(--border2);transform:translateY(-1px);}
-.kcard::after{
-  content:'';position:absolute;inset:0;border-radius:var(--r);
-  background:radial-gradient(ellipse 80% 50% at 50% -20%,var(--accent-glow,.05) 0%,transparent 70%);
+.kcard:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,.4);border-color:var(--border2);}
+
+/* per-card gradient glow */
+.kcard.c-blue  {--kc:var(--blue);  --kg:rgba(59,130,246,.18);}
+.kcard.c-red   {--kc:var(--red);   --kg:rgba(239,68,68,.18);}
+.kcard.c-amber {--kc:var(--amber); --kg:rgba(245,158,11,.15);}
+.kcard.c-green {--kc:var(--green); --kg:rgba(16,185,129,.15);}
+.kcard.c-purple{--kc:var(--purple);--kg:rgba(139,92,246,.18);}
+.kcard.c-cyan  {--kc:var(--cyan);  --kg:rgba(6,182,212,.15);}
+
+.kcard::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 100% 80% at 100% 0%,var(--kg) 0%,transparent 65%);
   pointer-events:none;
 }
-.kcard.bl{--accent-glow:rgba(79,158,255,.08);}
-.kcard.gn{--accent-glow:rgba(16,185,129,.08);}
-.kcard.rd{--accent-glow:rgba(239,68,68,.08);}
-.kcard.am{--accent-glow:rgba(245,158,11,.08);}
-.kcard.pu{--accent-glow:rgba(168,85,247,.08);}
-.kcard.cy{--accent-glow:rgba(6,182,212,.08);}
-
-.kcard-top{display:flex;justify-content:space-between;align-items:flex-start;}
-.kcard-label{font-size:9px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);}
-.kcard-icon{font-size:14px;opacity:.6;}
-.kcard-val{
-  font-size:28px;font-weight:800;margin-top:10px;line-height:1;
-  letter-spacing:-1px;font-variant-numeric:tabular-nums;
+.kcard-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;}
+.kcard-label{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);}
+.kcard-icon{
+  width:32px;height:32px;border-radius:8px;
+  background:rgba(255,255,255,.06);
+  display:flex;align-items:center;justify-content:center;font-size:14px;
 }
-.kcard.bl .kcard-val{color:var(--blue);}
-.kcard.gn .kcard-val{color:var(--green);}
-.kcard.rd .kcard-val{color:var(--red);}
-.kcard.am .kcard-val{color:var(--amber);}
-.kcard.pu .kcard-val{color:var(--purple);}
-.kcard.cy .kcard-val{color:var(--cyan);}
-.kcard-sub{font-size:10px;color:var(--muted);margin-top:5px;}
-.kbar{height:2px;border-radius:1px;margin-top:14px;}
-.kcard.bl .kbar{background:linear-gradient(90deg,var(--blue2),var(--blue));}
-.kcard.gn .kbar{background:linear-gradient(90deg,var(--green2),var(--green));}
-.kcard.rd .kbar{background:linear-gradient(90deg,var(--red2),var(--red));}
-.kcard.am .kbar{background:linear-gradient(90deg,var(--amber2),var(--amber));}
-.kcard.pu .kbar{background:linear-gradient(90deg,var(--purple2),var(--purple));}
-.kcard.cy .kbar{background:linear-gradient(90deg,#0e7490,var(--cyan));}
+.kcard-val{font-size:30px;font-weight:800;color:var(--kc);line-height:1;letter-spacing:-1.5px;font-variant-numeric:tabular-nums;}
+.kcard-sub{font-size:10px;color:var(--text3);margin-top:6px;}
+.kcard-bar{height:3px;border-radius:2px;margin-top:16px;background:rgba(255,255,255,.06);overflow:hidden;}
+.kcard-bar-fill{height:100%;border-radius:2px;background:var(--kc);opacity:.6;transition:width 1s ease;}
 
-/* charts row */
-.cgrid{display:grid;grid-template-columns:1.5fr 1fr;gap:14px;}
-@media(max-width:900px){.cgrid{grid-template-columns:1fr;}}
+/* ── sparkline canvas ── */
+.spark{display:block;width:100%;height:28px;margin-top:8px;opacity:.7;}
 
-.card{
-  background:var(--s1);border:1px solid var(--border);border-radius:var(--r);
-  padding:20px 22px;
-}
-.card-hd{margin-bottom:4px;}
-.card-title{font-size:14px;font-weight:700;color:var(--text);}
-.card-sub{font-size:10px;color:var(--muted);margin-top:2px;margin-bottom:16px;}
-.card-sub code{background:var(--s2);padding:1px 5px;border-radius:4px;font-size:9px;color:var(--blue);}
+/* ── 2-col grid ── */
+.cgrid{display:grid;grid-template-columns:1.6fr 1fr;gap:16px;}
+@media(max-width:950px){.cgrid{grid-template-columns:1fr;}}
+.cgrid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+@media(max-width:950px){.cgrid3{grid-template-columns:1fr;}}
 
-/* flags table */
+/* ── table ── */
 .twrap{overflow-x:auto;}
 table{width:100%;border-collapse:collapse;font-size:12px;}
-thead tr{background:var(--s2);}
-th{text-align:left;padding:9px 12px;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);}
-td{padding:11px 12px;border-bottom:1px solid rgba(30,42,56,.6);vertical-align:middle;}
-tr:hover td{background:rgba(255,255,255,.018);}
+thead tr{background:rgba(255,255,255,.03);}
+th{
+  text-align:left;padding:11px 14px;
+  font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text3);
+  border-bottom:1px solid var(--border);white-space:nowrap;
+}
+td{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle;}
 tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,.025);}
 
-.pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap;}
-.pill-rd{background:rgba(239,68,68,.12);color:var(--red);border:1px solid rgba(239,68,68,.2);}
-.pill-am{background:rgba(245,158,11,.12);color:var(--amber);border:1px solid rgba(245,158,11,.2);}
-.pill-pu{background:rgba(168,85,247,.12);color:var(--purple);border:1px solid rgba(168,85,247,.2);}
-.pill-bl{background:rgba(79,158,255,.1);color:var(--blue);border:1px solid rgba(79,158,255,.2);}
-.pill-gn{background:rgba(16,185,129,.1);color:var(--green);border:1px solid rgba(16,185,129,.2);}
-.pill-cy{background:rgba(6,182,212,.1);color:var(--cyan);border:1px solid rgba(6,182,212,.2);}
+/* ── pill badges ── */
+.pill{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap;
+}
+.pill::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.p-red   {background:rgba(239,68,68,.12); color:var(--red);   border:1px solid rgba(239,68,68,.2);}
+.p-amber {background:rgba(245,158,11,.12);color:var(--amber); border:1px solid rgba(245,158,11,.2);}
+.p-purple{background:rgba(139,92,246,.12);color:var(--purple);border:1px solid rgba(139,92,246,.2);}
+.p-blue  {background:rgba(59,130,246,.1); color:var(--blue);  border:1px solid rgba(59,130,246,.2);}
+.p-green {background:rgba(16,185,129,.1); color:var(--green); border:1px solid rgba(16,185,129,.2);}
+.p-teal  {background:rgba(20,184,166,.1); color:var(--teal);  border:1px solid rgba(20,184,166,.2);}
 
-.score-wrap{display:flex;align-items:center;gap:7px;}
-.score-bg{width:50px;height:5px;background:var(--s3);border-radius:3px;overflow:hidden;}
-.score-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--amber),var(--red));}
-.score-num{font-weight:700;font-size:12px;color:var(--text);}
+/* ── risk score bar ── */
+.sbar-wrap{display:flex;align-items:center;gap:8px;}
+.sbar-track{width:52px;height:5px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;flex-shrink:0;}
+.sbar-fill{height:100%;border-radius:3px;}
+.sbar-fill.hi{background:linear-gradient(90deg,#f59e0b,#ef4444);}
+.sbar-fill.md{background:linear-gradient(90deg,#3b82f6,#f59e0b);}
+.sbar-num{font-size:12px;font-weight:700;color:var(--text);}
 
-.mono{font-family:'SF Mono',Consolas,monospace;font-size:10px;color:var(--muted);}
+/* ── amount / mono ── */
 .amt{font-weight:700;color:var(--green);}
-.empty-row{text-align:center;padding:28px;color:var(--muted);font-size:12px;}
+.mono{font-family:'SF Mono',Consolas,monospace;font-size:10px;color:var(--text3);}
+.user-name{font-weight:600;color:var(--text);}
+.merch-name{color:var(--text2);}
+.empty-row{text-align:center;padding:32px;color:var(--text3);}
 
-/* risk heatmap */
-.heatmap-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:4px;}
+/* ── activity feed ── */
+.feed{display:flex;flex-direction:column;gap:0;}
+.feed-item{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:12px 0;border-bottom:1px solid var(--border);
+}
+.feed-item:last-child{border-bottom:none;}
+.feed-icon{
+  width:32px;height:32px;border-radius:8px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:13px;
+}
+.feed-icon.rd{background:rgba(239,68,68,.15);}
+.feed-icon.am{background:rgba(245,158,11,.15);}
+.feed-icon.pu{background:rgba(139,92,246,.15);}
+.feed-icon.bl{background:rgba(59,130,246,.15);}
+.feed-body{flex:1;min-width:0;}
+.feed-rule{font-size:11px;font-weight:700;color:var(--text);}
+.feed-meta{font-size:10px;color:var(--text3);margin-top:2px;}
+.feed-score{
+  font-size:13px;font-weight:800;flex-shrink:0;
+  font-variant-numeric:tabular-nums;
+}
+
+/* ── heatmap ── */
+.hm-grid{display:grid;grid-template-columns:repeat(24,1fr);gap:3px;}
 .hm-cell{
-  aspect-ratio:1;border-radius:4px;
-  background:var(--s2);border:1px solid var(--border);
+  aspect-ratio:1;border-radius:3px;cursor:default;
+  transition:transform .12s,opacity .12s;
+}
+.hm-cell:hover{transform:scale(1.3);z-index:5;opacity:1!important;}
+.hm-labels{display:flex;justify-content:space-between;margin-bottom:6px;}
+.hm-day-labels{display:flex;flex-direction:column;gap:3px;margin-right:8px;}
+
+/* ── chain node visualization ── */
+.chain-nodes{display:flex;align-items:center;gap:0;flex-wrap:wrap;}
+.cn{
   display:flex;align-items:center;justify-content:center;
-  font-size:9px;font-weight:700;color:var(--muted);
-  transition:transform .15s;cursor:default;
-  position:relative;
+  width:30px;height:30px;border-radius:50%;
+  background:rgba(139,92,246,.2);border:1px solid rgba(139,92,246,.4);
+  font-size:10px;font-weight:700;color:var(--purple);
 }
-.hm-cell:hover{transform:scale(1.15);z-index:2;}
+.cn-arrow{font-size:10px;color:var(--text3);padding:0 4px;}
 
-/* timeline */
-.timeline{position:relative;padding-left:20px;}
-.timeline::before{content:'';position:absolute;left:5px;top:4px;bottom:0;width:1px;background:var(--border);}
-.tl-item{position:relative;padding:0 0 16px 16px;}
-.tl-item::before{
-  content:'';position:absolute;left:-7px;top:4px;
-  width:8px;height:8px;border-radius:50%;border:2px solid var(--border2);
-  background:var(--bg);
-}
-.tl-item.rd::before{border-color:var(--red);background:rgba(239,68,68,.2);}
-.tl-item.am::before{border-color:var(--amber);background:rgba(245,158,11,.2);}
-.tl-item.pu::before{border-color:var(--purple);background:rgba(168,85,247,.2);}
-.tl-label{font-size:11px;font-weight:600;color:var(--text);}
-.tl-meta{font-size:10px;color:var(--muted);margin-top:2px;}
-
-/* footer */
-.footer{
+/* ── footer ── */
+footer{
   margin-top:48px;padding-top:20px;border-top:1px solid var(--border);
   display:flex;justify-content:space-between;align-items:center;
-  font-size:10px;color:var(--muted2);
+  font-size:10px;color:var(--text3);
 }
-.footer a{color:var(--muted);text-decoration:none;}
-.footer a:hover{color:var(--blue);}
+footer a{color:var(--text2);text-decoration:none;transition:color .15s;}
+footer a:hover{color:var(--blue);}
 </style>
 </head>
 <body>
 
-<nav class="nav">
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+
+<nav>
   <div class="nav-logo">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-    </svg>
+    <div class="nav-logo-icon">🛡</div>
     FraudDetector
   </div>
-  <span class="nav-pill">LIVE</span>
+  <div class="live-badge"><div class="live-dot"></div>LIVE</div>
   <div class="nav-sp"></div>
-  <div class="nav-info">
-    <div class="pulse-dot"></div>
-    <span>Refreshes every 15s</span>
+  <div class="nav-meta">
+    <div class="nav-stat">
+      <div class="nav-stat-val" id="nav-flags">—</div>
+      <div class="nav-stat-lbl">Open Flags</div>
+    </div>
+    <div style="width:1px;height:28px;background:var(--border);"></div>
+    <div class="nav-time" id="nav-clock">—</div>
   </div>
-  <div class="nav-time" id="nav-clock">—</div>
 </nav>
 
 <div class="page">
 
-  <div class="sh">Overview</div>
-
+  <!-- KPIs -->
+  <div class="sh"><div class="sh-dot"></div>Overview</div>
   <div class="kgrid">
-    <div class="kcard bl">
-      <div class="kcard-top"><span class="kcard-label">Total Transactions</span><span class="kcard-icon">📊</span></div>
+    <div class="kcard c-blue">
+      <div class="kcard-top"><span class="kcard-label">Total Transactions</span><div class="kcard-icon">📊</div></div>
       <div class="kcard-val" id="k-txns">—</div>
-      <div class="kcard-sub" id="k-txns-sub">loading…</div>
-      <div class="kbar"></div>
+      <div class="kcard-sub" id="k-txns-sub">—</div>
+      <canvas class="spark" id="sp-txns"></canvas>
+      <div class="kcard-bar"><div class="kcard-bar-fill" id="kb-txns" style="width:65%"></div></div>
     </div>
-    <div class="kcard rd">
-      <div class="kcard-top"><span class="kcard-label">Open Flags</span><span class="kcard-icon">🚨</span></div>
+    <div class="kcard c-red">
+      <div class="kcard-top"><span class="kcard-label">Open Flags</span><div class="kcard-icon">🚨</div></div>
       <div class="kcard-val" id="k-flags">—</div>
       <div class="kcard-sub">unresolved alerts</div>
-      <div class="kbar"></div>
+      <canvas class="spark" id="sp-flags"></canvas>
+      <div class="kcard-bar"><div class="kcard-bar-fill" id="kb-flags" style="width:45%"></div></div>
     </div>
-    <div class="kcard am">
-      <div class="kcard-top"><span class="kcard-label">Avg Risk Score</span><span class="kcard-icon">⚡</span></div>
+    <div class="kcard c-amber">
+      <div class="kcard-top"><span class="kcard-label">Avg Risk Score</span><div class="kcard-icon">⚡</div></div>
       <div class="kcard-val" id="k-risk">—</div>
       <div class="kcard-sub">across open flags</div>
-      <div class="kbar"></div>
+      <canvas class="spark" id="sp-risk"></canvas>
+      <div class="kcard-bar"><div class="kcard-bar-fill" id="kb-risk" style="width:72%"></div></div>
     </div>
-    <div class="kcard gn">
-      <div class="kcard-top"><span class="kcard-label">Active Users 24h</span><span class="kcard-icon">👥</span></div>
+    <div class="kcard c-green">
+      <div class="kcard-top"><span class="kcard-label">Active Users 24h</span><div class="kcard-icon">👥</div></div>
       <div class="kcard-val" id="k-users">—</div>
-      <div class="kcard-sub">distinct users</div>
-      <div class="kbar"></div>
+      <div class="kcard-sub">distinct accounts</div>
+      <canvas class="spark" id="sp-users"></canvas>
+      <div class="kcard-bar"><div class="kcard-bar-fill" id="kb-users" style="width:40%"></div></div>
     </div>
-    <div class="kcard pu">
-      <div class="kcard-top"><span class="kcard-label">Txns Last Hour</span><span class="kcard-icon">🔁</span></div>
+    <div class="kcard c-purple">
+      <div class="kcard-top"><span class="kcard-label">Txns Last Hour</span><div class="kcard-icon">🔁</div></div>
       <div class="kcard-val" id="k-hour">—</div>
       <div class="kcard-sub">past 60 minutes</div>
-      <div class="kbar"></div>
+      <canvas class="spark" id="sp-hour"></canvas>
+      <div class="kcard-bar"><div class="kcard-bar-fill" id="kb-hour" style="width:30%"></div></div>
     </div>
-    <div class="kcard cy">
-      <div class="kcard-top"><span class="kcard-label">Volume 24h</span><span class="kcard-icon">💰</span></div>
+    <div class="kcard c-cyan">
+      <div class="kcard-top"><span class="kcard-label">Volume 24h</span><div class="kcard-icon">💸</div></div>
       <div class="kcard-val" id="k-vol">—</div>
       <div class="kcard-sub">total amount</div>
-      <div class="kbar"></div>
+      <canvas class="spark" id="sp-vol"></canvas>
+      <div class="kcard-bar"><div class="kcard-bar-fill" id="kb-vol" style="width:55%"></div></div>
     </div>
   </div>
 
-  <div class="sh">Analytics</div>
-
+  <!-- Charts row -->
+  <div class="sh"><div class="sh-dot"></div>Analytics</div>
   <div class="cgrid">
-    <div class="card">
-      <div class="card-hd">
-        <div class="card-title">Merchant Fraud Rate</div>
-        <div class="card-sub">Rolling 7-day flag rate · <code>RANGE BETWEEN</code> window function</div>
-      </div>
-      <canvas id="chart-merch" height="210"></canvas>
+    <div class="card card-p">
+      <div class="card-title">Merchant Fraud Rate</div>
+      <div class="card-sub">Rolling 7-day flag rate · <code>RANGE BETWEEN INTERVAL</code> window</div>
+      <canvas id="chart-merch" height="200"></canvas>
     </div>
-    <div class="card">
-      <div class="card-hd">
-        <div class="card-title">User Risk Ranking</div>
-        <div class="card-sub"><code>PERCENT_RANK</code> + <code>NTILE(10)</code> · top 8 by flag count</div>
-      </div>
-      <canvas id="chart-users" height="210"></canvas>
+    <div class="card card-p">
+      <div class="card-title">User Risk Ranking</div>
+      <div class="card-sub"><code>PERCENT_RANK</code> + <code>NTILE(10)</code> · top 8</div>
+      <canvas id="chart-users" height="200"></canvas>
     </div>
   </div>
 
-  <div class="sh" style="margin-top:24px;">Risk Activity Heatmap</div>
-  <div class="card">
-    <div class="card-hd">
-      <div class="card-title">Transaction Risk — Last 7 Days</div>
-      <div class="card-sub">Each cell = one hour block · darker = higher flag density</div>
-    </div>
-    <div style="display:flex;gap:6px;margin-bottom:8px;">
-      <span style="font-size:9px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;padding-top:2px;">Mon</span>
-      <span style="font-size:9px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;padding-top:2px;margin-left:auto;">Sun</span>
-    </div>
-    <div class="heatmap-grid" id="heatmap"></div>
-    <div style="display:flex;align-items:center;gap:6px;margin-top:10px;justify-content:flex-end;">
-      <span style="font-size:9px;color:var(--muted)">Low</span>
-      <div style="display:flex;gap:2px;">
-        <div style="width:10px;height:10px;border-radius:2px;background:var(--s2);border:1px solid var(--border);"></div>
-        <div style="width:10px;height:10px;border-radius:2px;background:rgba(245,158,11,.2);"></div>
-        <div style="width:10px;height:10px;border-radius:2px;background:rgba(245,158,11,.5);"></div>
-        <div style="width:10px;height:10px;border-radius:2px;background:rgba(239,68,68,.5);"></div>
-        <div style="width:10px;height:10px;border-radius:2px;background:var(--red);"></div>
+  <!-- Heatmap -->
+  <div class="sh"><div class="sh-dot"></div>24-Hour Activity Heatmap</div>
+  <div class="card card-p">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">
+      <div>
+        <div class="card-title">Transaction Risk Density</div>
+        <div class="card-sub" style="margin-bottom:0">Each cell = 1 hour · darker = higher flag density · 24 columns (midnight → 11 PM)</div>
       </div>
-      <span style="font-size:9px;color:var(--muted)">High</span>
+      <div style="display:flex;align-items:center;gap:6px;font-size:9px;color:var(--text3);">
+        <span>Low</span>
+        <div style="display:flex;gap:3px;">
+          <div style="width:12px;height:12px;border-radius:3px;background:rgba(255,255,255,.04);border:1px solid var(--border);"></div>
+          <div style="width:12px;height:12px;border-radius:3px;background:rgba(99,102,241,.25);"></div>
+          <div style="width:12px;height:12px;border-radius:3px;background:rgba(245,158,11,.4);"></div>
+          <div style="width:12px;height:12px;border-radius:3px;background:rgba(239,68,68,.55);"></div>
+          <div style="width:12px;height:12px;border-radius:3px;background:var(--red);"></div>
+        </div>
+        <span>High</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:3px;margin-bottom:4px;padding-left:48px;">
+      <span style="font-size:8px;color:var(--text3);flex:1;text-align:center;">0</span>
+      <span style="font-size:8px;color:var(--text3);flex:1;text-align:center;">6</span>
+      <span style="font-size:8px;color:var(--text3);flex:1;text-align:center;">12</span>
+      <span style="font-size:8px;color:var(--text3);flex:1;text-align:center;">18</span>
+      <span style="font-size:8px;color:var(--text3);flex:1;text-align:center;">23</span>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <div style="display:flex;flex-direction:column;gap:3px;justify-content:center;width:40px;flex-shrink:0;">
+        <span style="font-size:8px;color:var(--text3);text-align:right;line-height:12px;">Mon</span>
+        <span style="font-size:8px;color:var(--text3);text-align:right;line-height:12px;">Tue</span>
+        <span style="font-size:8px;color:var(--text3);text-align:right;line-height:12px;">Wed</span>
+        <span style="font-size:8px;color:var(--text3);text-align:right;line-height:12px;">Thu</span>
+        <span style="font-size:8px;color:var(--text3);text-align:right;line-height:12px;">Fri</span>
+        <span style="font-size:8px;color:var(--text3);text-align:right;line-height:12px;">Sat</span>
+        <span style="font-size:8px;color:var(--text3);text-align:right;line-height:12px;">Sun</span>
+      </div>
+      <div id="heatmap" style="display:grid;grid-template-columns:repeat(24,1fr);grid-template-rows:repeat(7,1fr);gap:3px;flex:1;"></div>
     </div>
   </div>
 
-  <div class="sh">Open Fraud Flags</div>
-  <div class="card" style="padding:0;">
-    <div class="twrap">
-      <table id="tbl-flags">
-        <thead><tr>
-          <th>Rule</th><th>Risk</th><th>User</th>
-          <th>Merchant</th><th>Amount</th><th>Details</th><th>When</th>
-        </tr></thead>
-        <tbody><tr><td colspan="7" class="empty-row">Loading…</td></tr></tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="sh">Money Mule Chains <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);font-size:9px;">&nbsp;— recursive CTE, up to 6 hops</span></div>
+  <!-- Flags + feed -->
+  <div class="sh"><div class="sh-dot"></div>Open Fraud Flags</div>
   <div class="cgrid">
-    <div class="card" style="padding:0;">
+    <div class="card" style="padding:0;overflow:hidden;">
+      <div class="twrap">
+        <table id="tbl-flags">
+          <thead><tr>
+            <th>Rule</th><th>Risk</th><th>User</th>
+            <th>Merchant</th><th>Amount</th><th>Details</th><th>When</th>
+          </tr></thead>
+          <tbody><tr><td colspan="7" class="empty-row">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card card-p">
+      <div class="card-title">Live Flag Feed</div>
+      <div class="card-sub">Most recent detections</div>
+      <div class="feed" id="feed"></div>
+    </div>
+  </div>
+
+  <!-- Chains + devices -->
+  <div class="sh"><div class="sh-dot"></div>Money Mule Chains <span style="font-size:9px;color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0;margin-left:4px;">recursive CTE · up to 6 hops</span></div>
+  <div class="cgrid3">
+    <div class="card" style="padding:0;grid-column:span 2;">
       <div class="twrap">
         <table id="tbl-chains">
-          <thead><tr><th>From</th><th>To</th><th>Amount</th><th>Hops</th><th>Chain path</th></tr></thead>
+          <thead><tr><th>From</th><th>→ To</th><th>Amount</th><th>Hops</th><th>Chain path</th></tr></thead>
           <tbody><tr><td colspan="5" class="empty-row">Loading…</td></tr></tbody>
         </table>
       </div>
     </div>
-    <div class="card">
-      <div class="card-title" style="margin-bottom:4px;">Recent Flag Activity</div>
-      <div class="card-sub">Latest 6 events</div>
-      <div class="timeline" id="timeline">
-        <div class="tl-item"><div class="tl-label" style="color:var(--muted)">Loading…</div></div>
+    <div class="card card-p">
+      <div class="card-title">Device Sharing</div>
+      <div class="card-sub">Same device → multiple users</div>
+      <div class="twrap">
+        <table id="tbl-devices" style="font-size:11px;">
+          <thead><tr><th>Device</th><th>Users</th><th>Volume</th></tr></thead>
+          <tbody><tr><td colspan="3" class="empty-row">Loading…</td></tr></tbody>
+        </table>
       </div>
     </div>
   </div>
 
-  <div class="sh">Device Sharing</div>
-  <div class="card" style="padding:0;">
-    <div class="twrap">
-      <table id="tbl-devices">
-        <thead><tr><th>Device ID</th><th>Users sharing</th><th>Total volume</th><th>Accounts</th></tr></thead>
-        <tbody><tr><td colspan="4" class="empty-row">Loading…</td></tr></tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="footer">
-    <span>FraudDetector · PostgreSQL · FastAPI · <a href="https://github.com/ansh44233/FraudDetector">GitHub ↗</a></span>
+  <footer>
+    <span>FraudDetector · PostgreSQL · FastAPI ·
+      <a href="https://github.com/ansh44233/FraudDetector" target="_blank">GitHub ↗</a>
+    </span>
     <span id="ts">—</span>
-  </div>
+  </footer>
 </div>
 
 <script>
-const API='';
+// ── helpers ──────────────────────────────────────────────────
+const $=id=>document.getElementById(id);
 const r=n=>'₹'+Number(n).toLocaleString('en-IN',{maximumFractionDigits:0});
 const ago=d=>{
   if(!d)return'—';
@@ -349,167 +452,190 @@ const ago=d=>{
   return Math.floor(s/3600)+'h ago';
 };
 const ruleClass=rule=>{
-  if(rule.includes('MULE'))return'pill-pu';
-  if(rule.includes('VELOCITY')||rule.includes('RAPID')||rule.includes('HIGH_AMOUNT'))return'pill-rd';
-  if(rule.includes('DEVICE')||rule.includes('MULTI'))return'pill-am';
-  return'pill-bl';
+  if(rule.includes('MULE'))return'p-purple';
+  if(rule.includes('HIGH_AMOUNT')||rule.includes('VELOCITY'))return'p-red';
+  if(rule.includes('MULTI')||rule.includes('RAPID'))return'p-amber';
+  if(rule.includes('SHARED'))return'p-teal';
+  return'p-blue';
+};
+const feedIcon=rule=>{
+  if(rule.includes('MULE'))return['pu','🕸'];
+  if(rule.includes('VELOCITY')||rule.includes('HIGH'))return['rd','⚡'];
+  if(rule.includes('MULTI')||rule.includes('DEVICE'))return['am','📱'];
+  return['bl','🔁'];
 };
 
-// animated counter
-function animCount(el,target,prefix='',suffix=''){
-  const dur=800,start=performance.now();
-  const from=parseFloat(el.dataset.val||0)||0;
-  el.dataset.val=target;
-  const step=ts=>{
-    const p=Math.min((ts-start)/dur,1);
-    const ease=1-Math.pow(1-p,3);
-    const cur=from+(target-from)*ease;
-    el.textContent=prefix+(Number.isInteger(target)?Math.round(cur):cur.toFixed(1))+suffix;
+// ── animated counter ─────────────────────────────────────────
+function count(el,target,dec=0){
+  const dur=900,start=performance.now(),from=parseFloat(el.dataset.v||0)||0;
+  el.dataset.v=target;
+  const step=t=>{
+    const p=Math.min((t-start)/dur,1),e=1-Math.pow(1-p,3);
+    const v=from+(target-from)*e;
+    el.textContent=dec?v.toFixed(dec):Math.round(v);
     if(p<1)requestAnimationFrame(step);
   };
   requestAnimationFrame(step);
 }
 
-// clock
-setInterval(()=>{
-  document.getElementById('nav-clock').textContent=new Date().toLocaleTimeString('en-IN');
-},1000);
+// ── sparkline ────────────────────────────────────────────────
+function spark(id,color,data){
+  const cv=$('sp-'+id);if(!cv)return;
+  const ctx=cv.getContext('2d');
+  cv.width=cv.offsetWidth||200;cv.height=28;
+  const pts=data||Array.from({length:12},()=>Math.random()*0.6+0.2);
+  const max=Math.max(...pts),min=Math.min(...pts),range=max-min||1;
+  const W=cv.width,H=cv.height,step=W/(pts.length-1);
+  ctx.clearRect(0,0,W,H);
+  // gradient fill
+  const grad=ctx.createLinearGradient(0,0,0,H);
+  grad.addColorStop(0,color+'33');grad.addColorStop(1,color+'00');
+  ctx.beginPath();
+  pts.forEach((v,i)=>{
+    const x=i*step,y=H-(v-min)/range*(H-4)-2;
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();
+  ctx.fillStyle=grad;ctx.fill();
+  // line
+  ctx.beginPath();
+  pts.forEach((v,i)=>{
+    const x=i*step,y=H-(v-min)/range*(H-4)-2;
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.strokeStyle=color;ctx.lineWidth=1.5;ctx.stroke();
+}
 
-// build heatmap
-function buildHeatmap(data){
-  const hm=document.getElementById('heatmap');
-  hm.innerHTML='';
+// ── heatmap ──────────────────────────────────────────────────
+function buildHeatmap(vals){
+  const hm=$('heatmap');hm.innerHTML='';
   for(let d=0;d<7;d++){
-    for(let h=0;h<4;h++){
-      const val=data?data[d*4+h]||0:Math.random();
+    for(let h=0;h<24;h++){
+      const v=vals?vals[d*24+h]:Math.random()*Math.random();
       const cell=document.createElement('div');
-      cell.className='hm-cell';
-      let bg,color;
-      if(val<.1){bg='var(--s2)';color='var(--muted2)';}
-      else if(val<.3){bg='rgba(245,158,11,.18)';color='var(--amber)';}
-      else if(val<.6){bg='rgba(245,158,11,.4)';color='var(--amber)';}
-      else if(val<.8){bg='rgba(239,68,68,.4)';color='var(--red)';}
-      else{bg='rgba(239,68,68,.75)';color='var(--red)';}
-      cell.style.background=bg;
-      cell.style.color=color;
-      if(val>.1)cell.textContent=Math.round(val*10);
+      cell.style.cssText=`aspect-ratio:1;border-radius:3px;cursor:default;transition:transform .12s;`;
+      if(v<.05)       cell.style.background='rgba(255,255,255,.03)';
+      else if(v<.2)   cell.style.background=`rgba(99,102,241,${.15+v})`;
+      else if(v<.45)  cell.style.background=`rgba(245,158,11,${.3+v*.5})`;
+      else if(v<.7)   cell.style.background=`rgba(239,68,68,${.4+v*.4})`;
+      else             cell.style.background=`rgba(239,68,68,${.7+v*.3})`;
+      cell.title=`${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][d]} ${h}:00 — risk: ${(v*10).toFixed(1)}`;
+      cell.onmouseenter=()=>cell.style.transform='scale(1.4)';
+      cell.onmouseleave=()=>cell.style.transform='scale(1)';
       hm.appendChild(cell);
     }
   }
 }
 
+// ── charts ───────────────────────────────────────────────────
 let mChart,uChart;
+const chartDefaults={
+  plugins:{legend:{display:false}},
+  animation:{duration:600},
+};
 
-async function get(p){
-  const res=await fetch(API+p);
-  if(!res.ok)throw new Error(res.status);
-  return res.json();
-}
-
-async function load(){
-  try{
-    const [sum,flags,chains,devices,merch,rank]=await Promise.all([
-      get('/analytics/summary'),get('/flags?resolved=false&limit=20'),
-      get('/analytics/mule-chains'),get('/analytics/device-sharing'),
-      get('/analytics/merchant-fraud-rate'),get('/analytics/user-risk-ranking'),
-    ]);
-    const s=Array.isArray(sum)?sum[0]:sum;
-    animCount(document.getElementById('k-txns'),+s.total_txns||0);
-    animCount(document.getElementById('k-flags'),+s.open_flags||0);
-    animCount(document.getElementById('k-risk'),+s.avg_risk_score||0,'','');
-    animCount(document.getElementById('k-users'),+s.active_users_24h||0);
-    animCount(document.getElementById('k-hour'),+s.txns_last_hour||0);
-    document.getElementById('k-vol').textContent=s.volume_24h?r(s.volume_24h):'—';
-    document.getElementById('k-txns-sub').textContent='last hour: '+(s.txns_last_hour||0);
-    renderMerchChart(merch);renderUserChart(rank);
-    renderFlags(flags);renderChains(chains);renderDevices(devices);
-    renderTimeline(flags);buildHeatmap(null);
-    document.getElementById('ts').textContent='Updated '+new Date().toLocaleTimeString('en-IN');
-  }catch{loadDemo();}
-}
-
-function renderMerchChart(merch){
+function renderMerch(merch){
   const names=[...new Set(merch.map(r=>r.merchant))].slice(0,7);
-  const latest=names.map(n=>{const rows=merch.filter(r=>r.merchant===n);return rows[rows.length-1]||{};});
+  const latest=names.map(n=>merch.filter(r=>r.merchant===n).at(-1)||{});
   if(mChart)mChart.destroy();
-  mChart=new Chart(document.getElementById('chart-merch'),{
+  mChart=new Chart($('chart-merch'),{
     type:'bar',
     data:{
       labels:latest.map(r=>r.merchant||''),
       datasets:[{
-        label:'7-day flag rate %',
         data:latest.map(r=>r.rolling_7d_rate||0),
         backgroundColor:latest.map(r=>(r.rolling_7d_rate||0)>10
-          ?'rgba(239,68,68,.7)':'rgba(79,158,255,.55)'),
-        borderRadius:5,borderSkipped:false,
+          ?'rgba(239,68,68,.75)':'rgba(99,102,241,.65)'),
+        borderRadius:6,borderSkipped:false,
+        borderColor:latest.map(r=>(r.rolling_7d_rate||0)>10
+          ?'rgba(239,68,68,1)':'rgba(99,102,241,1)'),
+        borderWidth:1,
       }]
     },
     options:{
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.raw}%`}}},
+      ...chartDefaults,
       scales:{
-        x:{ticks:{color:'#5a7090',font:{size:10}},grid:{display:false},border:{display:false}},
-        y:{ticks:{color:'#5a7090',callback:v=>v+'%',font:{size:10}},
-           grid:{color:'rgba(30,42,56,.8)'},border:{display:false}}
+        x:{ticks:{color:'#475569',font:{size:10}},grid:{display:false},border:{display:false}},
+        y:{ticks:{color:'#475569',callback:v=>v+'%',font:{size:10}},
+           grid:{color:'rgba(255,255,255,.04)'},border:{display:false}}
       }
     }
   });
 }
 
-function renderUserChart(rank){
+function renderUsers(rank){
   const top=rank.slice(0,8);
   if(uChart)uChart.destroy();
-  uChart=new Chart(document.getElementById('chart-users'),{
+  uChart=new Chart($('chart-users'),{
     type:'bar',
     data:{
       labels:top.map(r=>r.name.split(' ')[0]),
       datasets:[{
-        label:'Flags',
         data:top.map(r=>r.flag_count),
-        backgroundColor:top.map((_,i)=>`rgba(239,68,68,${.75-.05*i})`),
-        borderRadius:4,borderSkipped:false,
+        backgroundColor:top.map((_,i)=>`rgba(239,68,68,${.8-.07*i})`),
+        borderRadius:5,borderSkipped:false,
       }]
     },
     options:{
+      ...chartDefaults,
       indexAxis:'y',
-      plugins:{legend:{display:false}},
       scales:{
-        x:{ticks:{color:'#5a7090',font:{size:10}},grid:{color:'rgba(30,42,56,.8)'},border:{display:false}},
-        y:{ticks:{color:'#8aa0b8',font:{size:11}},grid:{display:false},border:{display:false}}
+        x:{ticks:{color:'#475569',font:{size:10}},grid:{color:'rgba(255,255,255,.04)'},border:{display:false}},
+        y:{ticks:{color:'#94a3b8',font:{size:11}},grid:{display:false},border:{display:false}}
       }
     }
   });
 }
 
+// ── tables ───────────────────────────────────────────────────
 function renderFlags(flags){
   const tb=document.querySelector('#tbl-flags tbody');
-  tb.innerHTML=flags.length?flags.map(f=>`
-    <tr>
+  tb.innerHTML=flags.length?flags.map(f=>{
+    const hi=f.risk_score>=80;
+    return`<tr>
       <td><span class="pill ${ruleClass(f.rule_name)}">${f.rule_name}</span></td>
       <td>
-        <div class="score-wrap">
-          <div class="score-bg"><div class="score-fill" style="width:${f.risk_score}%"></div></div>
-          <span class="score-num">${f.risk_score}</span>
+        <div class="sbar-wrap">
+          <div class="sbar-track"><div class="sbar-fill ${hi?'hi':'md'}" style="width:${f.risk_score}%"></div></div>
+          <span class="sbar-num">${f.risk_score}</span>
         </div>
       </td>
-      <td style="font-weight:600">${f.user_name}</td>
-      <td style="color:var(--muted)">${f.merchant}</td>
+      <td class="user-name">${f.user_name}</td>
+      <td class="merch-name">${f.merchant}</td>
       <td class="amt">${r(f.amount)}</td>
-      <td class="mono">${f.details?JSON.stringify(f.details).slice(0,55):''}</td>
-      <td style="color:var(--muted)">${ago(f.created_at)}</td>
-    </tr>`).join('')
+      <td class="mono">${f.details?JSON.stringify(f.details).slice(0,50):''}</td>
+      <td style="color:var(--text3);white-space:nowrap;">${ago(f.created_at)}</td>
+    </tr>`;}).join('')
     :'<tr><td colspan="7" class="empty-row" style="color:var(--green)">✓ No open flags</td></tr>';
+}
+
+function renderFeed(flags){
+  const feed=$('feed');
+  feed.innerHTML=flags.slice(0,6).map(f=>{
+    const [cls,icon]=feedIcon(f.rule_name);
+    return`<div class="feed-item">
+      <div class="feed-icon ${cls}">${icon}</div>
+      <div class="feed-body">
+        <div class="feed-rule">${f.rule_name}</div>
+        <div class="feed-meta">${f.user_name} · ${f.merchant} · ${ago(f.created_at)}</div>
+      </div>
+      <div class="feed-score" style="color:${f.risk_score>=80?'var(--red)':'var(--amber)'}">${f.risk_score}</div>
+    </div>`;}).join('')||'<div style="color:var(--text3);font-size:12px;padding:12px 0;">No recent flags</div>';
 }
 
 function renderChains(chains){
   const tb=document.querySelector('#tbl-chains tbody');
-  tb.innerHTML=chains.length?chains.slice(0,8).map(c=>`
-    <tr>
-      <td style="font-weight:600">User ${c.from_user_id}</td>
-      <td style="font-weight:600">User ${c.to_user_id}</td>
+  tb.innerHTML=chains.length?chains.slice(0,8).map(c=>{
+    const nodes=(c.chain||[c.from_user_id,c.to_user_id]).map((n,i,a)=>
+      `<div class="cn">${n}</div>${i<a.length-1?'<div class="cn-arrow">→</div>':''}`
+    ).join('');
+    return`<tr>
+      <td class="user-name">User ${c.from_user_id}</td>
+      <td class="user-name">User ${c.to_user_id}</td>
       <td class="amt">${r(c.amount)}</td>
-      <td><span class="pill ${c.depth>=4?'pill-rd':'pill-am'}">${c.depth} hop${c.depth>1?'s':''}</span></td>
-      <td class="mono">${JSON.stringify(c.chain)}</td>
-    </tr>`).join('')
+      <td><span class="pill ${c.depth>=4?'p-red':'p-amber'}">${c.depth} hop${c.depth>1?'s':''}</span></td>
+      <td><div class="chain-nodes">${nodes}</div></td>
+    </tr>`;}).join('')
     :'<tr><td colspan="5" class="empty-row" style="color:var(--green)">No chains detected</td></tr>';
 }
 
@@ -517,40 +643,66 @@ function renderDevices(devices){
   const tb=document.querySelector('#tbl-devices tbody');
   tb.innerHTML=devices.length?devices.map(d=>`
     <tr>
-      <td class="mono">${d.device_id}</td>
-      <td><span class="pill pill-rd">${d.user_count} users</span></td>
+      <td class="mono" style="max-width:100px;overflow:hidden;text-overflow:ellipsis;">${d.device_id}</td>
+      <td><span class="pill p-red">${d.user_count}</span></td>
       <td class="amt">${r(d.total_amount)}</td>
-      <td style="color:var(--muted);font-size:11px">${(d.users||[]).join(', ')}</td>
     </tr>`).join('')
-    :'<tr><td colspan="4" class="empty-row" style="color:var(--green)">No shared devices</td></tr>';
+    :'<tr><td colspan="3" class="empty-row" style="color:var(--green)">None</td></tr>';
 }
 
-function renderTimeline(flags){
-  const tl=document.getElementById('timeline');
-  const cls=rule=>rule.includes('MULE')?'pu':rule.includes('VELOCITY')||rule.includes('HIGH')?'rd':'am';
-  tl.innerHTML=flags.slice(0,6).map(f=>`
-    <div class="tl-item ${cls(f.rule_name)}">
-      <div class="tl-label">${f.rule_name} · ${f.user_name}</div>
-      <div class="tl-meta">score ${f.risk_score} · ${f.merchant} · ${ago(f.created_at)}</div>
-    </div>`).join('')||'<div class="tl-item"><div class="tl-label" style="color:var(--green)">No recent flags</div></div>';
+// ── clock ────────────────────────────────────────────────────
+setInterval(()=>$('nav-clock').textContent=new Date().toLocaleTimeString('en-IN'),1000);
+
+// ── load ─────────────────────────────────────────────────────
+async function load(){
+  try{
+    const [sum,flags,chains,devices,merch,rank]=await Promise.all([
+      fetch('/analytics/summary').then(r=>r.json()),
+      fetch('/flags?resolved=false&limit=20').then(r=>r.json()),
+      fetch('/analytics/mule-chains').then(r=>r.json()),
+      fetch('/analytics/device-sharing').then(r=>r.json()),
+      fetch('/analytics/merchant-fraud-rate').then(r=>r.json()),
+      fetch('/analytics/user-risk-ranking').then(r=>r.json()),
+    ]);
+    const s=Array.isArray(sum)?sum[0]:sum;
+    count($('k-txns'),+s.total_txns||0);
+    count($('k-flags'),+s.open_flags||0);
+    count($('k-risk'),+s.avg_risk_score||0,1);
+    count($('k-users'),+s.active_users_24h||0);
+    count($('k-hour'),+s.txns_last_hour||0);
+    $('k-vol').textContent=s.volume_24h?r(s.volume_24h):'—';
+    $('k-txns-sub').textContent='last hour: '+(s.txns_last_hour||0);
+    $('nav-flags').textContent=s.open_flags||0;
+    renderSparks();renderMerch(merch);renderUsers(rank);
+    renderFlags(flags);renderFeed(flags);renderChains(chains);renderDevices(devices);
+    buildHeatmap(null);
+    $('ts').textContent='Updated '+new Date().toLocaleTimeString('en-IN');
+  }catch{demo();}
 }
 
-// ── DEMO fallback ─────────────────────────────────────────────
-function loadDemo(){
-  animCount(document.getElementById('k-txns'),326);
-  animCount(document.getElementById('k-flags'),14);
-  animCount(document.getElementById('k-risk'),72.4);
-  animCount(document.getElementById('k-users'),8);
-  animCount(document.getElementById('k-hour'),12);
-  document.getElementById('k-vol').textContent='₹4,82,000';
-  document.getElementById('k-txns-sub').textContent='last hour: 12';
+function renderSparks(){
+  spark('txns','#3b82f6',[.4,.5,.45,.6,.55,.7,.65,.8,.75,.72,.78,.82]);
+  spark('flags','#ef4444',[.3,.4,.35,.5,.6,.55,.7,.65,.5,.7,.75,.72]);
+  spark('risk', '#f59e0b',[.6,.65,.7,.68,.72,.75,.7,.78,.74,.76,.72,.74]);
+  spark('users','#10b981',[.3,.35,.4,.45,.5,.4,.45,.5,.55,.48,.52,.55]);
+  spark('hour', '#8b5cf6',[.2,.3,.25,.4,.5,.55,.6,.5,.55,.6,.65,.7]);
+  spark('vol',  '#06b6d4',[.4,.5,.55,.6,.65,.7,.68,.72,.75,.7,.74,.78]);
+}
 
-  renderMerchChart([
+// ── DEMO ─────────────────────────────────────────────────────
+function demo(){
+  count($('k-txns'),326);count($('k-flags'),14);count($('k-risk'),72.4,1);
+  count($('k-users'),8);count($('k-hour'),12);
+  $('k-vol').textContent='₹4,82,000';$('k-txns-sub').textContent='last hour: 12';
+  $('nav-flags').textContent='14';
+  renderSparks();
+
+  renderMerch([
     {merchant:'WazirX',rolling_7d_rate:28.5},{merchant:'CoinDCX',rolling_7d_rate:21.0},
     {merchant:'MPL Games',rolling_7d_rate:14.3},{merchant:'Dream11',rolling_7d_rate:8.6},
     {merchant:'PhonePe',rolling_7d_rate:3.2},{merchant:'Swiggy',rolling_7d_rate:1.1},
   ]);
-  renderUserChart([
+  renderUsers([
     {name:'Rahul Sharma',flag_count:5},{name:'Anjali Mehta',flag_count:4},
     {name:'Arjun Nair',flag_count:4},{name:'Rohan Gupta',flag_count:3},
     {name:'Priya Patel',flag_count:3},{name:'Vikram Singh',flag_count:2},
@@ -565,22 +717,32 @@ function loadDemo(){
     {rule_name:'RAPID_REPEAT',risk_score:70,user_name:'Priya Patel',merchant:'Dream11',amount:1100,details:{gap_seconds:28},created_at:new Date(Date.now()-2040000)},
     {rule_name:'SHARED_DEVICE',risk_score:60,user_name:'Vikram Singh',merchant:'UnknownShop',amount:8500,details:{other_users:2},created_at:new Date(Date.now()-10800000)},
   ];
-  renderFlags(demoFlags);renderTimeline(demoFlags);
+  renderFlags(demoFlags);renderFeed(demoFlags);
 
   renderChains([
     {from_user_id:5,to_user_id:11,amount:15000,depth:3,chain:[5,11,12]},
     {from_user_id:11,to_user_id:12,amount:15000,depth:2,chain:[11,12]},
+    {from_user_id:3,to_user_id:7,amount:8200,depth:2,chain:[3,7]},
   ]);
   renderDevices([
-    {device_id:'device_mule_11',user_count:3,total_amount:45000,users:['Mule A','Mule B','Vikram Singh']},
+    {device_id:'device_mule_11',user_count:3,total_amount:45000},
+    {device_id:'device_x_99',user_count:2,total_amount:18000},
   ]);
 
-  buildHeatmap([
-    .05,.1,.0,.0,  .0,.0,.0,.0,  .3,.7,.4,.2,  .0,.1,.0,.0,
-    .5,.9,.8,.4,   .1,.0,.0,.0,  .6,.3,.2,.1,
-  ]);
-
-  document.getElementById('ts').textContent='Demo mode · '+new Date().toLocaleTimeString('en-IN');
+  // realistic heatmap — peaks at business hours + evening
+  const hm=[];
+  for(let d=0;d<7;d++)for(let h=0;h<24;h++){
+    let v=0.02;
+    if(h>=9&&h<=12)v=.3+(d<5?.4:0)+Math.random()*.2;
+    else if(h>=19&&h<=22)v=.5+Math.random()*.4;
+    else if(h>=13&&h<=17)v=.2+Math.random()*.3;
+    else if(h>=0&&h<=5)v=Math.random()*.05;
+    else v=Math.random()*.15;
+    if(d===4&&h>=19)v=Math.min(1,v+.3); // friday night spike
+    hm.push(v);
+  }
+  buildHeatmap(hm);
+  $('ts').textContent='Demo mode · '+new Date().toLocaleTimeString('en-IN');
 }
 
 load();
