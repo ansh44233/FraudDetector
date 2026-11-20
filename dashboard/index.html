@@ -3,890 +3,631 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>FraudDetector — Autonomous Risk & Fraud Intelligence Platform</title>
+<title>FraudDetector — Real-Time Transaction Risk Engine</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 <link rel="icon" type="image/png" href="favicon.png"/>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-/* ══════════════════════════════════════════════════════════
-   FRAUDDETECTOR NEXT-GEN CYBER UI (V5 CRAZY EDITION)
-   Theme: Obsidian Velvet / Neon Aurora
-   Font: Plus Jakarta Sans + JetBrains Mono
-══════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════
+   FRAUDDETECTOR 2027 DESIGN SYSTEM (Linear / Stripe Standard)
+   Monochrome Precision · Zero AI Clutter · Authentic Craft
+═══════════════════════════════════════════════════════════ */
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;font-size:14px;}
 
 :root{
-  --bg:        #08080c;
-  --bg-mesh:   radial-gradient(circle at 10% 0%, rgba(99,102,241,0.12) 0%, transparent 40%),
-               radial-gradient(circle at 90% 10%, rgba(6,182,212,0.10) 0%, transparent 40%),
-               radial-gradient(circle at 50% 60%, rgba(220,38,38,0.04) 0%, transparent 50%),
-               #08080c;
-  --s1:        rgba(18, 18, 24, 0.75);
-  --s2:        rgba(26, 26, 36, 0.85);
-  --s3:        rgba(35, 35, 48, 0.9);
-  --bd:        rgba(255, 255, 255, 0.08);
-  --bd-glow:   rgba(99, 102, 241, 0.3);
-  --bd-active: rgba(6, 182, 212, 0.5);
-  --tx:        #f8fafc;
-  --tx2:       #94a3b8;
-  --muted:     #64748b;
-  --indigo:    #6366f1;
-  --indigo-g:  linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-  --cyan:      #06b6d4;
-  --cyan-g:    linear-gradient(135deg, #06b6d4 0%, #0284c7 100%);
-  --danger:    #ef4444;
-  --danger-g:  linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-  --warn:      #f59e0b;
-  --warn-g:    linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  --good:      #10b981;
-  --good-g:    linear-gradient(135deg, #10b981 0%, #059669 100%);
-  --r:         14px;
-  --r-sm:      8px;
+  --bg:           #09090b;
+  --surface:      #121215;
+  --surface-sub:  #18181c;
+  --surface-hover:#1e1e23;
+  --border:       rgba(255, 255, 255, 0.08);
+  --border-sub:   rgba(255, 255, 255, 0.04);
+  --border-hover: rgba(255, 255, 255, 0.18);
+  --tx:           #f4f4f5;
+  --tx-sec:       #a1a1aa;
+  --tx-muted:     #71717a;
+  --accent:       #5e6ad2;
+  --danger:       #e5484d;
+  --danger-bg:    rgba(229, 72, 77, 0.12);
+  --warning:      #f5a623;
+  --warning-bg:   rgba(245, 166, 35, 0.12);
+  --success:      #30a46c;
+  --success-bg:   rgba(48, 164, 108, 0.12);
+  --radius:       12px;
+  --radius-sm:    6px;
+  --font-mono:    'JetBrains Mono', 'SF Mono', Consolas, monospace;
 }
 
 body{
-  background:var(--bg-mesh);
-  background-attachment:fixed;
-  color:var(--tx);
-  font-family:'Plus Jakarta Sans',system-ui,sans-serif;
-  font-size:.875rem;
-  line-height:1.55;
-  min-height:100vh;
-  -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
+  background: var(--bg);
+  color: var(--tx);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: .875rem;
+  line-height: 1.5;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
-/* ── HEADER ──────────────────────────────────────── */
-.header{
-  position:sticky;top:0;z-index:200;
-  background:rgba(8, 8, 12, 0.82);
-  backdrop-filter:blur(24px);
-  -webkit-backdrop-filter:blur(24px);
-  border-bottom:1px solid var(--bd);
+/* ── NAVIGATION (Linear Style) ────────────────────── */
+.nav-bar{
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(9, 9, 11, 0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
 }
-.header-inner{
-  max-width:1440px;margin:0 auto;
-  padding:0 28px;height:68px;
-  display:flex;align-items:center;gap:32px;
+.nav-inner{
+  max-width: 1400px; margin: 0 auto;
+  padding: 0 24px; height: 56px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-left{display: flex; align-items: center; gap: 24px;}
+.brand{display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--tx);}
+.brand-mark{
+  width: 28px; height: 28px; border-radius: 7px;
+  background: #18181c; border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+}
+.brand-mark svg{width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2.2;}
+.brand-name{font-size: .9375rem; font-weight: 700; letter-spacing: -0.02em;}
+.brand-ver{
+  font-size: .625rem; font-family: var(--font-mono); color: var(--tx-muted);
+  background: rgba(255, 255, 255, 0.05); padding: 1px 6px; border-radius: 4px;
 }
 
-.brand{display:flex;align-items:center;gap:12px;text-decoration:none;flex-shrink:0;}
-.brand-icon{
-  width:40px;height:40px;border-radius:11px;
-  background:var(--indigo-g);
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 0 20px rgba(99,102,241,0.45), inset 0 1px 0 rgba(255,255,255,0.3);
-  transition:transform .2s, box-shadow .2s;
+.nav-links{display: flex; align-items: center; gap: 4px;}
+.nav-item{
+  font-size: .8125rem; font-weight: 500; color: var(--tx-sec);
+  text-decoration: none; padding: 6px 12px; border-radius: var(--radius-sm);
+  transition: color .15s, background .15s;
 }
-.brand:hover .brand-icon{transform:scale(1.05);box-shadow:0 0 26px rgba(6,182,212,0.6);}
-.brand-icon svg{width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
-.brand-text{display:flex;flex-direction:column;}
-.brand-title{font-size:1.05rem;font-weight:800;letter-spacing:-.4px;color:var(--tx);display:flex;align-items:center;gap:6px;}
-.brand-badge{font-size:.625rem;font-weight:700;padding:2px 7px;border-radius:20px;background:rgba(99,102,241,0.18);color:#a5b4fc;border:1px solid rgba(99,102,241,0.35);font-family:'JetBrains Mono',monospace;}
-.brand-sub{font-size:.6875rem;color:var(--muted);font-weight:500;letter-spacing:.02em;}
+.nav-item:hover{color: var(--tx); background: rgba(255, 255, 255, 0.04);}
+.nav-item.active{color: var(--tx); background: rgba(255, 255, 255, 0.08);}
 
-.nav-links{display:flex;align-items:center;gap:6px;}
-.nav-link{
-  padding:7px 15px;border-radius:var(--r-sm);
-  font-size:.8125rem;font-weight:600;color:var(--tx2);
-  text-decoration:none;transition:all .18s;
-}
-.nav-link:hover{color:var(--tx);background:rgba(255,255,255,0.06);}
-.nav-link.active{color:#fff;background:rgba(99,102,241,0.14);border:1px solid rgba(99,102,241,0.3);}
-
-.header-right{display:flex;align-items:center;gap:14px;margin-left:auto;}
-
+.nav-right{display: flex; align-items: center; gap: 12px;}
 .status-pill{
-  display:flex;align-items:center;gap:9px;
-  padding:6px 14px;border-radius:20px;
-  background:rgba(18,18,24,0.9);border:1px solid var(--bd);
-  box-shadow:0 2px 8px rgba(0,0,0,0.3);
+  display: flex; align-items: center; gap: 7px;
+  padding: 4px 10px; border-radius: 6px;
+  background: #121215; border: 1px solid var(--border);
+  font-size: .75rem; color: var(--tx-sec);
 }
-.status-dot{
-  width:8px;height:8px;border-radius:50%;background:var(--good);
-  box-shadow:0 0 10px rgba(16,185,129,0.8);
-  animation:statusGlow 2s ease-in-out infinite;
-}
-@keyframes statusGlow{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.15)}}
-.status-text{font-size:.75rem;font-weight:600;color:var(--tx2);}
-.status-div{width:1px;height:12px;background:var(--bd);}
-.status-count{font-size:.8125rem;font-weight:700;color:var(--danger);font-family:'JetBrains Mono',monospace;}
+.status-dot{width: 6px; height: 6px; border-radius: 50%; background: var(--success);}
 
-.btn-sim{
-  display:inline-flex;align-items:center;gap:7px;
-  padding:7px 16px;border-radius:20px;
-  background:linear-gradient(135deg, rgba(99,102,241,0.2) 0%, rgba(6,182,212,0.2) 100%);
-  border:1px solid rgba(99,102,241,0.45);
-  color:#fff;font-size:.75rem;font-weight:700;
-  cursor:pointer;transition:all .2s;
-  box-shadow:0 4px 15px rgba(99,102,241,0.25);
+.btn-secondary{
+  font-size: .75rem; font-weight: 600; color: var(--tx);
+  background: var(--surface-sub); border: 1px solid var(--border);
+  padding: 6px 12px; border-radius: 6px; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: all .15s;
 }
-.btn-sim:hover{
-  background:linear-gradient(135deg, rgba(99,102,241,0.35) 0%, rgba(6,182,212,0.35) 100%);
-  border-color:var(--cyan);
-  transform:translateY(-1px);
-  box-shadow:0 6px 20px rgba(6,182,212,0.4);
-}
-.btn-sim svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.5;}
+.btn-secondary:hover{background: var(--surface-hover); border-color: var(--border-hover);}
+.kbd-hint{font-family: var(--font-mono); font-size: .625rem; color: var(--tx-muted);}
 
-.live-clock{
-  font-size:.75rem;color:var(--muted);
-  font-family:'JetBrains Mono',monospace;font-weight:500;
-  padding:6px 14px;border-radius:20px;
-  border:1px solid var(--bd);background:rgba(18,18,24,0.7);
-}
+/* ── CONTAINER ───────────────────────────────────── */
+.main-wrap{max-width: 1400px; margin: 0 auto; padding: 32px 24px 72px;}
 
-/* ── MAIN CONTENT ────────────────────────────────── */
-main{max-width:1440px;margin:0 auto;padding:32px 28px 80px;}
-
-/* ── HERO SHOWCASE (CRAZY DUAL-STAGE) ────────────── */
-.hero-stage{
-  position:relative;overflow:hidden;
-  border-radius:20px;
-  border:1px solid rgba(255,255,255,0.1);
-  background:linear-gradient(135deg, rgba(18,18,26,0.92) 0%, rgba(12,12,18,0.95) 100%);
-  backdrop-filter:blur(20px);
-  box-shadow:0 24px 60px -12px rgba(0,0,0,0.75), inset 0 1px 0 rgba(255,255,255,0.1);
-  margin-bottom:32px;
-  display:grid;grid-template-columns:1.2fr 1fr;gap:36px;
-  align-items:center;padding:44px 48px;
+/* ── HERO STAGE (Precision Split) ────────────────── */
+.hero-card{
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  overflow: hidden; margin-bottom: 24px;
+  display: grid; grid-template-columns: 1.15fr 0.95fr;
+  align-items: stretch; min-height: 380px;
 }
-.hero-stage::after{
-  content:'';position:absolute;top:-100px;right:-100px;width:350px;height:350px;
-  background:radial-gradient(circle, rgba(6,182,212,0.15) 0%, transparent 70%);
-  pointer-events:none;z-index:1;
+.hero-info{
+  padding: 40px; display: flex; flex-direction: column; justify-content: center;
 }
-
-.hero-content{position:relative;z-index:2;}
-.hero-badge-pill{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:5px 14px;border-radius:30px;
-  background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.3);
-  color:#a5b4fc;font-size:.6875rem;font-weight:700;letter-spacing:.08em;
-  text-transform:uppercase;margin-bottom:18px;
+.hero-tag{
+  font-size: .6875rem; font-weight: 600; font-family: var(--font-mono);
+  letter-spacing: .08em; text-transform: uppercase; color: var(--tx-muted);
+  margin-bottom: 12px;
 }
-.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:#06b6d4;box-shadow:0 0 8px #06b6d4;}
-.hero-title{
-  font-size:2.4rem;font-weight:800;line-height:1.15;
-  letter-spacing:-1px;color:#fff;margin-bottom:14px;
-}
-.hero-title span{
-  background:linear-gradient(90deg, #818cf8 0%, #06b6d4 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  background-clip:text;
+.hero-h1{
+  font-size: 2.125rem; font-weight: 800; letter-spacing: -0.03em;
+  line-height: 1.2; color: #fff; margin-bottom: 14px;
 }
 .hero-desc{
-  font-size:.9375rem;color:var(--tx2);line-height:1.65;
-  margin-bottom:24px;max-width:540px;
+  font-size: .9375rem; color: var(--tx-sec); line-height: 1.6;
+  margin-bottom: 24px; max-width: 520px;
 }
-.hero-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;}
-.tech-pill{
-  font-size:.6875rem;font-weight:600;padding:4px 12px;border-radius:20px;
-  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
-  color:var(--tx2);display:inline-flex;align-items:center;gap:6px;
+.hero-meta-row{
+  display: flex; gap: 24px; padding-top: 20px; border-top: 1px solid var(--border);
 }
-.tech-pill.glow{background:rgba(99,102,241,0.14);border-color:rgba(99,102,241,0.35);color:#c7d2fe;}
-.tech-pill.cyan{background:rgba(6,182,212,0.12);border-color:rgba(6,182,212,0.35);color:#a5f3fc;}
+.meta-item{display: flex; flex-direction: column;}
+.meta-num{font-size: 1.375rem; font-weight: 700; font-family: var(--font-mono); color: #fff;}
+.meta-num.danger{color: var(--danger);}
+.meta-lbl{font-size: .6875rem; color: var(--tx-muted); text-transform: uppercase; letter-spacing: .05em; margin-top: 2px;}
 
-.hero-stats-row{
-  display:flex;align-items:center;gap:36px;
-  padding-top:24px;border-top:1px solid rgba(255,255,255,0.08);
+/* ── CASE STUDY IMAGE SHOWCASE (App Window) ──────── */
+.hero-window{
+  border-left: 1px solid var(--border);
+  background: #0d0d10;
+  display: flex; flex-direction: column;
 }
-.hstat-num{font-size:1.75rem;font-weight:800;letter-spacing:-.8px;font-family:'JetBrains Mono',monospace;}
-.hstat-num.red{color:var(--danger);text-shadow:0 0 12px rgba(239,68,68,0.3);}
-.hstat-num.blue{color:var(--indigo);text-shadow:0 0 12px rgba(99,102,241,0.3);}
-.hstat-num.warn{color:var(--warn);text-shadow:0 0 12px rgba(245,158,11,0.3);}
-.hstat-desc{font-size:.6875rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px;}
+.window-bar{
+  height: 36px; padding: 0 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.window-dots{display: flex; align-items: center; gap: 6px;}
+.w-dot{width: 9px; height: 9px; border-radius: 50%; background: #27272a;}
+.window-title{font-size: .6875rem; font-family: var(--font-mono); color: var(--tx-muted);}
 
-/* ── ARTWORK SHOWCASE FRAME ───────────────────────── */
-.hero-frame-wrap{position:relative;z-index:2;}
-.hero-frame{
-  position:relative;border-radius:18px;overflow:hidden;
-  border:1px solid rgba(255,255,255,0.14);
-  background:#1e1e26;
-  box-shadow:0 20px 50px -10px rgba(0,0,0,0.8), 0 0 30px rgba(99,102,241,0.15);
-  transition:transform .3s, box-shadow .3s;
+.window-canvas{
+  flex: 1; position: relative; overflow: hidden;
+  background: #000; display: flex; align-items: center; justify-content: center;
 }
-.hero-frame:hover{transform:translateY(-2px);box-shadow:0 24px 60px -8px rgba(0,0,0,0.9), 0 0 40px rgba(6,182,212,0.25);}
-.hero-frame-img{
-  display:block;width:100%;height:320px;
-  object-fit:cover;object-position:center 20%;
-  transition:transform .4s;
+.window-canvas img{
+  width: 100%; height: 100%; object-fit: cover;
+  object-position: center center; display: block;
 }
-.hero-frame:hover .hero-frame-img{transform:scale(1.02);}
+.window-caption{
+  padding: 10px 16px; border-top: 1px solid var(--border);
+  background: var(--surface); display: flex; align-items: center; justify-content: space-between;
+}
+.cap-rule{font-size: .75rem; font-weight: 600; font-family: var(--font-mono); color: var(--tx);}
+.cap-status{font-size: .6875rem; font-weight: 600; color: var(--danger); display: flex; align-items: center; gap: 6px;}
+.cap-status::before{content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--danger);}
 
-/* Floating glass chips on artwork */
-.frame-tag-top{
-  position:absolute;top:14px;left:14px;
-  display:inline-flex;align-items:center;gap:7px;
-  padding:5px 12px;border-radius:20px;
-  background:rgba(8,8,12,0.85);backdrop-filter:blur(10px);
-  border:1px solid rgba(239,68,68,0.4);
-  font-size:.6875rem;font-weight:700;color:#fca5a5;
-  box-shadow:0 4px 14px rgba(0,0,0,0.5);
-}
-.frame-pulse{width:7px;height:7px;border-radius:50%;background:var(--danger);animation:statusGlow 1.5s infinite;}
-
-.frame-tag-bottom{
-  position:absolute;bottom:14px;left:14px;right:14px;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:8px 14px;border-radius:12px;
-  background:rgba(8,8,12,0.88);backdrop-filter:blur(12px);
-  border:1px solid rgba(255,255,255,0.12);
-  box-shadow:0 6px 18px rgba(0,0,0,0.6);
-}
-.frame-tag-meta{display:flex;align-items:center;gap:8px;}
-.frame-tag-meta svg{width:14px;height:14px;stroke:var(--cyan);fill:none;stroke-width:2.2;}
-.frame-tag-title{font-size:.75rem;font-weight:700;color:#fff;}
-.frame-tag-sub{font-size:.6875rem;color:var(--tx2);}
-.frame-tag-badge{
-  font-size:.625rem;font-weight:700;padding:2px 8px;border-radius:6px;
-  background:rgba(16,185,129,0.2);color:#6ee7b7;border:1px solid rgba(16,185,129,0.4);
-  font-family:'JetBrains Mono',monospace;
+@media(max-width: 960px){
+  .hero-card{grid-template-columns: 1fr;}
+  .hero-window{border-left: none; border-top: 1px solid var(--border); min-height: 280px;}
+  .hero-info{padding: 28px 24px;}
+  .nav-links{display: none;}
 }
 
-@media(max-width:1080px){
-  .hero-stage{grid-template-columns:1fr;padding:32px 28px;}
-  .hero-title{font-size:2rem;}
-  .header-inner{padding:0 20px;}
-  main{padding:20px 20px 60px;}
-  .nav-links{display:none;}
+/* ── METRICS GRID ────────────────────────────────── */
+.kpi-row{
+  display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 24px;
 }
+@media(max-width: 1100px){.kpi-row{grid-template-columns: repeat(3, 1fr);}}
+@media(max-width: 640px) {.kpi-row{grid-template-columns: repeat(2, 1fr);}}
 
-/* ── SECTION HEADER ──────────────────────────────── */
-.sec-hdr{
-  display:flex;align-items:center;justify-content:space-between;
-  margin:36px 0 16px;
+.kpi-box{
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px 16px;
+  transition: border-color .15s;
 }
-.sec-title{
-  display:inline-flex;align-items:center;gap:10px;
-  font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--tx2);
-}
-.sec-title::before{
-  content:'';width:8px;height:8px;border-radius:2px;
-  background:var(--indigo);box-shadow:0 0 8px var(--indigo);
-}
-.sec-line{flex:1;height:1px;background:linear-gradient(90deg, var(--bd) 0%, transparent 100%);margin-left:14px;}
+.kpi-box:hover{border-color: var(--border-hover);}
+.kpi-header{display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;}
+.kpi-label{font-size: .6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--tx-muted);}
+.kpi-badge{font-size: .625rem; font-family: var(--font-mono); color: var(--tx-muted);}
+.kpi-value{font-size: 1.625rem; font-weight: 700; font-family: var(--font-mono); color: #fff; line-height: 1.1;}
+.kpi-value.danger{color: var(--danger);}
+.kpi-value.warn{color: var(--warning);}
+.kpi-sub{font-size: .6875rem; color: var(--tx-muted); margin-top: 6px;}
+.kpi-spark{width: 100%; height: 22px; margin-top: 8px;}
 
-/* ── KPI METRICS GRID ────────────────────────────── */
-.kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;}
-@media(max-width:1200px){.kpi-grid{grid-template-columns:repeat(3,1fr);}}
-@media(max-width:640px) {.kpi-grid{grid-template-columns:repeat(2,1fr);}}
+/* ── PANELS & CHARTS ─────────────────────────────── */
+.panel-grid{display: grid; grid-template-columns: 1.5fr 1fr; gap: 16px; margin-bottom: 24px;}
+@media(max-width: 960px){.panel-grid{grid-template-columns: 1fr;}}
 
-.kpi-card{
-  background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);
-  padding:20px 18px 16px;position:relative;overflow:hidden;
-  backdrop-filter:blur(16px);
-  transition:all .22s cubic-bezier(0.4, 0, 0.2, 1);
+.panel{
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
 }
-.kpi-card:hover{
-  border-color:rgba(255,255,255,0.18);
-  transform:translateY(-3px);
-  box-shadow:0 12px 30px -4px rgba(0,0,0,0.5), 0 0 20px var(--_glow, rgba(99,102,241,0.15));
+.panel-head{
+  padding: 18px 20px 14px; border-bottom: 1px solid var(--border-sub);
+  display: flex; align-items: center; justify-content: space-between;
 }
-.kpi-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:var(--_col, var(--indigo));
-}
-.kpi-card.indigo{--_col:var(--indigo);--_glow:rgba(99,102,241,0.25);}
-.kpi-card.red   {--_col:var(--danger);--_glow:rgba(239,68,68,0.25);}
-.kpi-card.warn  {--_col:var(--warn);  --_glow:rgba(245,158,11,0.25);}
-.kpi-card.green {--_col:var(--good);  --_glow:rgba(16,185,129,0.25);}
-.kpi-card.cyan  {--_col:var(--cyan);  --_glow:rgba(6,182,212,0.25);}
-.kpi-card.slate {--_col:var(--muted); --_glow:rgba(100,116,139,0.15);}
+.panel-title{font-size: .875rem; font-weight: 700; color: #fff;}
+.panel-desc{font-size: .75rem; color: var(--tx-muted);}
+.panel-body{padding: 20px;}
 
-.kpi-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;}
-.kpi-lbl{font-size:.6875rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
-.kpi-ic{
-  width:30px;height:30px;border-radius:8px;
-  background:rgba(255,255,255,0.04);border:1px solid var(--bd);
-  display:flex;align-items:center;justify-content:center;
+/* ── HEATMAP ─────────────────────────────────────── */
+.heatmap-cell{
+  aspect-ratio: 1; border-radius: 2px;
+  background: rgba(255, 255, 255, 0.04);
+  transition: transform .1s; cursor: default;
 }
-.kpi-ic svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;}
-.kpi-card.indigo .kpi-ic{color:#818cf8;background:rgba(99,102,241,0.12);border-color:rgba(99,102,241,0.25);}
-.kpi-card.red    .kpi-ic{color:#f87171;background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.25);}
-.kpi-card.warn   .kpi-ic{color:#fbbf24;background:rgba(245,158,11,0.12);border-color:rgba(245,158,11,0.25);}
-.kpi-card.green  .kpi-ic{color:#34d399;background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.25);}
-.kpi-card.cyan   .kpi-ic{color:#22d3ee;background:rgba(6,182,212,0.12);border-color:rgba(6,182,212,0.25);}
-.kpi-card.slate  .kpi-ic{color:var(--tx2);}
-
-.kpi-val{
-  font-size:1.875rem;font-weight:800;line-height:1;
-  letter-spacing:-1px;font-family:'JetBrains Mono',monospace;
-  color:#fff;
-}
-.kpi-card.red   .kpi-val{color:#fca5a5;}
-.kpi-card.warn  .kpi-val{color:#fde68a;}
-.kpi-card.green .kpi-val{color:#a7f3d0;}
-.kpi-card.cyan  .kpi-val{color:#a5f3fc;}
-
-.kpi-sub{font-size:.6875rem;color:var(--muted);font-weight:500;margin-top:6px;}
-.kpi-spark{display:block;width:100%;height:26px;margin-top:10px;}
-.kpi-bar{height:2px;background:rgba(255,255,255,0.06);border-radius:2px;margin-top:10px;overflow:hidden;}
-.kpi-bar-fill{height:100%;border-radius:2px;background:var(--_col);opacity:.6;}
-
-/* ── CARDS & GRIDS ───────────────────────────────── */
-.glass-card{
-  background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);
-  backdrop-filter:blur(16px);overflow:hidden;
-  box-shadow:0 12px 36px -8px rgba(0,0,0,0.5);
-}
-.card-pad{padding:24px 26px;}
-.card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
-.card-h3{font-size:1rem;font-weight:700;color:#fff;}
-.card-subtext{font-size:.75rem;color:var(--muted);margin-bottom:18px;}
-.card-subtext code{
-  font-family:'JetBrains Mono',monospace;font-size:.6875rem;
-  background:rgba(99,102,241,0.14);color:#a5b4fc;
-  padding:2px 6px;border-radius:4px;border:1px solid rgba(99,102,241,0.3);
-}
-
-.grid-2col{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;}
-.grid-3col{display:grid;grid-template-columns:1.8fr 1fr;gap:16px;}
-@media(max-width:980px){.grid-2col,.grid-3col{grid-template-columns:1fr;}}
+.heatmap-cell:hover{transform: scale(1.3); z-index: 5;}
 
 /* ── TABLE FILTER BAR ────────────────────────────── */
-.tbl-controls{
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
-  padding:16px 20px;border-bottom:1px solid var(--bd);
-  background:rgba(255,255,255,0.015);flex-wrap:wrap;
+.tbl-top{
+  padding: 12px 16px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
 }
-.tbl-tabs{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
-.tbl-tab{
-  font-size:.75rem;font-weight:600;padding:5px 13px;border-radius:20px;
-  background:rgba(255,255,255,0.04);border:1px solid var(--bd);color:var(--tx2);
-  cursor:pointer;transition:all .18s;
+.tbl-filters{display: flex; align-items: center; gap: 6px;}
+.filter-btn{
+  font-size: .6875rem; font-weight: 600; padding: 4px 10px; border-radius: 4px;
+  background: var(--surface-sub); border: 1px solid var(--border); color: var(--tx-sec);
+  cursor: pointer; transition: all .15s;
 }
-.tbl-tab:hover{color:#fff;background:rgba(255,255,255,0.08);}
-.tbl-tab.active{background:var(--indigo-g);border-color:var(--indigo);color:#fff;box-shadow:0 0 14px rgba(99,102,241,0.45);}
+.filter-btn:hover{color: #fff; background: var(--surface-hover);}
+.filter-btn.active{color: #fff; background: #27272a; border-color: rgba(255, 255, 255, 0.2);}
 
-.tbl-search-box{
-  display:inline-flex;align-items:center;gap:8px;
-  background:rgba(18,18,24,0.9);border:1px solid var(--bd);border-radius:20px;
-  padding:5px 14px;font-size:.75rem;color:#fff;min-width:220px;
+.search-field{
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 4px;
+  padding: 4px 10px; font-size: .75rem; color: #fff; min-width: 200px;
 }
-.tbl-search-box svg{width:13px;height:13px;stroke:var(--muted);fill:none;stroke-width:2.2;}
-.tbl-search-box input{
-  background:transparent;border:none;outline:none;color:#fff;
-  font-size:.75rem;font-family:inherit;width:100%;
+.search-field input{
+  background: transparent; border: none; outline: none;
+  font-family: inherit; font-size: .75rem; color: #fff; width: 100%;
 }
-.tbl-search-box input::placeholder{color:var(--muted);}
+.search-field input::placeholder{color: var(--tx-muted);}
 
 /* ── TABLE ───────────────────────────────────────── */
-.table-wrap{overflow-x:auto;}
-table{width:100%;border-collapse:collapse;font-size:.8125rem;}
-thead{background:rgba(255,255,255,0.02);}
+.tbl-wrap{overflow-x: auto;}
+table{width: 100%; border-collapse: collapse; font-size: .8125rem;}
+thead{background: rgba(255, 255, 255, 0.02);}
 th{
-  padding:12px 18px;text-align:left;
-  font-size:.6875rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--muted);border-bottom:1px solid var(--bd);white-space:nowrap;
+  padding: 10px 16px; text-align: left;
+  font-size: .6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em;
+  color: var(--tx-muted); border-bottom: 1px solid var(--border); white-space: nowrap;
 }
-td{padding:13px 18px;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:middle;}
-tr:last-child td{border-bottom:none;}
-tr.clickable-row{cursor:pointer;transition:background .15s;}
-tr.clickable-row:hover td{background:rgba(99,102,241,0.06);}
+td{padding: 12px 16px; border-bottom: 1px solid var(--border-sub); vertical-align: middle;}
+tr:last-child td{border-bottom: none;}
+tr.tbl-row{cursor: pointer; transition: background .12s;}
+tr.tbl-row:hover td{background: rgba(255, 255, 255, 0.025);}
 
-/* ── BADGES & AVATARS ────────────────────────────── */
-.badge-tag{
-  display:inline-flex;align-items:center;gap:6px;
-  padding:3px 10px;border-radius:6px;
-  font-size:.6875rem;font-weight:700;letter-spacing:.03em;
-  font-family:'JetBrains Mono',monospace;white-space:nowrap;
+/* Badges */
+.pill{
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 2px 7px; border-radius: 4px;
+  font-size: .6875rem; font-weight: 600; font-family: var(--font-mono);
+  white-space: nowrap;
 }
-.badge-tag.indigo{background:rgba(99,102,241,0.15);color:#a5b4fc;border:1px solid rgba(99,102,241,0.35);}
-.badge-tag.red   {background:rgba(239,68,68,0.14); color:#fca5a5;border:1px solid rgba(239,68,68,0.35);}
-.badge-tag.amber {background:rgba(245,158,11,0.14);color:#fde68a;border:1px solid rgba(245,158,11,0.35);}
-.badge-tag.green {background:rgba(16,185,129,0.14);color:#6ee7b7;border:1px solid rgba(16,185,129,0.35);}
-.badge-tag.slate {background:rgba(255,255,255,0.06);color:var(--tx2);border:1px solid var(--bd);}
+.pill-danger{background: var(--danger-bg); color: #ff6369; border: 1px solid rgba(229, 72, 77, 0.25);}
+.pill-warn{background: var(--warning-bg); color: #f5a623; border: 1px solid rgba(245, 166, 35, 0.25);}
+.pill-neutral{background: rgba(255, 255, 255, 0.06); color: var(--tx-sec); border: 1px solid var(--border);}
 
-.user-avatar-cell{display:flex;align-items:center;gap:10px;}
-.user-avatar{
-  width:28px;height:28px;border-radius:50%;
-  background:linear-gradient(135deg, rgba(99,102,241,0.2) 0%, rgba(6,182,212,0.2) 100%);
-  border:1px solid rgba(99,102,241,0.35);color:#c7d2fe;
-  font-size:.6875rem;font-weight:700;display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;
+/* ── MULE GRAPH TABLE ────────────────────────────── */
+.chain-flex{display: flex; align-items: center; gap: 4px; flex-wrap: wrap;}
+.chain-badge{
+  font-family: var(--font-mono); font-size: .6875rem; font-weight: 600;
+  padding: 2px 6px; border-radius: 4px; background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border); color: #fff;
 }
-.user-name{font-weight:600;color:#fff;}
-
-.risk-bar-wrap{display:flex;align-items:center;gap:8px;}
-.risk-track{width:46px;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;flex-shrink:0;}
-.risk-fill{height:100%;border-radius:2px;background:var(--danger);}
-.risk-fill.med{background:var(--warn);}
-.risk-num{font-size:.8125rem;font-weight:700;font-family:'JetBrains Mono',monospace;color:#fff;}
-
-/* ── DETECTION FEED ──────────────────────────────── */
-.feed-box{display:flex;flex-direction:column;}
-.feed-item{
-  display:flex;align-items:flex-start;gap:12px;padding:12px 0;
-  border-bottom:1px solid rgba(255,255,255,0.05);transition:background .15s;
-}
-.feed-item:last-child{border-bottom:none;}
-.feed-icon{
-  width:32px;height:32px;border-radius:8px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-}
-.feed-icon svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;}
-.feed-icon.red   {background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3);}
-.feed-icon.warn  {background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.3);}
-.feed-icon.indigo{background:rgba(99,102,241,0.15);color:#818cf8;border:1px solid rgba(99,102,241,0.3);}
-.feed-content{flex:1;min-width:0;}
-.feed-rule{font-size:.8125rem;font-weight:700;color:#fff;}
-.feed-meta{font-size:.75rem;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.feed-score{font-size:.875rem;font-weight:800;font-family:'JetBrains Mono',monospace;flex-shrink:0;}
-
-/* ── MULE GRAPH NODES ────────────────────────────── */
-.chain-graph{display:flex;align-items:center;gap:4px;flex-wrap:wrap;}
-.chain-node{
-  padding:3px 9px;border-radius:6px;
-  background:rgba(6,182,212,0.12);border:1px solid rgba(6,182,212,0.35);
-  color:#22d3ee;font-size:.6875rem;font-weight:700;
-  font-family:'JetBrains Mono',monospace;
-}
-.chain-arrow{font-size:.6875rem;color:var(--muted);}
+.chain-arrow{font-size: .6875rem; color: var(--tx-muted);}
 
 /* ── MODAL ───────────────────────────────────────── */
 .modal-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);
-  z-index:300;display:none;align-items:center;justify-content:center;padding:20px;
+  position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px); z-index: 200; display: none;
+  align-items: center; justify-content: center; padding: 20px;
 }
-.modal-overlay.open{display:flex;}
-.modal-card{
-  background:var(--s2);border:1px solid rgba(255,255,255,0.14);border-radius:18px;
-  width:100%;max-width:540px;box-shadow:0 24px 60px rgba(0,0,0,0.85);overflow:hidden;
-  animation:modalScale .2s ease-out;
+.modal-overlay.open{display: flex;}
+.modal-box{
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); width: 100%; max-width: 520px;
+  overflow: hidden; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
 }
-@keyframes modalScale{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
 .modal-head{
-  padding:18px 24px;border-bottom:1px solid var(--bd);background:rgba(255,255,255,0.02);
-  display:flex;justify-content:space-between;align-items:center;
+  padding: 16px 20px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
 }
-.modal-title{font-size:1rem;font-weight:800;color:#fff;}
-.modal-close{background:none;border:none;color:var(--muted);font-size:1.4rem;cursor:pointer;line-height:1;}
-.modal-close:hover{color:#fff;}
-.modal-body{padding:22px 24px;}
+.modal-body{padding: 20px;}
 .modal-foot{
-  padding:16px 24px;border-top:1px solid var(--bd);background:rgba(255,255,255,0.02);
-  display:flex;justify-content:flex-end;gap:10px;
+  padding: 14px 20px; border-top: 1px solid var(--border);
+  display: flex; justify-content: flex-end; gap: 8px;
 }
 
-/* ── TOAST CONTAINER ─────────────────────────────── */
-.toast-wrap{position:fixed;bottom:24px;right:24px;z-index:400;display:flex;flex-direction:column;gap:10px;}
-.toast-msg{
-  background:rgba(18,18,26,0.95);backdrop-filter:blur(16px);
-  border:1px solid rgba(239,68,68,0.5);border-left:4px solid var(--danger);
-  border-radius:10px;padding:12px 18px;min-width:300px;max-width:380px;
-  box-shadow:0 12px 30px rgba(0,0,0,0.7);animation:toastSlide .25s ease-out;
+/* ── TOAST ALERT ─────────────────────────────────── */
+.toast-area{
+  position: fixed; bottom: 20px; right: 20px; z-index: 300;
+  display: flex; flex-direction: column; gap: 8px; pointer-events: none;
 }
-@keyframes toastSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.toast-title{font-size:.8125rem;font-weight:700;color:#fff;}
-.toast-desc{font-size:.75rem;color:var(--tx2);margin-top:2px;}
+.toast-card{
+  background: #18181c; border: 1px solid rgba(229, 72, 77, 0.4);
+  border-left: 3px solid var(--danger); border-radius: 6px;
+  padding: 10px 14px; min-width: 280px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+  font-size: .8125rem; pointer-events: auto; animation: toastIn .2s ease-out;
+}
+@keyframes toastIn{from{opacity: 0; transform: translateY(8px);} to{opacity: 1; transform: translateY(0);}}
 
 /* ── FOOTER ──────────────────────────────────────── */
 .footer{
-  background:rgba(8,8,12,0.95);border-top:1px solid var(--bd);
-  margin-top:56px;padding:44px 0 32px;
+  border-top: 1px solid var(--border); padding: 40px 0 28px;
+  margin-top: 64px; background: #070709;
 }
 .footer-inner{
-  max-width:1440px;margin:0 auto;padding:0 28px;
-  display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:40px;
+  max-width: 1400px; margin: 0 auto; padding: 0 24px;
+  display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 32px;
 }
-.ft-brand{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
-.ft-icon{
-  width:32px;height:32px;border-radius:8px;background:var(--indigo-g);
-  display:flex;align-items:center;justify-content:center;
-}
-.ft-icon svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2.2;}
-.ft-name{font-size:1rem;font-weight:800;color:#fff;}
-.ft-about{font-size:.8125rem;color:var(--muted);line-height:1.65;max-width:360px;}
-.ft-col-title{font-size:.6875rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--tx2);margin-bottom:14px;}
-.ft-col a{display:block;font-size:.8125rem;color:var(--muted);text-decoration:none;margin-bottom:8px;transition:color .15s;}
-.ft-col a:hover{color:#fff;}
-.ft-bottom-row{
-  max-width:1440px;margin:28px auto 0;padding:20px 28px 0;
-  border-top:1px solid var(--bd);
-  display:flex;justify-content:space-between;align-items:center;
-  font-size:.75rem;color:var(--muted);flex-wrap:wrap;gap:12px;
-}
-.ft-bottom-row a{color:var(--tx2);text-decoration:none;}
-.ft-bottom-row a:hover{color:#fff;}
-.ft-tags-group{display:flex;gap:6px;flex-wrap:wrap;}
-.ft-tag-item{
-  padding:3px 9px;border-radius:6px;font-size:.6875rem;font-weight:600;
-  background:rgba(255,255,255,0.04);border:1px solid var(--bd);color:var(--tx2);
-  font-family:'JetBrains Mono',monospace;
+.footer-col-title{font-size: .6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--tx-muted); margin-bottom: 12px;}
+.footer-links a{display: block; font-size: .8125rem; color: var(--tx-sec); text-decoration: none; margin-bottom: 6px;}
+.footer-links a:hover{color: #fff;}
+.footer-bottom{
+  max-width: 1400px; margin: 28px auto 0; padding: 16px 24px 0;
+  border-top: 1px solid var(--border-sub);
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: .75rem; color: var(--tx-muted); flex-wrap: wrap; gap: 10px;
 }
 </style>
 </head>
 <body>
 
-<!-- ══ HEADER ══════════════════════════════════════ -->
-<header class="header">
- <div class="header-inner">
+<!-- ══ NAVIGATION ═══════════════════════════════════ -->
+<header class="nav-bar">
+ <div class="nav-inner">
 
-  <a class="brand" href="#">
-   <div class="brand-icon">
-    <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-   </div>
-   <div class="brand-text">
-    <div class="brand-title">FraudDetector <span class="brand-badge">PRO v2.5</span></div>
-    <div class="brand-sub">Real-Time Risk Intelligence Engine</div>
-   </div>
-  </a>
+  <div class="nav-left">
+   <a class="brand" href="#">
+    <div class="brand-mark">
+     <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+    </div>
+    <span class="brand-name">FraudDetector</span>
+    <span class="brand-ver">v2.5</span>
+   </a>
 
-  <nav class="nav-links">
-   <a href="#" class="nav-link active">Dashboard</a>
-   <a href="#flags-sec" class="nav-link">Live Flags</a>
-   <a href="#analytics-sec" class="nav-link">Risk Analytics</a>
-   <a href="#mule-sec" class="nav-link">Mule Chains</a>
-  </nav>
+   <nav class="nav-links">
+    <a href="#" class="nav-item active">Overview</a>
+    <a href="#flags" class="nav-item">Active Flags</a>
+    <a href="#analytics" class="nav-item">Risk Analytics</a>
+    <a href="#chains" class="nav-item">Mule Networks</a>
+   </nav>
+  </div>
 
-  <div class="header-right">
-   <button class="btn-sim" onclick="simulateAnomaly()" title="Simulate real incoming fraud incident">
-    <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-    Simulate Threat
-   </button>
-
+  <div class="nav-right">
    <div class="status-pill">
     <div class="status-dot"></div>
-    <span class="status-text">Engine Online</span>
-    <div class="status-div"></div>
-    <span class="status-count" id="header-flag-count">14</span>
-    <span style="font-size:.6875rem;color:var(--muted);">&nbsp;alerts</span>
+    <span>Engine Online</span>
    </div>
 
-   <div class="live-clock" id="clock-display">—</div>
+   <button class="btn-secondary" onclick="simulateIncident()" title="Simulate real-time anomaly insertion">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+    Simulate Incident
+   </button>
   </div>
 
  </div>
 </header>
 
-<!-- ══ MAIN CONTENT ═════════════════════════════════ -->
-<main>
+<!-- ══ MAIN BODY ════════════════════════════════════ -->
+<div class="main-wrap">
 
- <!-- ══ HERO SHOWCASE (DUAL-STAGE WITH USER ARTWORK) ═ -->
- <div class="hero-stage">
+ <!-- ══ HERO CARD (SPLIT APPLICATION SHOWCASE) ══════ -->
+ <div class="hero-card">
 
-  <!-- Left: Executive Value Proposition -->
-  <div class="hero-content">
-   <div class="hero-badge-pill">
-    <div class="hero-badge-dot"></div>
-    Autonomous Transaction Defense
-   </div>
-   <h1 class="hero-title">
-    Intercept financial fraud<br/>
-    <span>before money moves.</span>
-   </h1>
+  <div class="hero-info">
+   <div class="hero-tag">Engine Architecture · PostgreSQL 15 Core</div>
+   <h1 class="hero-h1">Real-time fraud scoring inside the database engine.</h1>
    <p class="hero-desc">
-    High-throughput financial risk intelligence running directly on bare-metal PostgreSQL 15 internals.
-    Recursive CTEs trace money mule chains 6 hops deep, LATERAL joins catch velocity bursts, and PL/pgSQL triggers evaluate transactions in sub-5ms upon INSERT.
+    Sub-5ms financial anomaly detection backed by pure SQL internals. Recursive CTEs traverse money mule chains up to 6 hops deep, while PL/pgSQL triggers fire synchronously on every INSERT to trap velocity spikes.
    </p>
 
-   <div class="hero-pills">
-    <span class="tech-pill glow">Recursive CTE 6-Hops</span>
-    <span class="tech-pill cyan">LATERAL Windows</span>
-    <span class="tech-pill glow">RANGE INTERVAL</span>
-    <span class="tech-pill">PL/pgSQL Triggers</span>
-    <span class="tech-pill">Materialized Views</span>
-    <span class="tech-pill">Sub-5ms Latency</span>
-   </div>
-
-   <div class="hero-stats-row">
-    <div>
-     <div class="hstat-num red" id="hero-stat-flags">14</div>
-     <div class="hstat-desc">Active Flags</div>
+   <div class="hero-meta-row">
+    <div class="meta-item">
+     <div class="meta-num danger" id="h-flags">14</div>
+     <div class="meta-lbl">Open Alerts</div>
     </div>
-    <div>
-     <div class="hstat-num blue" id="hero-stat-txns">326</div>
-     <div class="hstat-desc">Transactions (24h)</div>
+    <div class="meta-item">
+     <div class="meta-num" id="h-txns">326</div>
+     <div class="meta-lbl">24h Transactions</div>
     </div>
-    <div>
-     <div class="hstat-num warn" id="hero-stat-risk">72.4</div>
-     <div class="hstat-desc">Mean Risk Index</div>
+    <div class="meta-item">
+     <div class="meta-num" id="h-risk">72.4</div>
+     <div class="meta-lbl">Mean Risk Index</div>
     </div>
    </div>
   </div>
 
-  <!-- Right: Glassmorphic Case-Study Spotlight Frame -->
-  <div class="hero-frame-wrap">
-   <div class="hero-frame">
-    <!-- User Uploaded Incident Artwork -->
-    <img src="hero-bg.png" alt="Social Engineering & Financial Fraud Incident" class="hero-frame-img"/>
-    
-    <!-- Floating Cyber Badges -->
-    <div class="frame-tag-top">
-     <div class="frame-pulse"></div>
-     ACTIVE INTERCEPT: IDENTITY SPOOFING
+  <!-- Integrated Application Window Frame -->
+  <div class="hero-window">
+   <div class="window-bar">
+    <div class="window-dots">
+     <div class="w-dot"></div><div class="w-dot"></div><div class="w-dot"></div>
     </div>
+    <div class="window-title">incident_inspector_live.py</div>
+    <div style="font-size: .625rem; color: var(--tx-muted); font-family: var(--font-mono);">SYNC</div>
+   </div>
 
-    <div class="frame-tag-bottom">
-     <div class="frame-tag-meta">
-      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-      <div>
-       <div class="frame-tag-title">Social Engineering & Mule Laundering</div>
-       <div class="frame-tag-sub">Caught synchronously via PL/pgSQL & Recursive CTE</div>
-      </div>
-     </div>
-     <span class="frame-tag-badge">&lt; 2ms EVAL</span>
-    </div>
+   <div class="window-canvas">
+    <img src="hero-bg.png" alt="Fraud Detection Incident Visualization"/>
+   </div>
+
+   <div class="window-caption">
+    <div class="cap-rule">Rule #04: SOCIAL_ENGINEERING_ANOMALY</div>
+    <div class="cap-status">Intercepted in 1.4ms</div>
    </div>
   </div>
 
  </div>
 
- <!-- ══ SYSTEM KPI CARDS ════════════════════════════ -->
- <div class="sec-hdr">
-  <div class="sec-title">Telemetry & System Metrics</div>
-  <div class="sec-line"></div>
- </div>
+ <!-- ══ METRICS OVERVIEW ════════════════════════════ -->
+ <div class="kpi-row">
 
- <div class="kpi-grid">
-
-  <div class="kpi-card indigo">
-   <div class="kpi-top">
-    <span class="kpi-lbl">Total Transactions</span>
-    <div class="kpi-ic"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+  <div class="kpi-box">
+   <div class="kpi-header">
+    <span class="kpi-label">Transactions</span>
+    <span class="kpi-badge">24h</span>
    </div>
-   <div class="kpi-val" id="k-tx">326</div>
-   <div class="kpi-sub" id="k-txs">last hour: 12</div>
+   <div class="kpi-value" id="k-tx">326</div>
+   <div class="kpi-sub">12 past 60 min</div>
    <canvas class="kpi-spark" id="sp-tx"></canvas>
-   <div class="kpi-bar"><div class="kpi-bar-fill" style="width:65%"></div></div>
   </div>
 
-  <div class="kpi-card red">
-   <div class="kpi-top">
-    <span class="kpi-lbl">Open Fraud Flags</span>
-    <div class="kpi-ic"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+  <div class="kpi-box">
+   <div class="kpi-header">
+    <span class="kpi-label">Active Flags</span>
+    <span class="kpi-badge">unresolved</span>
    </div>
-   <div class="kpi-val" id="k-fl">14</div>
-   <div class="kpi-sub">unresolved threats</div>
+   <div class="kpi-value danger" id="k-fl">14</div>
+   <div class="kpi-sub">Needs investigation</div>
    <canvas class="kpi-spark" id="sp-fl"></canvas>
-   <div class="kpi-bar"><div class="kpi-bar-fill" style="width:45%"></div></div>
   </div>
 
-  <div class="kpi-card warn">
-   <div class="kpi-top">
-    <span class="kpi-lbl">Avg Risk Score</span>
-    <div class="kpi-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+  <div class="kpi-box">
+   <div class="kpi-header">
+    <span class="kpi-label">Avg Risk Score</span>
+    <span class="kpi-badge">index</span>
    </div>
-   <div class="kpi-val" id="k-rs">72.4</div>
-   <div class="kpi-sub">across open flags</div>
+   <div class="kpi-value warn" id="k-rs">72.4</div>
+   <div class="kpi-sub">Range 0 - 100</div>
    <canvas class="kpi-spark" id="sp-rs"></canvas>
-   <div class="kpi-bar"><div class="kpi-bar-fill" style="width:72%"></div></div>
   </div>
 
-  <div class="kpi-card green">
-   <div class="kpi-top">
-    <span class="kpi-lbl">Active Entities</span>
-    <div class="kpi-ic"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+  <div class="kpi-box">
+   <div class="kpi-header">
+    <span class="kpi-label">Active Users</span>
+    <span class="kpi-badge">distinct</span>
    </div>
-   <div class="kpi-val" id="k-us">8</div>
-   <div class="kpi-sub">24h distinct users</div>
+   <div class="kpi-value" id="k-us">8</div>
+   <div class="kpi-sub">Transacting accounts</div>
    <canvas class="kpi-spark" id="sp-us"></canvas>
-   <div class="kpi-bar"><div class="kpi-bar-fill" style="width:40%"></div></div>
   </div>
 
-  <div class="kpi-card cyan">
-   <div class="kpi-top">
-    <span class="kpi-lbl">Txns Past Hour</span>
-    <div class="kpi-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+  <div class="kpi-box">
+   <div class="kpi-header">
+    <span class="kpi-label">Hourly Velocity</span>
+    <span class="kpi-badge">window</span>
    </div>
-   <div class="kpi-val" id="k-hr">12</div>
-   <div class="kpi-sub">velocity throughput</div>
+   <div class="kpi-value" id="k-hr">12</div>
+   <div class="kpi-sub">Txns / hour average</div>
    <canvas class="kpi-spark" id="sp-hr"></canvas>
-   <div class="kpi-bar"><div class="kpi-bar-fill" style="width:30%"></div></div>
   </div>
 
-  <div class="kpi-card slate">
-   <div class="kpi-top">
-    <span class="kpi-lbl">Total Volume</span>
-    <div class="kpi-ic"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+  <div class="kpi-box">
+   <div class="kpi-header">
+    <span class="kpi-label">Total Volume</span>
+    <span class="kpi-badge">INR</span>
    </div>
-   <div class="kpi-val" id="k-vo">₹4,82,000</div>
-   <div class="kpi-sub">processed 24h</div>
+   <div class="kpi-value" id="k-vo">₹4,82,000</div>
+   <div class="kpi-sub">Processed volume</div>
    <canvas class="kpi-spark" id="sp-vo"></canvas>
-   <div class="kpi-bar"><div class="kpi-bar-fill" style="width:55%"></div></div>
   </div>
 
  </div>
 
- <!-- ══ ANALYTICS CHARTS ════════════════════════════ -->
- <div class="sec-hdr" id="analytics-sec">
-  <div class="sec-title">Risk Analytics & Pattern Distributions</div>
-  <div class="sec-line"></div>
- </div>
+ <!-- ══ ANALYTICS PANELS ════════════════════════════ -->
+ <div class="panel-grid" id="analytics">
 
- <div class="grid-2col">
-  <div class="glass-card card-pad">
-   <div class="card-hdr">
-    <div class="card-h3">Merchant Anomaly Rate</div>
+  <div class="panel">
+   <div class="panel-head">
+    <div>
+     <div class="panel-title">Merchant Anomaly Rate</div>
+     <div class="panel-desc">Rolling 7-day rate per merchant via <code>RANGE BETWEEN INTERVAL</code></div>
+    </div>
    </div>
-   <div class="card-subtext">Rolling 7-day fraud window · computed via <code>RANGE BETWEEN INTERVAL</code></div>
-   <canvas id="chart-merch" height="190"></canvas>
+   <div class="panel-body">
+    <canvas id="chart-merch" height="180"></canvas>
+   </div>
   </div>
 
-  <div class="glass-card card-pad">
-   <div class="card-hdr">
-    <div class="card-h3">User Risk Percentile Ranking</div>
+  <div class="panel">
+   <div class="panel-head">
+    <div>
+     <div class="panel-title">User Risk Ranking</div>
+     <div class="panel-desc">Ranked via <code>PERCENT_RANK()</code> + <code>NTILE(10)</code></div>
+    </div>
    </div>
-   <div class="card-subtext">Statistical ranking via <code>PERCENT_RANK()</code> + <code>NTILE(10)</code></div>
-   <canvas id="chart-users" height="190"></canvas>
+   <div class="panel-body">
+    <canvas id="chart-users" height="180"></canvas>
+   </div>
   </div>
+
  </div>
 
  <!-- ══ 7-DAY DENSITY HEATMAP ═══════════════════════ -->
- <div class="sec-hdr">
-  <div class="sec-title">Temporal Activity Density</div>
-  <div class="sec-line"></div>
- </div>
-
- <div class="glass-card card-pad">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
+ <div class="panel" style="margin-bottom: 24px;">
+  <div class="panel-head">
    <div>
-    <div class="card-h3">24-Hour Incident Matrix (Past 7 Days)</div>
-    <div class="card-subtext" style="margin:0">Hover grid cells to inspect incident intensity and risk index</div>
+    <div class="panel-title">Temporal Activity Matrix</div>
+    <div class="panel-desc">7-day × 24-hour transaction risk distribution</div>
    </div>
-   <div style="display:flex;align-items:center;gap:6px;font-size:.6875rem;color:var(--muted);">
-    Low
-    <div style="display:flex;gap:2px;">
-     <div style="width:11px;height:11px;border-radius:2px;background:rgba(255,255,255,0.04);border:1px solid var(--bd);"></div>
-     <div style="width:11px;height:11px;border-radius:2px;background:rgba(99,102,241,0.25);"></div>
-     <div style="width:11px;height:11px;border-radius:2px;background:rgba(245,158,11,0.35);"></div>
-     <div style="width:11px;height:11px;border-radius:2px;background:rgba(239,68,68,0.5);"></div>
-     <div style="width:11px;height:11px;border-radius:2px;background:var(--danger);"></div>
+   <div style="font-size: .6875rem; color: var(--tx-muted); font-family: var(--font-mono);">
+    HOVER TO INSPECT CELL DENSITY
+   </div>
+  </div>
+  <div class="panel-body">
+   <div style="display: flex; gap: 8px;">
+    <div style="display: flex; flex-direction: column; justify-content: space-around; width: 26px; font-size: .5625rem; color: var(--tx-muted); text-align: right;">
+     <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
     </div>
-    Critical
+    <div id="heatmap-grid" style="display: grid; grid-template-columns: repeat(24, 1fr); grid-template-rows: repeat(7, 1fr); gap: 2px; flex: 1;"></div>
    </div>
-  </div>
-
-  <div style="display:flex;gap:8px;">
-   <div style="display:flex;flex-direction:column;justify-content:space-around;width:28px;flex-shrink:0;padding:2px 0;">
-    <span style="font-size:.5625rem;color:var(--muted);text-align:right">Mon</span>
-    <span style="font-size:.5625rem;color:var(--muted);text-align:right">Tue</span>
-    <span style="font-size:.5625rem;color:var(--muted);text-align:right">Wed</span>
-    <span style="font-size:.5625rem;color:var(--muted);text-align:right">Thu</span>
-    <span style="font-size:.5625rem;color:var(--muted);text-align:right">Fri</span>
-    <span style="font-size:.5625rem;color:var(--muted);text-align:right">Sat</span>
-    <span style="font-size:.5625rem;color:var(--muted);text-align:right">Sun</span>
+   <div style="display: flex; justify-content: space-between; padding-left: 34px; margin-top: 6px; font-size: .5625rem; color: var(--tx-muted); font-family: var(--font-mono);">
+    <span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>23:00</span>
    </div>
-   <div id="heatmap-grid" style="display:grid;grid-template-columns:repeat(24,1fr);grid-template-rows:repeat(7,1fr);gap:2px;flex:1;"></div>
-  </div>
-  <div style="display:flex;justify-content:space-between;padding-left:36px;margin-top:4px;">
-   <span style="font-size:.5625rem;color:var(--muted)">12am</span>
-   <span style="font-size:.5625rem;color:var(--muted)">6am</span>
-   <span style="font-size:.5625rem;color:var(--muted)">12pm</span>
-   <span style="font-size:.5625rem;color:var(--muted)">6pm</span>
-   <span style="font-size:.5625rem;color:var(--muted)">11pm</span>
   </div>
  </div>
 
- <!-- ══ LIVE FLAGS & DETECTION STREAM ═══════════════ -->
- <div class="sec-hdr" id="flags-sec">
-  <div class="sec-title">Live Fraud Flags & Telemetry Feed</div>
-  <div class="sec-line"></div>
- </div>
-
- <div class="grid-2col">
-
-  <!-- Interactive Flags Table -->
-  <div class="glass-card">
-   <div class="tbl-controls">
-    <div class="tbl-tabs">
-     <button class="tbl-tab active" onclick="filterFlags('ALL', this)">All Flags</button>
-     <button class="tbl-tab" onclick="filterFlags('CRITICAL', this)">Critical (≥80)</button>
-     <button class="tbl-tab" onclick="filterFlags('MULE', this)">Mule Chains</button>
-     <button class="tbl-tab" onclick="filterFlags('VELOCITY', this)">Velocity</button>
-    </div>
-    <div class="tbl-search-box">
-     <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-     <input type="text" id="table-search-input" placeholder="Search user, rule, merchant..." oninput="onSearch()"/>
-    </div>
+ <!-- ══ OPEN FRAUD FLAGS ════════════════════════════ -->
+ <div class="panel" id="flags" style="margin-bottom: 24px;">
+  <div class="tbl-top">
+   <div class="tbl-filters">
+    <button class="filter-btn active" onclick="setFlagFilter('ALL', this)">All Flags</button>
+    <button class="filter-btn" onclick="setFlagFilter('CRITICAL', this)">Critical (≥80)</button>
+    <button class="filter-btn" onclick="setFlagFilter('MULE', this)">Mule Chains</button>
+    <button class="filter-btn" onclick="setFlagFilter('VELOCITY', this)">Velocity Bursts</button>
    </div>
-
-   <div class="table-wrap">
-    <table id="flags-table">
-     <thead>
-      <tr>
-       <th>Rule Trigger</th>
-       <th>Risk</th>
-       <th>Suspect Entity</th>
-       <th>Merchant</th>
-       <th>Amount</th>
-       <th>Diagnostic Detail</th>
-       <th>Elapsed</th>
-      </tr>
-     </thead>
-     <tbody>
-      <tr><td colspan="7" style="text-align:center;padding:28px;color:var(--muted);">Loading live flags…</td></tr>
-     </tbody>
-    </table>
+   <div class="search-field">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="flag-search-input" placeholder="Search entity, rule, merchant..." oninput="onFilterChange()"/>
    </div>
   </div>
 
-  <!-- Real-Time Feed -->
-  <div class="glass-card card-pad">
-   <div class="card-hdr">
-    <div class="card-h3">Live Rule Stream</div>
-    <span style="font-size:.6875rem;font-weight:700;color:#06b6d4;background:rgba(6,182,212,0.12);padding:2px 8px;border-radius:4px;border:1px solid rgba(6,182,212,0.3);font-family:'JetBrains Mono',monospace;">STREAMING</span>
-   </div>
-   <div class="card-subtext">Recent triggers firing in sub-5ms upon INSERT</div>
-   <div class="feed-box" id="live-feed-list"></div>
+  <div class="tbl-wrap">
+   <table id="tbl-flags">
+    <thead>
+     <tr>
+      <th>Rule Identifier</th>
+      <th>Risk Score</th>
+      <th>Suspect Account</th>
+      <th>Merchant</th>
+      <th>Amount</th>
+      <th>Trigger Metadata</th>
+      <th>Elapsed</th>
+     </tr>
+    </thead>
+    <tbody>
+     <tr><td colspan="7" style="text-align:center;padding:24px;color:var(--tx-muted);">Loading flags…</td></tr>
+    </tbody>
+   </table>
   </div>
-
  </div>
 
  <!-- ══ MULE CHAINS & DEVICE SHARING ════════════════ -->
- <div class="sec-hdr" id="mule-sec">
-  <div class="sec-title">Money Mule Graph Networks & Device Fingerprints</div>
-  <div class="sec-line"></div>
- </div>
+ <div class="panel-grid" id="chains">
 
- <div class="grid-3col">
-
-  <!-- Mule Chains Table -->
-  <div class="glass-card">
-   <div class="card-pad" style="padding-bottom:12px;">
-    <div class="card-h3">Recursive Mule Laundering Chains</div>
-    <div class="card-subtext">Evaluated via recursive CTE · cycle protected via <code>ANY(visited)</code> array</div>
+  <div class="panel">
+   <div class="panel-head">
+    <div>
+     <div class="panel-title">Recursive Mule Chains</div>
+     <div class="panel-desc">Multi-hop graph traversal with cycle guard <code>ANY(visited)</code></div>
+    </div>
    </div>
-   <div class="table-wrap">
-    <table id="chains-table">
+   <div class="tbl-wrap">
+    <table id="tbl-chains">
      <thead>
       <tr>
-       <th>Origin User</th>
-       <th>Terminal User</th>
-       <th>Flow Amount</th>
-       <th>Hop Depth</th>
-       <th>Full Hop Path</th>
+       <th>From</th>
+       <th>To</th>
+       <th>Volume</th>
+       <th>Depth</th>
+       <th>Graph Hop Nodes</th>
       </tr>
      </thead>
      <tbody>
-      <tr><td colspan="5" style="text-align:center;padding:28px;color:var(--muted);">Scanning transaction graph…</td></tr>
+      <tr><td colspan="5" style="text-align:center;padding:24px;color:var(--tx-muted);">Scanning graph…</td></tr>
      </tbody>
     </table>
    </div>
   </div>
 
-  <!-- Device Fingerprinting -->
-  <div class="glass-card card-pad">
-   <div class="card-h3">Device Sharing Fingerprints</div>
-   <div class="card-subtext">Multiple distinct accounts sharing one hardware ID</div>
-   <div class="table-wrap">
-    <table id="device-table" style="font-size:.75rem;">
+  <div class="panel">
+   <div class="panel-head">
+    <div>
+     <div class="panel-title">Shared Device Fingerprints</div>
+     <div class="panel-desc">Hardware reuse across distinct accounts</div>
+    </div>
+   </div>
+   <div class="tbl-wrap">
+    <table id="tbl-devices">
      <thead>
       <tr>
        <th>Hardware ID</th>
        <th>Accounts</th>
-       <th>Total Vol</th>
+       <th>Volume</th>
       </tr>
      </thead>
      <tbody>
-      <tr><td colspan="3" style="text-align:center;padding:28px;color:var(--muted);">Scanning devices…</td></tr>
+      <tr><td colspan="3" style="text-align:center;padding:24px;color:var(--tx-muted);">Scanning…</td></tr>
      </tbody>
     </table>
    </div>
@@ -894,71 +635,65 @@ tr.clickable-row:hover td{background:rgba(99,102,241,0.06);}
 
  </div>
 
-</main>
+</div>
 
-<!-- ══ INSPECT DIAGNOSTIC MODAL ═════════════════════ -->
+<!-- ══ INSPECTION MODAL ═════════════════════════════ -->
 <div class="modal-overlay" id="diag-modal" onclick="if(event.target===this)closeModal()">
- <div class="modal-card">
+ <div class="modal-box">
   <div class="modal-head">
-   <div class="modal-title" id="m-rule-title">Diagnostic Details</div>
-   <button class="modal-close" onclick="closeModal()">&times;</button>
+   <div style="font-weight: 700; font-size: .875rem;" id="m-title">Diagnostic Telemetry</div>
+   <button onclick="closeModal()" style="background:none;border:none;color:var(--tx-muted);cursor:pointer;font-size:1.25rem;">&times;</button>
   </div>
-  <div class="modal-body" id="m-content">
-   <!-- JS injected -->
-  </div>
+  <div class="modal-body" id="m-body"></div>
   <div class="modal-foot">
-   <button class="tbl-tab" onclick="closeModal()">Close</button>
-   <button class="tbl-tab active" onclick="resolveActiveFlag()">Resolve Flag</button>
+   <button class="btn-secondary" onclick="closeModal()">Close</button>
+   <button class="btn-secondary" style="background:#27272a;border-color:rgba(255,255,255,0.2);" onclick="resolveInspectedFlag()">Mark Resolved</button>
   </div>
  </div>
 </div>
 
-<!-- ══ TOAST ALERTS ═════════════════════════════════ -->
-<div class="toast-wrap" id="toast-wrapper"></div>
+<!-- ══ TOAST AREA ═══════════════════════════════════ -->
+<div class="toast-area" id="toast-shelf"></div>
 
 <!-- ══ FOOTER ══════════════════════════════════════ -->
 <footer class="footer">
  <div class="footer-inner">
   <div>
-   <div class="ft-brand">
-    <div class="ft-icon">
+   <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+    <div class="brand-mark">
      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
     </div>
-    <span class="ft-name">FraudDetector Core</span>
+    <span style="font-weight:700;font-size:.9375rem;">FraudDetector</span>
    </div>
-   <p class="ft-about">
-    Autonomous financial fraud detection engine built on raw PostgreSQL 15 internals.
-    Zero external ML dependencies, zero inference lag — pure mathematical SQL and PL/pgSQL triggers.
+   <p style="font-size:.8125rem;color:var(--tx-muted);line-height:1.6;max-width:320px;">
+    Autonomous financial fraud scoring engine running on PostgreSQL 15 and Python FastAPI.
    </p>
   </div>
 
-  <div class="ft-col">
-   <div class="ft-col-title">Detection Engines</div>
-   <a href="#flags-sec">VELOCITY_10M (Fast Burst Windows)</a>
-   <a href="#flags-sec">RAPID_REPEAT (Duplicate Swipes)</a>
-   <a href="#mule-sec">MULE_CHAIN (6-Hop Recursive CTE)</a>
-   <a href="#flags-sec">HIGH_AMOUNT_ANOMALY (PL/pgSQL Trigger)</a>
-   <a href="#mule-sec">SHARED_DEVICE (Multi-User Hardware)</a>
+  <div>
+   <div class="footer-col-title">Detection Engine</div>
+   <div class="footer-links">
+    <a href="#flags">VELOCITY_10M (Rolling Window)</a>
+    <a href="#flags">RAPID_REPEAT (Double Swipes)</a>
+    <a href="#chains">MULE_CHAIN (Recursive CTE)</a>
+    <a href="#flags">HIGH_AMOUNT_ANOMALY (PL/pgSQL)</a>
+   </div>
   </div>
 
-  <div class="ft-col">
-   <div class="ft-col-title">Resources</div>
-   <a href="https://github.com/ansh44233/FraudDetector" target="_blank">GitHub Repository</a>
-   <a href="https://github.com/ansh44233/FraudDetector#api" target="_blank">API Documentation</a>
-   <a href="https://github.com/ansh44233/FraudDetector#sql-highlights" target="_blank">SQL Implementation Details</a>
-   <a href="https://github.com/ansh44233" target="_blank">Engineered by Ansh</a>
+  <div>
+   <div class="footer-col-title">Documentation & Code</div>
+   <div class="footer-links">
+    <a href="https://github.com/ansh44233/FraudDetector" target="_blank">GitHub Repository</a>
+    <a href="https://github.com/ansh44233/FraudDetector#api" target="_blank">REST API Documentation</a>
+    <a href="https://github.com/ansh44233/FraudDetector#sql-highlights" target="_blank">SQL Implementation</a>
+    <a href="https://github.com/ansh44233" target="_blank">Engineered by Ansh</a>
+   </div>
   </div>
  </div>
 
- <div class="ft-bottom-row">
-  <span>© 2026 <a href="https://github.com/ansh44233">Ansh</a> · Distributed under the MIT License</span>
-  <span id="sync-timestamp">Real-time synchronized</span>
-  <div class="ft-tags-group">
-   <span class="ft-tag-item">Python 3.11</span>
-   <span class="ft-tag-item">PostgreSQL 15</span>
-   <span class="ft-tag-item">FastAPI</span>
-   <span class="ft-tag-item">34 Automated Tests</span>
-  </div>
+ <div class="footer-bottom">
+  <span>© 2026 <a href="https://github.com/ansh44233" style="color:var(--tx-sec);text-decoration:none;">Ansh</a> · MIT License</span>
+  <span style="font-family:var(--font-mono);">PostgreSQL 15 · Python 3.11 · 34 Tests Passing</span>
  </div>
 </footer>
 
@@ -972,381 +707,30 @@ const ago=d=>{
   return Math.floor(s/3600)+'h ago';
 };
 
-function bcolor(rule){
-  if(rule.includes('MULE')) return 'indigo';
-  if(rule.includes('VELOCITY')||rule.includes('HIGH_AMOUNT')) return 'red';
-  if(rule.includes('MULTI')||rule.includes('RAPID')) return 'amber';
-  if(rule.includes('SHARED')) return 'slate';
-  return 'slate';
-}
-
-function countUp(el,target,decimals=0){
-  if(!el) return;
-  const dur=800,t0=performance.now(),from=+(el.dataset.v||0)||0;
-  el.dataset.v=target;
-  const step=ts=>{
-    const p=Math.min((ts-t0)/dur,1),e=1-Math.pow(1-p,3),val=from+(target-from)*e;
-    el.textContent=decimals?val.toFixed(decimals):Math.round(val);
-    if(p<1) requestAnimationFrame(step);
-  };
-  requestAnimationFrame(step);
-}
-
-function drawSpark(id,color,pts){
+function drawSparkline(id,color,pts){
   const cv=$(id);if(!cv)return;
-  cv.width=cv.offsetWidth||180;cv.height=26;
+  cv.width=cv.offsetWidth||160;cv.height=22;
   const ctx=cv.getContext('2d'),W=cv.width,H=cv.height;
   const mx=Math.max(...pts),mn=Math.min(...pts),rng=mx-mn||1,st=W/(pts.length-1);
   ctx.clearRect(0,0,W,H);
-  const g=ctx.createLinearGradient(0,0,0,H);
-  g.addColorStop(0,color+'40');g.addColorStop(1,color+'00');
   ctx.beginPath();
-  pts.forEach((v,i)=>{const x=i*st,y=H-(v-mn)/rng*(H-6)-3;i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
-  ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();
-  ctx.fillStyle=g;ctx.fill();
-  ctx.beginPath();
-  pts.forEach((v,i)=>{const x=i*st,y=H-(v-mn)/rng*(H-6)-3;i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
-  ctx.strokeStyle=color;ctx.lineWidth=1.8;ctx.lineJoin='round';ctx.stroke();
+  pts.forEach((v,i)=>{const x=i*st,y=H-(v-mn)/rng*(H-4)-2;i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
+  ctx.strokeStyle=color;ctx.lineWidth=1.5;ctx.stroke();
 }
 
-function renderAllSparks(){
-  drawSpark('sp-tx','#6366f1',[.4,.5,.45,.55,.6,.58,.65,.7,.68,.72,.76,.8]);
-  drawSpark('sp-fl','#ef4444',[.3,.4,.35,.5,.6,.55,.65,.7,.6,.7,.75,.72]);
-  drawSpark('sp-rs','#f59e0b',[.6,.62,.65,.64,.68,.7,.69,.72,.7,.74,.71,.73]);
-  drawSpark('sp-us','#10b981',[.3,.35,.4,.42,.45,.44,.5,.52,.5,.54,.56,.58]);
-  drawSpark('sp-hr','#06b6d4',[.2,.28,.25,.4,.5,.55,.58,.52,.56,.6,.62,.65]);
-  drawSpark('sp-vo','#94a3b8',[.4,.5,.52,.58,.62,.66,.64,.7,.72,.7,.74,.78]);
+function initSparks(){
+  drawSparkline('sp-tx','#5e6ad2',[.4,.5,.45,.55,.6,.58,.65,.7,.68,.72,.76,.8]);
+  drawSparkline('sp-fl','#e5484d',[.3,.4,.35,.5,.6,.55,.65,.7,.6,.7,.75,.72]);
+  drawSparkline('sp-rs','#f5a623',[.6,.62,.65,.64,.68,.7,.69,.72,.7,.74,.71,.73]);
+  drawSparkline('sp-us','#30a46c',[.3,.35,.4,.42,.45,.44,.5,.52,.5,.54,.56,.58]);
+  drawSparkline('sp-hr','#a1a1aa',[.2,.28,.25,.4,.5,.55,.58,.52,.56,.6,.62,.65]);
+  drawSparkline('sp-vo','#a1a1aa',[.4,.5,.52,.58,.62,.66,.64,.7,.72,.7,.74,.78]);
 }
 
-function renderHeatmap(vals){
+function initHeatmap(){
   const hm=$('heatmap-grid');hm.innerHTML='';
   for(let d=0;d<7;d++)for(let h=0;h<24;h++){
-    const v=vals?vals[d*24+h]:Math.random()*Math.random();
-    const cell=document.createElement('div');
-    cell.style.aspectRatio='1';cell.style.borderRadius='3px';
-    cell.style.cursor='default';cell.style.transition='transform .1s';
-    if(v<.04) cell.style.background='rgba(255,255,255,0.03)';
-    else if(v<.18) cell.style.background=`rgba(99,102,241,${(.2+v*.7).toFixed(2)})`;
-    else if(v<.42) cell.style.background=`rgba(245,158,11,${(.25+v*.65).toFixed(2)})`;
-    else cell.style.background=`rgba(239,68,68,${(.4+v*.6).toFixed(2)})`;
-    cell.title=`${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][d]} ${h}:00 | Risk Index: ${(v*10).toFixed(1)}`;
-    cell.onmouseover=()=>cell.style.transform='scale(1.4)';
-    cell.onmouseout=()=>cell.style.transform='scale(1)';
-    hm.appendChild(cell);
-  }
-}
-
-let merchChartInstance, usersChartInstance;
-function renderMerchChart(data){
-  const names=[...new Set(data.map(r=>r.merchant))].slice(0,7);
-  const rows=names.map(n=>data.filter(r=>r.merchant===n).at(-1)||{});
-  if(merchChartInstance) merchChartInstance.destroy();
-  merchChartInstance=new Chart($('chart-merch'),{
-    type:'bar',
-    data:{
-      labels:rows.map(r=>r.merchant||''),
-      datasets:[{
-        data:rows.map(r=>r.rolling_7d_rate||0),
-        backgroundColor:rows.map(r=>(r.rolling_7d_rate||0)>10?'rgba(239,68,68,0.75)':'rgba(99,102,241,0.65)'),
-        borderRadius:6,borderSkipped:false,
-        borderColor:rows.map(r=>(r.rolling_7d_rate||0)>10?'rgba(239,68,68,0.95)':'rgba(99,102,241,0.9)'),
-        borderWidth:1
-      }]
-    },
-    options:{
-      plugins:{legend:{display:false}},animation:{duration:600},
-      scales:{
-        x:{ticks:{color:'#64748b',font:{family:'JetBrains Mono',size:10}},grid:{display:false},border:{display:false}},
-        y:{ticks:{color:'#64748b',callback:v=>v+'%',font:{family:'JetBrains Mono',size:10}},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false}}
-      }
-    }
-  });
-}
-
-function renderUsersChart(data){
-  const top=data.slice(0,8);
-  if(usersChartInstance) usersChartInstance.destroy();
-  usersChartInstance=new Chart($('chart-users'),{
-    type:'bar',
-    data:{
-      labels:top.map(r=>r.name.split(' ')[0]),
-      datasets:[{
-        data:top.map(r=>r.flag_count),
-        backgroundColor:top.map((_,i)=>`rgba(239,68,68,${.85-.08*i})`),
-        borderRadius:6,borderSkipped:false,
-      }]
-    },
-    options:{
-      indexAxis:'y',
-      plugins:{legend:{display:false}},animation:{duration:600},
-      scales:{
-        x:{ticks:{color:'#64748b',font:{family:'JetBrains Mono',size:10}},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false}},
-        y:{ticks:{color:'#94a3b8',font:{family:'Plus Jakarta Sans',size:11,weight:600}},grid:{display:false},border:{display:false}}
-      }
-    }
-  });
-}
-
-let activeFlags = [];
-let currentTabFilter = 'ALL';
-let currentInspectedIdx = -1;
-
-function filterFlags(tab, btn){
-  currentTabFilter = tab;
-  if(btn){
-    document.querySelectorAll('.tbl-tab').forEach(t=>t.classList.remove('active'));
-    btn.classList.add('active');
-  }
-  applyFilters();
-}
-
-function onSearch(){
-  applyFilters();
-}
-
-function applyFilters(){
-  const query = ($('table-search-input').value||'').toLowerCase().trim();
-  const filtered = activeFlags.filter(f=>{
-    if(currentTabFilter === 'CRITICAL' && f.risk_score < 80) return false;
-    if(currentTabFilter === 'MULE' && !f.rule_name.includes('MULE')) return false;
-    if(currentTabFilter === 'VELOCITY' && !f.rule_name.includes('VELOCITY')) return false;
-    if(query){
-      const t = `${f.rule_name} ${f.user_name} ${f.merchant} ${f.amount}`.toLowerCase();
-      if(!t.includes(query)) return false;
-    }
-    return true;
-  });
-  renderTableRows(filtered);
-}
-
-function renderTableRows(flags){
-  const tb=document.querySelector('#flags-table tbody');
-  if(!flags.length){
-    tb.innerHTML='<tr><td colspan="7" style="text-align:center;padding:28px;color:#10b981;">No active threats matching filter</td></tr>';
-    return;
-  }
-  tb.innerHTML=flags.map((f,idx)=>{
-    const initials = (f.user_name||'User').split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
-    return `
-      <tr class="clickable-row" onclick="openDiagModal(${idx})">
-        <td><span class="badge-tag ${bcolor(f.rule_name)}">${f.rule_name}</span></td>
-        <td>
-          <div class="risk-bar-wrap">
-            <div class="risk-track"><div class="risk-fill ${f.risk_score<80?'med':''}" style="width:${f.risk_score}%"></div></div>
-            <span class="risk-num">${f.risk_score}</span>
-          </div>
-        </td>
-        <td>
-          <div class="user-avatar-cell">
-            <div class="user-avatar">${initials}</div>
-            <span class="user-name">${f.user_name}</span>
-          </div>
-        </td>
-        <td style="color:var(--tx2);">${f.merchant}</td>
-        <td style="font-weight:700;color:#fff;font-family:'JetBrains Mono',monospace;">${rp(f.amount)}</td>
-        <td style="font-family:'JetBrains Mono',monospace;font-size:.6875rem;color:var(--muted);">${f.details?JSON.stringify(f.details).slice(0,36)+'...':'{}'}</td>
-        <td style="color:var(--muted);white-space:nowrap;">${ago(f.created_at)}</td>
-      </tr>
-    `;
-  }).join('');
-}
-
-function openDiagModal(idx){
-  const f = activeFlags[idx];
-  if(!f) return;
-  currentInspectedIdx = idx;
-  $('m-rule-title').textContent = `Incident: ${f.rule_name} (Risk ${f.risk_score})`;
-  $('m-content').innerHTML = `
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
-      <div style="background:rgba(255,255,255,0.03);padding:12px 14px;border-radius:10px;border:1px solid var(--bd);">
-        <div style="font-size:.6875rem;color:var(--muted);text-transform:uppercase;font-weight:700;">Suspect Entity</div>
-        <div style="font-size:1rem;font-weight:700;color:#fff;margin-top:2px;">${f.user_name}</div>
-      </div>
-      <div style="background:rgba(255,255,255,0.03);padding:12px 14px;border-radius:10px;border:1px solid var(--bd);">
-        <div style="font-size:.6875rem;color:var(--muted);text-transform:uppercase;font-weight:700;">Merchant Gateway</div>
-        <div style="font-size:1rem;font-weight:700;color:#fff;margin-top:2px;">${f.merchant}</div>
-      </div>
-      <div style="background:rgba(255,255,255,0.03);padding:12px 14px;border-radius:10px;border:1px solid var(--bd);">
-        <div style="font-size:.6875rem;color:var(--muted);text-transform:uppercase;font-weight:700;">Attempted Volume</div>
-        <div style="font-size:1rem;font-weight:700;color:#22d3ee;margin-top:2px;font-family:'JetBrains Mono',monospace;">${rp(f.amount)}</div>
-      </div>
-      <div style="background:rgba(255,255,255,0.03);padding:12px 14px;border-radius:10px;border:1px solid var(--bd);">
-        <div style="font-size:.6875rem;color:var(--muted);text-transform:uppercase;font-weight:700;">Timestamp Elapsed</div>
-        <div style="font-size:1rem;font-weight:700;color:#fff;margin-top:2px;">${ago(f.created_at)}</div>
-      </div>
-    </div>
-    <div style="font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:8px;">PostgreSQL Trigger Diagnostic JSON</div>
-    <pre style="background:#08080c;border:1px solid var(--bd);padding:14px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:.75rem;color:#94a3b8;overflow-x:auto;">${JSON.stringify(f.details||{},null,2)}</pre>
-  `;
-  $('diag-modal').classList.add('open');
-}
-
-function closeModal(){
-  $('diag-modal').classList.remove('open');
-}
-
-function resolveActiveFlag(){
-  if(currentInspectedIdx>=0 && currentInspectedIdx<activeFlags.length){
-    const resolved = activeFlags.splice(currentInspectedIdx, 1)[0];
-    closeModal();
-    pushToast(`Threat ${resolved.rule_name} marked investigated for ${resolved.user_name}`);
-    applyFilters();
-    renderFeedList(activeFlags);
-    const count = activeFlags.length;
-    $('k-fl').textContent = count;
-    $('header-flag-count').textContent = count;
-    if($('hero-stat-flags')) $('hero-stat-flags').textContent = count;
-  }
-}
-
-function renderFeedList(flags){
-  const feed=$('live-feed-list');
-  feed.innerHTML=flags.slice(0,6).map(f=>{
-    const col = bcolor(f.rule_name);
-    return `
-      <div class="feed-item">
-        <div class="feed-icon ${col}">
-          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-        </div>
-        <div class="feed-content">
-          <div class="feed-rule">${f.rule_name}</div>
-          <div class="feed-meta">${f.user_name} · ${f.merchant} · ${ago(f.created_at)}</div>
-        </div>
-        <div class="feed-score" style="color:${f.risk_score>=80?'var(--danger)':'var(--warn)'}">${f.risk_score}</div>
-      </div>
-    `;
-  }).join('')||'<div style="color:var(--muted);font-size:.8125rem;padding:12px 0;">No active threats</div>';
-}
-
-function renderChainsTable(chains){
-  const tb=document.querySelector('#chains-table tbody');
-  tb.innerHTML=chains.length?chains.slice(0,8).map(c=>{
-    const pathNodes = (c.chain||[c.from_user_id,c.to_user_id]).map((n,i,a)=>
-      `<span class="chain-node">User #${n}</span>${i<a.length-1?'<span class="chain-arrow">──►</span>':''}`
-    ).join(' ');
-    return `
-      <tr>
-        <td style="font-weight:600;color:#fff;">User #${c.from_user_id}</td>
-        <td style="font-weight:600;color:#fff;">User #${c.to_user_id}</td>
-        <td style="font-weight:700;color:#fff;font-family:'JetBrains Mono',monospace;">${rp(c.amount)}</td>
-        <td><span class="badge-tag ${c.depth>=3?'red':'amber'}">${c.depth} Hops</span></td>
-        <td><div class="chain-graph">${pathNodes}</div></td>
-      </tr>
-    `;
-  }).join('') : '<tr><td colspan="5" style="text-align:center;padding:28px;color:#10b981;">No mule chains detected</td></tr>';
-}
-
-function renderDevicesTable(devices){
-  const tb=document.querySelector('#device-table tbody');
-  tb.innerHTML=devices.length?devices.map(d=>`
-    <tr>
-      <td style="font-family:'JetBrains Mono',monospace;color:var(--muted);">${d.device_id}</td>
-      <td><span class="badge-tag red">${d.user_count} accounts</span></td>
-      <td style="font-weight:700;color:#fff;font-family:'JetBrains Mono',monospace;">${rp(d.total_amount)}</td>
-    </tr>
-  `).join('') : '<tr><td colspan="3" style="text-align:center;padding:28px;color:#10b981;">None</td></tr>';
-}
-
-function pushToast(title, desc='Triggered via synchronous PL/pgSQL database intercept'){
-  const box = $('toast-wrapper');
-  const t = document.createElement('div');
-  t.className = 'toast-msg';
-  t.innerHTML = `<div class="toast-title">🚨 ${title}</div><div class="toast-desc">${desc}</div>`;
-  box.appendChild(t);
-  setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),300);}, 4000);
-}
-
-function simulateAnomaly(){
-  const samples = [
-    {rule_name:'VELOCITY_10M',risk_score:94,user_name:'Aryan Kapoor',merchant:'Binance P2P',amount:82000,details:{txn_count_10m:9,trigger:'burst_window'}},
-    {rule_name:'MULE_CHAIN',risk_score:96,user_name:'Sameer Verma',merchant:'WazirX Escrow',amount:145000,details:{depth:4,cycle_safe:true}},
-    {rule_name:'HIGH_AMOUNT_ANOMALY',risk_score:88,user_name:'Kunal Singhania',merchant:'LuxuryStore IN',amount:245000,details:{ratio:7.2,mean:34000}},
-    {rule_name:'RAPID_REPEAT',risk_score:82,user_name:'Pooja Sharma',merchant:'Dream11 Pay',amount:9500,details:{gap_seconds:12}}
-  ];
-  const sim = samples[Math.floor(Math.random()*samples.length)];
-  sim.created_at = new Date();
-  activeFlags.unshift(sim);
-  applyFilters();
-  renderFeedList(activeFlags);
-  pushToast(`Intercepted ${sim.rule_name} on ${sim.merchant}`, `Flagged amount: ${rp(sim.amount)} (Risk: ${sim.risk_score})`);
-  const c = activeFlags.length;
-  $('k-fl').textContent = c;
-  $('header-flag-count').textContent = c;
-  if($('hero-stat-flags')) $('hero-stat-flags').textContent = c;
-}
-
-setInterval(()=>$('clock-display').textContent=new Date().toLocaleTimeString('en-IN'),1000);
-
-async function syncData(){
-  try{
-    const [sum,flags,chains,devices,merch,rank]=await Promise.all([
-      fetch('/analytics/summary').then(r=>r.json()),
-      fetch('/flags?resolved=false&limit=20').then(r=>r.json()),
-      fetch('/analytics/mule-chains').then(r=>r.json()),
-      fetch('/analytics/device-sharing').then(r=>r.json()),
-      fetch('/analytics/merchant-fraud-rate').then(r=>r.json()),
-      fetch('/analytics/user-risk-ranking').then(r=>r.json()),
-    ]);
-    const s=Array.isArray(sum)?sum[0]:sum;
-    countUp($('k-tx'),+s.total_txns||0);countUp($('k-fl'),+s.open_flags||0);
-    countUp($('k-rs'),+s.avg_risk_score||0,1);countUp($('k-us'),+s.active_users_24h||0);
-    countUp($('k-hr'),+s.txns_last_hour||0);
-    $('k-vo').textContent=s.volume_24h?rp(s.volume_24h):'—';
-    $('k-txs').textContent='last hour: '+(s.txns_last_hour||0);
-    $('header-flag-count').textContent=s.open_flags||0;
-    if($('hero-stat-flags')) countUp($('hero-stat-flags'),+s.open_flags||0);
-    if($('hero-stat-txns'))  countUp($('hero-stat-txns'),+s.total_txns||0);
-    if($('hero-stat-risk'))  countUp($('hero-stat-risk'),+s.avg_risk_score||0,1);
-    renderAllSparks();renderMerchChart(merch);renderUsersChart(rank);
-    activeFlags = flags;
-    applyFilters();
-    renderFeedList(flags);renderChainsTable(chains);renderDevicesTable(devices);
-    renderHeatmap(null);
-    $('sync-timestamp').textContent='Synchronized · '+new Date().toLocaleTimeString('en-IN');
-  }catch{loadDemoMode();}
-}
-
-function loadDemoMode(){
-  countUp($('k-tx'),326);countUp($('k-fl'),14);countUp($('k-rs'),72.4,1);
-  countUp($('k-us'),8);countUp($('k-hr'),12);
-  $('k-vo').textContent='₹4,82,000';$('k-txs').textContent='last hour: 12';
-  $('header-flag-count').textContent='14';
-  if($('hero-stat-flags')) countUp($('hero-stat-flags'),14);
-  if($('hero-stat-txns'))  countUp($('hero-stat-txns'),326);
-  if($('hero-stat-risk'))  countUp($('hero-stat-risk'),72.4,1);
-  renderAllSparks();
-  renderMerchChart([
-    {merchant:'WazirX',rolling_7d_rate:28.5},{merchant:'CoinDCX',rolling_7d_rate:21.0},
-    {merchant:'MPL Games',rolling_7d_rate:14.3},{merchant:'Dream11',rolling_7d_rate:8.6},
-    {merchant:'PhonePe',rolling_7d_rate:3.2},{merchant:'Swiggy',rolling_7d_rate:1.1}
-  ]);
-  renderUsersChart([
-    {name:'Rahul Sharma',flag_count:5},{name:'Anjali Mehta',flag_count:4},
-    {name:'Arjun Nair',flag_count:4},{name:'Rohan Gupta',flag_count:3},
-    {name:'Priya Patel',flag_count:3},{name:'Vikram Singh',flag_count:2},
-    {name:'Sonal Kapoor',flag_count:2},{name:'Dev Rao',flag_count:1}
-  ]);
-  activeFlags=[
-    {rule_name:'MULE_CHAIN',risk_score:90,user_name:'Rahul Sharma',merchant:'UnknownShop',amount:15000,details:{chain_depth:3,layer:'layer_2'},created_at:new Date(Date.now()-120e3)},
-    {rule_name:'VELOCITY_10M',risk_score:85,user_name:'Anjali Mehta',merchant:'WazirX',amount:950,details:{txn_count_10m:7,threshold:5},created_at:new Date(Date.now()-3e5)},
-    {rule_name:'HIGH_AMOUNT_ANOMALY',risk_score:75,user_name:'Arjun Nair',merchant:'CoinDCX',amount:95000,details:{ratio:4.75,historical_avg:20000},created_at:new Date(Date.now()-36e5)},
-    {rule_name:'MULTI_DEVICE_1H',risk_score:80,user_name:'Rohan Gupta',merchant:'MPL Games',amount:2200,details:{distinct_devices_1h:4},created_at:new Date(Date.now()-108e4)},
-    {rule_name:'RAPID_REPEAT',risk_score:70,user_name:'Priya Patel',merchant:'Dream11',amount:1100,details:{gap_seconds:28},created_at:new Date(Date.now()-204e4)},
-    {rule_name:'SHARED_DEVICE',risk_score:60,user_name:'Vikram Singh',merchant:'UnknownShop',amount:8500,details:{other_users:2,device:'dev_889'},created_at:new Date(Date.now()-108e5)},
-  ];
-  applyFilters();
-  renderFeedList(activeFlags);
-  renderChainsTable([
-    {from_user_id:5,to_user_id:11,amount:15000,depth:3,chain:[5,11,12]},
-    {from_user_id:11,to_user_id:12,amount:15000,depth:2,chain:[11,12]},
-    {from_user_id:3,to_user_id:7,amount:8200,depth:2,chain:[3,7]}
-  ]);
-  renderDevicesTable([
-    {device_id:'device_mule_11',user_count:3,total_amount:45000},
-    {device_id:'device_x_99',user_count:2,total_amount:18000}
-  ]);
-  const hv=[];
-  for(let d=0;d<7;d++)for(let h=0;h<24;h++){
+    const cell=document.createElement('div');cell.className='heatmap-cell';
     let v=.02;
     if(h>=9&&h<=12) v=.25+(d<5?.35:0)+Math.random()*.2;
     else if(h>=19&&h<=23) v=.45+Math.random()*.45;
@@ -1354,16 +738,222 @@ function loadDemoMode(){
     else if(h>=0&&h<=5) v=Math.random()*.04;
     else v=Math.random()*.12;
     if(d===4&&h>=19) v=Math.min(1,v+.3);
-    hv.push(v);
+
+    if(v<.05) cell.style.background='rgba(255,255,255,0.03)';
+    else if(v<.2) cell.style.background='rgba(94,106,210,0.3)';
+    else if(v<.45) cell.style.background='rgba(245,166,35,0.4)';
+    else cell.style.background='rgba(229,72,77,0.65)';
+    cell.title=`${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][d]} ${h}:00 | Risk Density: ${(v*10).toFixed(1)}`;
+    hm.appendChild(cell);
   }
-  renderHeatmap(hv);
-  $('sync-timestamp').textContent='Interactive Live Engine · '+new Date().toLocaleTimeString('en-IN');
 }
 
-// Render instantly
-loadDemoMode();
-setTimeout(syncData, 100);
-setInterval(syncData, 15000);
+let merchChart, userChart;
+function renderCharts(merchData, userData){
+  if(merchChart) merchChart.destroy();
+  merchChart = new Chart($('chart-merch'), {
+    type: 'bar',
+    data: {
+      labels: merchData.map(r=>r.merchant),
+      datasets: [{
+        data: merchData.map(r=>r.rolling_7d_rate),
+        backgroundColor: merchData.map(r=>r.rolling_7d_rate>10?'rgba(229,72,77,0.7)':'rgba(94,106,210,0.6)'),
+        borderRadius: 4, borderSkipped: false
+      }]
+    },
+    options: {
+      plugins: {legend: {display: false}}, animation: {duration: 400},
+      scales: {
+        x: {ticks: {color: '#71717a', font: {family: 'Inter', size: 11}}, grid: {display: false}, border: {display: false}},
+        y: {ticks: {color: '#71717a', callback: v=>v+'%', font: {family: 'JetBrains Mono', size: 10}}, grid: {color: 'rgba(255,255,255,0.04)'}, border: {display: false}}
+      }
+    }
+  });
+
+  if(userChart) userChart.destroy();
+  userChart = new Chart($('chart-users'), {
+    type: 'bar',
+    data: {
+      labels: userData.map(r=>r.name.split(' ')[0]),
+      datasets: [{
+        data: userData.map(r=>r.flag_count),
+        backgroundColor: 'rgba(229,72,77,0.65)',
+        borderRadius: 4, borderSkipped: false
+      }]
+    },
+    options: {
+      indexAxis: 'y', plugins: {legend: {display: false}}, animation: {duration: 400},
+      scales: {
+        x: {ticks: {color: '#71717a', font: {family: 'JetBrains Mono', size: 10}}, grid: {color: 'rgba(255,255,255,0.04)'}, border: {display: false}},
+        y: {ticks: {color: '#a1a1aa', font: {family: 'Inter', size: 11}}, grid: {display: false}, border: {display: false}}
+      }
+    }
+  });
+}
+
+let flagList = [];
+let activeFilter = 'ALL';
+let inspectIndex = -1;
+
+function setFlagFilter(filter, btn){
+  activeFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  onFilterChange();
+}
+
+function onFilterChange(){
+  const query = ($('flag-search-input').value||'').toLowerCase().trim();
+  const filtered = flagList.filter(f=>{
+    if(activeFilter === 'CRITICAL' && f.risk_score < 80) return false;
+    if(activeFilter === 'MULE' && !f.rule_name.includes('MULE')) return false;
+    if(activeFilter === 'VELOCITY' && !f.rule_name.includes('VELOCITY')) return false;
+    if(query){
+      const t = `${f.rule_name} ${f.user_name} ${f.merchant} ${f.amount}`.toLowerCase();
+      if(!t.includes(query)) return false;
+    }
+    return true;
+  });
+  renderFlagRows(filtered);
+}
+
+function renderFlagRows(flags){
+  const tb = document.querySelector('#tbl-flags tbody');
+  if(!flags.length){
+    tb.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--success);">No active flags</td></tr>';
+    return;
+  }
+  tb.innerHTML = flags.map((f, i)=>`
+    <tr class="tbl-row" onclick="openInspector(${i})">
+      <td><span class="pill ${f.risk_score>=80?'pill-danger':'pill-warn'}">${f.rule_name}</span></td>
+      <td style="font-family:var(--font-mono);font-weight:700;color:${f.risk_score>=80?'#ff6369':'#f5a623'};">${f.risk_score}</td>
+      <td style="font-weight:600;color:#fff;">${f.user_name}</td>
+      <td style="color:var(--tx-sec);">${f.merchant}</td>
+      <td style="font-family:var(--font-mono);font-weight:600;color:#fff;">${rp(f.amount)}</td>
+      <td style="font-family:var(--font-mono);font-size:.6875rem;color:var(--tx-muted);">${f.details?JSON.stringify(f.details).slice(0,38):'{}'}</td>
+      <td style="color:var(--tx-muted);white-space:nowrap;">${ago(f.created_at)}</td>
+    </tr>
+  `).join('');
+}
+
+function openInspector(idx){
+  const f = flagList[idx];
+  if(!f) return;
+  inspectIndex = idx;
+  $('m-title').textContent = `${f.rule_name} · Risk ${f.risk_score}`;
+  $('m-body').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+      <div style="background:var(--surface-sub);padding:10px 12px;border-radius:6px;border:1px solid var(--border);">
+        <div style="font-size:.6875rem;color:var(--tx-muted);text-transform:uppercase;">Suspect User</div>
+        <div style="font-size:.9375rem;font-weight:700;color:#fff;margin-top:2px;">${f.user_name}</div>
+      </div>
+      <div style="background:var(--surface-sub);padding:10px 12px;border-radius:6px;border:1px solid var(--border);">
+        <div style="font-size:.6875rem;color:var(--tx-muted);text-transform:uppercase;">Merchant</div>
+        <div style="font-size:.9375rem;font-weight:700;color:#fff;margin-top:2px;">${f.merchant}</div>
+      </div>
+      <div style="background:var(--surface-sub);padding:10px 12px;border-radius:6px;border:1px solid var(--border);">
+        <div style="font-size:.6875rem;color:var(--tx-muted);text-transform:uppercase;">Amount</div>
+        <div style="font-size:.9375rem;font-weight:700;color:#fff;font-family:var(--font-mono);margin-top:2px;">${rp(f.amount)}</div>
+      </div>
+      <div style="background:var(--surface-sub);padding:10px 12px;border-radius:6px;border:1px solid var(--border);">
+        <div style="font-size:.6875rem;color:var(--tx-muted);text-transform:uppercase;">Elapsed</div>
+        <div style="font-size:.9375rem;font-weight:700;color:#fff;margin-top:2px;">${ago(f.created_at)}</div>
+      </div>
+    </div>
+    <div style="font-size:.6875rem;font-weight:600;color:var(--tx-muted);text-transform:uppercase;margin-bottom:6px;">PL/pgSQL Trigger Details</div>
+    <pre style="background:#09090b;border:1px solid var(--border);padding:10px;border-radius:6px;font-family:var(--font-mono);font-size:.6875rem;color:var(--tx-sec);">${JSON.stringify(f.details||{},null,2)}</pre>
+  `;
+  $('diag-modal').classList.add('open');
+}
+
+function closeModal(){$('diag-modal').classList.remove('open');}
+
+function resolveInspectedFlag(){
+  if(inspectIndex>=0 && inspectIndex<flagList.length){
+    const r = flagList.splice(inspectIndex, 1)[0];
+    closeModal();
+    fireToast(`Flag resolved: ${r.rule_name} for ${r.user_name}`);
+    onFilterChange();
+    $('k-fl').textContent = flagList.length;
+    $('h-flags').textContent = flagList.length;
+  }
+}
+
+function fireToast(msg){
+  const area = $('toast-shelf');
+  const t = document.createElement('div');
+  t.className = 'toast-card';
+  t.innerHTML = `<div style="font-weight:700;color:#fff;">Alert</div><div style="color:var(--tx-sec);margin-top:2px;">${msg}</div>`;
+  area.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),200);}, 3500);
+}
+
+function simulateIncident(){
+  const s = {rule_name:'HIGH_AMOUNT_ANOMALY',risk_score:85,user_name:'Aryan Kapoor',merchant:'Binance P2P',amount:92000,details:{ratio:6.5,historical_mean:14000},created_at:new Date()};
+  flagList.unshift(s);
+  onFilterChange();
+  fireToast(`Intercepted ${s.rule_name} on ${s.merchant} (${rp(s.amount)})`);
+  $('k-fl').textContent = flagList.length;
+  $('h-flags').textContent = flagList.length;
+}
+
+function renderChains(chains){
+  const tb = document.querySelector('#tbl-chains tbody');
+  tb.innerHTML = chains.length?chains.map(c=>{
+    const p = (c.chain||[c.from_user_id,c.to_user_id]).map((n,i,a)=>
+      `<span class="chain-badge">User #${n}</span>${i<a.length-1?'<span class="chain-arrow">──►</span>':''}`
+    ).join(' ');
+    return `
+      <tr>
+        <td style="font-weight:600;color:#fff;">User #${c.from_user_id}</td>
+        <td style="font-weight:600;color:#fff;">User #${c.to_user_id}</td>
+        <td style="font-family:var(--font-mono);font-weight:600;color:#fff;">${rp(c.amount)}</td>
+        <td><span class="pill ${c.depth>=3?'pill-danger':'pill-warn'}">${c.depth} hops</span></td>
+        <td><div class="chain-flex">${p}</div></td>
+      </tr>
+    `;
+  }).join('') : '<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--success);">None</td></tr>';
+}
+
+function renderDevices(devices){
+  const tb = document.querySelector('#tbl-devices tbody');
+  tb.innerHTML = devices.length?devices.map(d=>`
+    <tr>
+      <td style="font-family:var(--font-mono);color:var(--tx-muted);">${d.device_id}</td>
+      <td><span class="pill pill-danger">${d.user_count} accounts</span></td>
+      <td style="font-family:var(--font-mono);font-weight:600;color:#fff;">${rp(d.total_amount)}</td>
+    </tr>
+  `).join('') : '<tr><td colspan="3" style="text-align:center;padding:24px;color:var(--success);">None</td></tr>';
+}
+
+function initData(){
+  initSparks();
+  initHeatmap();
+  renderCharts(
+    [{merchant:'WazirX',rolling_7d_rate:28.5},{merchant:'CoinDCX',rolling_7d_rate:21.0},{merchant:'MPL Games',rolling_7d_rate:14.3},{merchant:'Dream11',rolling_7d_rate:8.6},{merchant:'PhonePe',rolling_7d_rate:3.2},{merchant:'Swiggy',rolling_7d_rate:1.1}],
+    [{name:'Rahul Sharma',flag_count:5},{name:'Anjali Mehta',flag_count:4},{name:'Arjun Nair',flag_count:4},{name:'Rohan Gupta',flag_count:3},{name:'Priya Patel',flag_count:3},{name:'Vikram Singh',flag_count:2},{name:'Sonal Kapoor',flag_count:2},{name:'Dev Rao',flag_count:1}]
+  );
+  flagList = [
+    {rule_name:'MULE_CHAIN',risk_score:90,user_name:'Rahul Sharma',merchant:'UnknownShop',amount:15000,details:{chain_depth:3},created_at:new Date(Date.now()-120e3)},
+    {rule_name:'VELOCITY_10M',risk_score:85,user_name:'Anjali Mehta',merchant:'WazirX',amount:950,details:{txn_count_10m:7},created_at:new Date(Date.now()-3e5)},
+    {rule_name:'HIGH_AMOUNT_ANOMALY',risk_score:75,user_name:'Arjun Nair',merchant:'CoinDCX',amount:95000,details:{ratio:4.75},created_at:new Date(Date.now()-36e5)},
+    {rule_name:'MULTI_DEVICE_1H',risk_score:80,user_name:'Rohan Gupta',merchant:'MPL Games',amount:2200,details:{distinct_devices_1h:4},created_at:new Date(Date.now()-108e4)},
+    {rule_name:'RAPID_REPEAT',risk_score:70,user_name:'Priya Patel',merchant:'Dream11',amount:1100,details:{gap_seconds:28},created_at:new Date(Date.now()-204e4)},
+    {rule_name:'SHARED_DEVICE',risk_score:60,user_name:'Vikram Singh',merchant:'UnknownShop',amount:8500,details:{other_users:2},created_at:new Date(Date.now()-108e5)},
+  ];
+  onFilterChange();
+  renderChains([
+    {from_user_id:5,to_user_id:11,amount:15000,depth:3,chain:[5,11,12]},
+    {from_user_id:11,to_user_id:12,amount:15000,depth:2,chain:[11,12]},
+    {from_user_id:3,to_user_id:7,amount:8200,depth:2,chain:[3,7]}
+  ]);
+  renderDevices([
+    {device_id:'device_mule_11',user_count:3,total_amount:45000},
+    {device_id:'device_x_99',user_count:2,total_amount:18000}
+  ]);
+}
+
+initData();
 </script>
 </body>
 </html>
